@@ -50,7 +50,6 @@ public class BaseData {
         isNew = aNew;
     }
 
-
     public LocalDateTime getChangeDate() {
         return changeDate;
     }
@@ -84,4 +83,5 @@ public class BaseData {
     public void setChangerId(int changerId) {
         this.changerId = changerId;
     }
+
 }
