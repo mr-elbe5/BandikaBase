@@ -8,83 +8,53 @@
  */
 package de.elbe5.base;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@SuppressWarnings("unchecked")
 public class JsonObject extends JSONObject {
 
-    @SuppressWarnings("unchecked")
-    public void add(String key, String val){
-        put(key, val);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addIfNotEmpty(String key, String val){
-        if (!val.isEmpty())
-            put(key, val);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void add(String key, int val){
-        put(key, val);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addIfNotZero(String key, int val){
-        if (val != 0)
-            put(key, val);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void add(String key, LocalDateTime val){
-        put(key, DateHelper.asMillis(val));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addIfNotNull(String key, LocalDateTime val){
-        if (val != null)
-            put(key, DateHelper.asMillis(val));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void add(String key, LocalDate val){
-        put(key, DateHelper.asMillis(val));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addIfNotNull(String key, LocalDate val){
-        if (val != null)
-            put(key, DateHelper.asMillis(val));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void add(String key, boolean val){
-        put(key, Boolean.toString(val));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void add(String key, JsonArray val){
-        put(key, val);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addIfNotEmpty(String key, JSONArray val){
+    public JsonObject add(String key, String val){
         if (val != null && !val.isEmpty())
             put(key, val);
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public void add(String key, JsonObject val){
-        put(key, val);
+    public JsonObject add(String key, int val){
+        if (val != 0)
+            put(key, val);
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public void addIfNotNull(String key, JsonObject val){
+    public JsonObject add(String key, LocalDateTime val){
+        if (val != null)
+            put(key, DateHelper.asMillis(val));
+        return this;
+    }
+
+    public JsonObject add(String key, LocalDate val){
+        if (val != null)
+            put(key, DateHelper.asMillis(val));
+        return this;
+    }
+
+    public JsonObject add(String key, boolean val){
+        put(key, Boolean.toString(val));
+        return this;
+    }
+
+    public JsonObject add(String key, JsonArray val){
+        if (val != null && !val.isEmpty())
+            put(key, val);
+        return this;
+    }
+
+    public JsonObject add(String key, JsonObject val){
         if (val != null)
             put(key, val);
+        return this;
     }
 
 }
