@@ -30,10 +30,10 @@ public class JsonSerializer {
         try {
             Object o = toJSONInstance(obj);
             if (o instanceof JSONObject){
-                return ((JSONObject) o).toJSONString();
+                return o.toString();
             }
             else if (o instanceof JSONArray){
-                return ((JSONArray) o).toJSONString();
+                return o.toString();
             }
             return "";
         }
