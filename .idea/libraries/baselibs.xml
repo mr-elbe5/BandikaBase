@@ -15,7 +15,6 @@
       <root url="jar://$PROJECT_DIR$/lib/commons-crypto-1.1.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/commons-math3-3.6.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/log4j-api-2.18.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/SparseBitSet-1.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
