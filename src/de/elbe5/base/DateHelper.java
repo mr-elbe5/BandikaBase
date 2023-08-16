@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class DateHelper {
 
+    static DateTimeFormatter isoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     public static Date asDate(LocalDate localDate) {
         if (localDate==null)
             return null;
@@ -106,5 +107,17 @@ public class DateHelper {
         if (s == null || s.isEmpty())
             return null;
         return LocalDateTime.parse(s, DateTimeFormatter.ofPattern(getDateTimePattern()));
+    }
+
+    public static String toISODateTime(LocalDateTime date) {
+        if (date == null)
+            return "";
+        return date.format(isoFormatter);
+    }
+
+    public static LocalDateTime fromISODateTime(String s) {
+        if (s == null || s.isEmpty())
+            return null;
+        return LocalDateTime.parse(s, isoFormatter);
     }
 }

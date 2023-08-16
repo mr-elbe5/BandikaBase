@@ -11,4 +11,7 @@ package de.elbe5.base;
 
 public interface IJsonData {
     JsonObject getJson();
+    default JsonObject getJsonRecursive(){
+        return getJson();
+    }
 }
