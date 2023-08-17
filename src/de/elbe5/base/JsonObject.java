@@ -8,8 +8,10 @@
  */
 package de.elbe5.base;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("unchecked")
@@ -30,6 +32,12 @@ public class JsonObject extends JSONObject {
     public JsonObject add(String key, LocalDateTime val){
         if (val != null)
             put(key, DateHelper.toISODateTime(val));
+        return this;
+    }
+
+    public JsonObject add(String key, LocalDate val){
+        if (val != null)
+            put(key, DateHelper.toISODate(val));
         return this;
     }
 

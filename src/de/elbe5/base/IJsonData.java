@@ -9,9 +9,64 @@
 
 package de.elbe5.base;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public interface IJsonData {
     JsonObject getJson();
+
+    default void fromJson(JSONObject json){
+    }
+
     default JsonObject getJsonRecursive(){
         return getJson();
+    }
+
+    default void fromJsonRecursive(JSONObject json){
+        fromJson(json);
+    }
+
+    default <T> T get(JSONObject obj, String key, Class<T> cls){
+        try {
+            return cls.cast(obj.get(key));
+        }
+        catch(NullPointerException | ClassCastException e){
+            return null;
+        }
+    }
+
+    default String getString(JSONObject obj, String key){
+        String val = get(obj, key, String.class);
+        return val == null ? "" : val;
+    }
+
+    default int getInt(JSONObject obj, String key){
+        Integer val = get(obj, key, Integer.class);
+        return val == null ? 0 : val;
+    }
+
+    default LocalDateTime getLocalDateTime(JSONObject obj, String key){
+        return DateHelper.fromISODateTime(getString(obj, key));
+    }
+
+    default LocalDate getLocalDate(JSONObject obj, String key){
+        return DateHelper.fromISODate(getString(obj, key));
+    }
+
+    default boolean getBoolean(JSONObject obj, String key){
+        Boolean val = get(obj, key, Boolean.class);
+        return val != null && val;
+    }
+
+    default JSONArray getJSONArray(JSONObject obj, String key){
+        JSONArray val = get(obj, key, JSONArray.class);
+        return val == null ? new JSONArray() : val;
+    }
+
+    default JSONObject getJSONObject(JSONObject obj, String key){
+        return get(obj, key, JSONObject.class);
     }
 }
