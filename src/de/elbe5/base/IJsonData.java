@@ -43,9 +43,14 @@ public interface IJsonData {
         return val == null ? "" : val;
     }
 
+    default long getLong(JSONObject obj, String key){
+        Number val = get(obj, key, Number.class);
+        return val == null ? 0 : val.longValue();
+    }
+
     default int getInt(JSONObject obj, String key){
-        Integer val = get(obj, key, Integer.class);
-        return val == null ? 0 : val;
+        Number val = get(obj, key, Number.class);
+        return val == null ? 0 : val.intValue();
     }
 
     default LocalDateTime getLocalDateTime(JSONObject obj, String key){
