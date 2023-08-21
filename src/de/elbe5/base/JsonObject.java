@@ -42,7 +42,7 @@ public class JsonObject extends JSONObject {
     }
 
     public JsonObject add(String key, boolean val){
-        put(key, Boolean.toString(val));
+        put(key, val);
         return this;
     }
 
