@@ -10,7 +10,7 @@ package de.elbe5.user;
 
 import de.elbe5.base.*;
 import de.elbe5.application.Configuration;
-import de.elbe5.data.BaseData;
+import de.elbe5.base.BaseData;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.RequestData;
 import de.elbe5.rights.SystemZone;

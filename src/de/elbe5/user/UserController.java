@@ -9,7 +9,7 @@
 package de.elbe5.user;
 
 import de.elbe5.base.*;
-import de.elbe5.data.BaseData;
+import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
 import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;

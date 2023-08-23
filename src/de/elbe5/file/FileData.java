@@ -9,14 +9,13 @@
 package de.elbe5.file;
 
 import de.elbe5.base.JsonObject;
-import de.elbe5.data.BaseData;
+import de.elbe5.base.BaseData;
 import de.elbe5.base.BinaryFile;
 import de.elbe5.base.FileHelper;
 import de.elbe5.base.StringHelper;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public abstract class FileData extends BaseData {

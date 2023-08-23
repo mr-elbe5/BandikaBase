@@ -9,7 +9,7 @@
 package de.elbe5.content;
 
 import de.elbe5.base.*;
-import de.elbe5.data.BaseData;
+import de.elbe5.base.BaseData;
 import de.elbe5.file.*;
 import de.elbe5.group.GroupBean;
 import de.elbe5.group.GroupData;
@@ -54,7 +54,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public static final String VIEW_TYPE_SHOW = "SHOW";
     public static final String VIEW_TYPE_SHOWPUBLISHED = "PUBLISHED";
     public static final String VIEW_TYPE_EDIT = "EDIT";
-    public static final String VIEW_TYPE_PUBLISH = "PUBLISH";
 
     public static final int ID_ROOT = 1;
 
