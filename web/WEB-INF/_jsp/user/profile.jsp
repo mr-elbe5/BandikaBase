@@ -30,15 +30,11 @@
             </form:line>
             <form:line label="_login"><%=$H(user.getLogin())%>
             </form:line>
-            <form:line label="_title"><%=$H(user.getTitle())%>
-            </form:line>
             <form:line label="_firstName"><%=$H(user.getFirstName())%>
             </form:line>
             <form:line label="_lastName"><%=$H(user.getLastName())%>
             </form:line>
             <form:line label="_notes"><%=$H(user.getNotes())%>
-            </form:line>
-            <form:line label="_portrait"><% if (user.hasPortrait()) {%><img src="/ctrl/user/showPortrait/<%=user.getId()%>" alt="<%=$H(user.getName())%>"/> <%}%>
             </form:line>
             <h3><%=$SH("_address")%>
             </h3>
@@ -55,8 +51,6 @@
             <form:line label="_email"><%=$H(user.getEmail())%>
             </form:line>
             <form:line label="_phone"><%=$H(user.getPhone())%>
-            </form:line>
-            <form:line label="_fax"><%=$H(user.getFax())%>
             </form:line>
             <form:line label="_mobile"><%=$H(user.getMobile())%>
             </form:line>

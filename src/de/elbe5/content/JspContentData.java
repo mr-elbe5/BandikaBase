@@ -46,9 +46,8 @@ public class JspContentData extends ContentData {
     @Override
     public void copyData(ContentData data, RequestData rdata) {
         super.copyData(data, rdata);
-        if (!(data instanceof JspContentData))
+        if (!(data instanceof JspContentData jpdata))
             return;
-        JspContentData jpdata=(JspContentData)data;
         setJsp(jpdata.getJsp());
     }
 

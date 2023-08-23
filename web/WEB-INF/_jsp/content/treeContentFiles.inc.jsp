@@ -17,7 +17,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = ContentData.getCurrentContent(rdata);
-            List<Class<? extends FileData>> fileClasses=contentData.getFileClasses();
+    List<Class<? extends FileData>> fileClasses=contentData.getFileClasses();
     int fileId=rdata.getAttributes().getInt("fileId");
 %>
         <li class="files open">
@@ -33,7 +33,8 @@
                         <%} else {%>
                 <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newFile")%>"></a>
                 <div class="dropdown-menu">
-                    <%for (Class<? extends FileData> fileType : fileClasses) {
+                    <%
+                        for (Class<? extends FileData> fileType : fileClasses) {
                         String name = $SH(fileType.getName());
                     %>
                     <a class="dropdown-item" onclick="return openModalDialog('/ctrl/file/openCreateFile?parentId=<%=contentData.getId()%>&type=<%=fileType.getName()%>');"><%=name%>
@@ -57,7 +58,6 @@
                                 <img src="/ctrl/image/showPreview/<%=file.getId()%>" alt="<%=$H(file.getFileName())%>"/>
                             </span>
                             <%}%>
-                        </span>
                         </span>
                         <div class="icons">
                             <a class="icon fa fa-eye" href="<%=file.getStaticURL()%>" target="_blank" title="<%=$SH("_view")%>"> </a>

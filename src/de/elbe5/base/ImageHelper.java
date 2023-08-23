@@ -21,10 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-/**
- * Class ImageTool is a helper class for image manipulation. <br>
- * Usage:
- */
 public class ImageHelper {
 
     public static BufferedImage createImage(byte[] bytes, String contentType) throws IOException {
@@ -32,10 +28,7 @@ public class ImageHelper {
         if (readers.hasNext() && bytes != null) {
             ImageReader reader = readers.next();
             BufferedImage image;
-            boolean singleImage = true;
-            if (contentType.endsWith("gif")) {
-                singleImage = false;
-            }
+            boolean singleImage = !contentType.endsWith("gif");
             ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(bytes));
             reader.setInput(iis, singleImage);
             image = reader.read(0);

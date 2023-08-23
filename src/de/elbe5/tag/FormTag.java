@@ -45,14 +45,16 @@ public class FormTag extends BaseTag {
 
     String preHtml = "<form action=\"{1}\" method=\"post\" id=\"{2}\" name=\"{3}\" accept-charset=\"UTF-8\"{4}>\n";
     String postHtml = "</form>\n";
-    String ajaxHtml = "<script type=\"text/javascript\">\n" +
-            "$('#{1}').submit(function (event) {\n" +
-            "var $this = $(this);\n    " +
-            "event.preventDefault();\n    " +
-            "var params = $this.{2}();\n    " +
-            "{3}('{4}', params,'{5}');\n  " +
-            "});\n" +
-            "</script>\n";
+    String ajaxHtml = """
+            <script type="text/javascript">
+            $('#{1}').submit(function (event) {
+            var $this = $(this);
+                event.preventDefault();
+                var params = $this.{2}();
+                {3}('{4}', params,'{5}');
+              });
+            </script>
+            """;
 
     @Override
     public int doStartTag() throws JspException {

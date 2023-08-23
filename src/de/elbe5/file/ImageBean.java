@@ -29,9 +29,8 @@ public class ImageBean extends FileBean {
 
     @Override
     public void readFileExtras(Connection con, FileData contentData, boolean complete) throws SQLException {
-        if (!(contentData instanceof ImageData))
+        if (!(contentData instanceof ImageData data))
             return;
-        ImageData data = (ImageData) contentData;
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(complete ? GET_CONTENT_EXTRAS_COMPLETE_SQL : GET_CONTENT_EXTRAS_SQL);
@@ -60,9 +59,8 @@ public class ImageBean extends FileBean {
 
     @Override
     public void writeFileExtras(Connection con, FileData contentData, boolean complete) throws SQLException {
-        if (!(contentData instanceof ImageData))
+        if (!(contentData instanceof ImageData data))
             return;
-        ImageData data = (ImageData) contentData;
         PreparedStatement pst;
         int i = 1;
         pst = con.prepareStatement(data.isNew() ? INSERT_CONTENT_EXTRAS_SQL : (complete ? UPDATE_CONTENT_EXTRAS_SQL : UPDATE_CONTENT_EXTRAS_NOBYTES_SQL));

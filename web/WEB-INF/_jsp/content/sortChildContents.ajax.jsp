@@ -15,12 +15,10 @@
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.base.Pair" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = ContentData.getSessionContent(rdata,  ContentData.class);
-    //todo js
     String url = "/ctrl/content/saveChildRankings/" + contentData.getId();%>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -86,7 +84,7 @@
             let select = $('#select' + childId);
             let newRanking = parseInt(select.val());
             let oldRanking = parseInt(select.attr('data-ranking'));
-            $('select', '#subpages').each(function (i) {
+            $('select', '#subpages').each(function () {
                 let sel = $(this);
                 if (sel.attr('id') === 'select' + childId) {
                     setRankVal(sel, newRanking);

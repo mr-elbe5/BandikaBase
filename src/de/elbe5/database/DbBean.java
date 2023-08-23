@@ -53,7 +53,7 @@ public abstract class DbBean {
     }
 
     public int getNextId(String sequence) {
-        int id = -1;
+        int id;
         Connection con = getConnection();
         try {
             id = getNextId(con, sequence);

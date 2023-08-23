@@ -71,8 +71,7 @@ public class JsonSerializer {
             object = ((Calendar) object).getTime(); //sets object to date, will be converted in next if-statement:
         }
 
-        if (object instanceof Date) {
-            Date date = (Date) object;
+        if (object instanceof Date date) {
             return new SimpleDateFormat(ISO_8601_PATTERN).format(date);
         }
 
@@ -84,8 +83,7 @@ public class JsonSerializer {
             return new String((char[]) object);
         }
 
-        if (object instanceof Map) {
-            Map<?, ?> map = (Map<?, ?>) object;
+        if (object instanceof Map<?, ?> map) {
             return toJSONObject(map);
         }
 
@@ -94,8 +92,7 @@ public class JsonSerializer {
             return toJSONArray(c);
         }
 
-        if (object instanceof Collection) {
-            Collection<?> coll = (Collection<?>) object;
+        if (object instanceof Collection<?> coll) {
             return toJSONArray(coll);
         }
 

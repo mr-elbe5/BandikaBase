@@ -18,7 +18,6 @@ public class ApplicationPath {
     private static String appROOTPath = "";
     private static String appWEBINFPath = "";
     private static String appFilePath = "";
-    private static String appPreviewPath = "";
 
     public static String getAppName() {
         return appName;

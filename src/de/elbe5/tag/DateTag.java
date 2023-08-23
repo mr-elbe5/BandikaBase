@@ -23,10 +23,12 @@ public class DateTag extends FormLineTag {
     }
 
     String controlPreHtml =
-            "<div class=\"input-group date\">\n" +
-            "  <input type=\"text\" id=\"{1}\" name=\"{2}\" class=\"form-control datepicker\" value=\"{3}\" />\n" +
-            "</div>\n" +
-            "<script type=\"text/javascript\">$('#{4}').datepicker({language: '{5}'});</script>\n";
+            """
+                    <div class="input-group date">
+                      <input type="text" id="{1}" name="{2}" class="form-control datepicker" value="{3}" />
+                    </div>
+                    <script type="text/javascript">$('#{4}').datepicker({language: '{5}'});</script>
+                    """;
 
     protected String getPreControlHtml(HttpServletRequest request) {
         return StringFormatter.format(controlPreHtml, name, name, StringHelper.toHtml(value),name, Configuration.getLocale().getLanguage());

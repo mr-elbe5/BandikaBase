@@ -8,8 +8,6 @@
  */
 package de.elbe5.base;
 
-import de.elbe5.base.BinaryFile;
-
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -152,14 +150,11 @@ public class Mailer {
             return false;
         }
         Properties props = System.getProperties();
-        switch (smtpConnectionType) {
-            case tls:
-                return sendTLSMail(props);
-            case ssl:
-                return sendSSLMail(props);
-            default:
-                return sendPlainMail(props);
-        }
+        return switch (smtpConnectionType) {
+            case tls -> sendTLSMail(props);
+            case ssl -> sendSSLMail(props);
+            default -> sendPlainMail(props);
+        };
 
     }
 

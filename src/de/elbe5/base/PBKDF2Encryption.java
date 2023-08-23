@@ -35,8 +35,7 @@ public class PBKDF2Encryption {
 
     public static byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int derivedKeyLength = 160;
-        int iterations = HASH_ITERATIONS;
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, derivedKeyLength);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, HASH_ITERATIONS, derivedKeyLength);
         SecretKeyFactory f = SecretKeyFactory.getInstance(HASH_ALGORITHM);
         return f.generateSecret(spec).getEncoded();
     }

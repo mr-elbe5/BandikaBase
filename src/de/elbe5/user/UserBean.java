@@ -80,32 +80,6 @@ public class UserBean extends DbBean {
         return list;
     }
 
-    private static final String GET_COMPANY_USERS_SQL = SELECT_USER_SQL + " WHERE company_id=? AND deleted=FALSE";
-
-    public List<UserData> getCompanyUsers(int companyId) {
-        List<UserData> list = new ArrayList<>();
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        UserData data;
-        try {
-            pst = con.prepareStatement(GET_COMPANY_USERS_SQL);
-            pst.setInt(1,companyId);
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    data = new UserData();
-                    readUserData(data, rs);
-                    list.add(data);
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return list;
-    }
-
     private void readUserData(UserData data, ResultSet rs) throws SQLException {
         int i = 1;
         data.setId(rs.getInt(i++));

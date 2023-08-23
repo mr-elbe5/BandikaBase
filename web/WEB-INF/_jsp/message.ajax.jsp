@@ -16,18 +16,12 @@
     RequestData rdata = RequestData.getRequestData(request);
     String msg = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGE);
     String msgType = rdata.getAttributes().getString(RequestKeys.KEY_MESSAGETYPE);
-    String msgKey="";
-    switch (msgType) {
-        case RequestKeys.MESSAGE_TYPE_INFO:
-            msgKey="_info";
-            break;
-        case RequestKeys.MESSAGE_TYPE_SUCCESS:
-            msgKey="_success";
-            break;
-        case RequestKeys.MESSAGE_TYPE_ERROR:
-            msgKey="_error";
-            break;
-    }
+    String msgKey = switch (msgType) {
+        case RequestKeys.MESSAGE_TYPE_INFO -> "_info";
+        case RequestKeys.MESSAGE_TYPE_SUCCESS -> "_success";
+        case RequestKeys.MESSAGE_TYPE_ERROR -> "_error";
+        default -> "";
+    };
 %>
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">

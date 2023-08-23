@@ -10,7 +10,6 @@ package de.elbe5.file;
 
 import de.elbe5.base.*;
 import de.elbe5.request.RequestData;
-import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -218,6 +217,7 @@ public class ImageData extends FileData implements IJsonData {
         ImageWriter writer = writers.next();
         setBytes(ImageHelper.writeImage(writer, bi));
         setFileSize(getBytes().length);
+        assert bi != null;
         setWidth(bi.getWidth());
         setHeight(bi.getHeight());
     }
@@ -230,6 +230,7 @@ public class ImageData extends FileData implements IJsonData {
         ImageWriter writer = writers.next();
         setBytes(ImageHelper.writeImage(writer, bi));
         setFileSize(getBytes().length);
+        assert bi != null;
         setWidth(bi.getWidth());
         setHeight(bi.getHeight());
     }
@@ -242,6 +243,7 @@ public class ImageData extends FileData implements IJsonData {
         ImageWriter writer = writers.next();
         setBytes(ImageHelper.writeImage(writer, bi));
         setFileSize(getBytes().length);
+        assert bi != null;
         setWidth(bi.getWidth());
         setHeight(bi.getHeight());
     }

@@ -14,11 +14,11 @@ public enum SystemZone {
     APPLICATION, USER, CONTENTREAD,
     CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION;
 
-    private static List<SystemZone> elevatedZones = Arrays.asList(APPLICATION, USER, CONTENTREAD, CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
-    private static List<SystemZone> contentReadZones = Arrays.asList(CONTENTREAD, CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
-    private static List<SystemZone> contentEditZones = Arrays.asList(CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
-    private static List<SystemZone> contentApproveZones = Arrays.asList(CONTENTAPPROVE, CONTENTADMINISTRATION);
-    private static List<SystemZone> contentAdminZones = List.of(CONTENTADMINISTRATION);
+    private static final List<SystemZone> elevatedZones = Arrays.asList(APPLICATION, USER, CONTENTREAD, CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
+    private static final List<SystemZone> contentReadZones = Arrays.asList(CONTENTREAD, CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
+    private static final List<SystemZone> contentEditZones = Arrays.asList(CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
+    private static final List<SystemZone> contentApproveZones = Arrays.asList(CONTENTAPPROVE, CONTENTADMINISTRATION);
+    private static final List<SystemZone> contentAdminZones = List.of(CONTENTADMINISTRATION);
 
     public static boolean includesElevatedZone(Set<SystemZone> zones){
         return includesAnyZoneOf(zones, elevatedZones);

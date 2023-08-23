@@ -15,7 +15,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.group.GroupBean" %>
 <%@ page import="de.elbe5.rights.Right" %>
-<%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ page import="de.elbe5.base.StringHelper" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
@@ -39,21 +38,19 @@
                 <%for (GroupData group : groups) {
                 if (group.getId() <= GroupData.ID_MAX_FINAL)
                     continue;
-                    {
-                    label = StringHelper.toHtml(group.getName());
-                    name = "groupright_" + group.getId();%>
-                    <form:line label="<%=label%>" padded="true">
-                        <form:radio name="<%=name%>" value="" checked="<%=!contentData.hasAnyGroupRight(group.getId())%>"><%=$SH("_rightnone")%>
-                        </form:radio><br/>
-                        <form:radio name="<%=name%>" value="<%=Right.READ.name()%>" checked="<%=contentData.isGroupRight(group.getId(), Right.READ)%>"><%=$SH("_rightread")%>
-                        </form:radio><br/>
-                        <form:radio name="<%=name%>" value="<%=Right.EDIT.name()%>" checked="<%=contentData.isGroupRight(group.getId(), Right.EDIT)%>"><%=$SH("_rightedit")%>
-                        </form:radio><br/>
-                        <form:radio name="<%=name%>" value="<%=Right.APPROVE.name()%>" checked="<%=contentData.isGroupRight(group.getId(), Right.APPROVE)%>"><%=$SH("_rightapprove")%>
-                        </form:radio><br/>
-                    </form:line>
-                    <%}
-                }%>
+                label = StringHelper.toHtml(group.getName());
+                name = "groupright_" + group.getId();%>
+                <form:line label="<%=label%>" padded="true">
+                    <form:radio name="<%=name%>" value="" checked="<%=!contentData.hasAnyGroupRight(group.getId())%>"><%=$SH("_rightnone")%>
+                    </form:radio><br/>
+                    <form:radio name="<%=name%>" value="<%=Right.READ.name()%>" checked="<%=contentData.isGroupRight(group.getId(), Right.READ)%>"><%=$SH("_rightread")%>
+                    </form:radio><br/>
+                    <form:radio name="<%=name%>" value="<%=Right.EDIT.name()%>" checked="<%=contentData.isGroupRight(group.getId(), Right.EDIT)%>"><%=$SH("_rightedit")%>
+                    </form:radio><br/>
+                    <form:radio name="<%=name%>" value="<%=Right.APPROVE.name()%>" checked="<%=contentData.isGroupRight(group.getId(), Right.APPROVE)%>"><%=$SH("_rightapprove")%>
+                    </form:radio><br/>
+                </form:line>
+                <%}%>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close")%>

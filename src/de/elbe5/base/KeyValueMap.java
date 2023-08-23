@@ -61,8 +61,7 @@ public class KeyValueMap extends HashMap<String, Object> {
                 while (stk.hasMoreTokens()) {
                     list.add(stk.nextToken());
                 }
-            } else if (obj instanceof String[]) {
-                String[] values = (String[]) obj;
+            } else if (obj instanceof String[] values) {
                 list.addAll(Arrays.asList(values));
             }
         }

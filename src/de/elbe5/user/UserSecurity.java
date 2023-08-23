@@ -58,7 +58,7 @@ public class UserSecurity {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHints(rh);
-        GradientPaint gp = new GradientPaint(0, 0, gradiantStartColor, 0, (height / 2), gradiantEndColor, true);
+        GradientPaint gp = new GradientPaint(0, 0, gradiantStartColor, 0, (float) (height / 2), gradiantEndColor, true);
         g2d.setPaint(gp);
         g2d.fillRect(0, 0, width, height);
         Random r = new Random();
@@ -69,7 +69,7 @@ public class UserSecurity {
             g2d.drawLine(i, q, width, height);
             g2d.drawLine(q, i, i, height);
         }
-        int x = 0;
+        int x;
         int y;
         int capCount = captcha.length();
         int capWidth = width / (capCount +1);

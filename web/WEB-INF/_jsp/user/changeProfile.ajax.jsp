@@ -35,13 +35,10 @@
                 </form:line>
                 <form:line label="_login" required="true"><%=$H(user.getLogin())%>
                 </form:line>
-                <form:text name="title" label="_title" value="<%=$H(user.getTitle())%>"/>
                 <form:text name="firstName" label="_firstName" value="<%=$H(user.getFirstName())%>"/>
                 <form:text name="lastName" label="_lastName" required="true" value="<%=$H(user.getLastName())%>"/>
                 <form:textarea name="notes" label="_notes" height="5rem"><%=$H(user.getNotes())%>
                 </form:textarea>
-                <form:file name="portrait" label="_portrait"><% if (user.hasPortrait()) {%><img src="/ctrl/user/showPortrait/<%=user.getId()%>" alt="<%=$H(user.getName())%>"/> <%}%>
-                </form:file>
                 <h3><%=$SH("_address")%>
                 </h3>
                 <form:text name="street" label="_street" value="<%=$H(user.getStreet())%>"/>
@@ -52,7 +49,6 @@
                 </h3>
                 <form:text name="email" label="_email" required="true" value="<%=$H(user.getEmail())%>"/>
                 <form:text name="phone" label="_phone" value="<%=$H(user.getPhone())%>"/>
-                <form:text name="fax" label="_fax" value="<%=$H(user.getFax())%>"/>
                 <form:text name="mobile" label="_mobile" value="<%=$H(user.getMobile())%>"/>
             </div>
             <div class="modal-footer">

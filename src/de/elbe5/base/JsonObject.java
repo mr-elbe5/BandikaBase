@@ -8,7 +8,6 @@
  */
 package de.elbe5.base;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.time.LocalDate;
