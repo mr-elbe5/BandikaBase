@@ -9,19 +9,22 @@
 package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
+import de.elbe5.base.BinaryFile;
 import de.elbe5.base.LocalizedStrings;
-import de.elbe5.base.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.request.RequestType;
+import de.elbe5.response.MemoryFileResponse;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
 
 import de.elbe5.servlet.ControllerCache;
+import de.elbe5.user.UserData;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 
@@ -49,23 +52,25 @@ public class FileController extends Controller {
         return KEY;
     }
 
-    @Deprecated
-    public IResponse show(RequestData rdata) {
-        assertSessionCall(rdata);
-        int id = rdata.getId();
-        Log.warn("deprecated call of file show for id " + id);
-        FileData data = ContentCache.getFile(id);
-        return show(data, rdata);
-    }
-
-    @Deprecated
     public IResponse download(RequestData rdata) {
-        assertSessionCall(rdata);
-        return downloadFile(rdata);
+        if (rdata.getType() == RequestType.api)
+            return apiDownload(rdata);
+        else
+            return sessionDownload(rdata);
     }
 
-    @Deprecated
-    private IResponse downloadFile(RequestData rdata) {
+    public IResponse apiDownload(RequestData rdata) {
+        assertApiCall(rdata);
+        int id = rdata.getId();
+        UserData user = rdata.getLoginUser();
+        if (user==null)
+            return new StatusResponse(HttpServletResponse.SC_UNAUTHORIZED);
+        FileData data = ContentCache.getFile(id);
+        BinaryFile file = FileBean.getInstance().getBinaryFile(id);
+        return new MemoryFileResponse(file);
+    }
+
+    public IResponse sessionDownload(RequestData rdata) {
         assertSessionCall(rdata);
         int id = rdata.getId();
         FileData data = ContentCache.getFile(id);
@@ -76,11 +81,6 @@ public class FileController extends Controller {
     private IResponse show(FileData data, RequestData rdata){
         assertSessionCall(rdata);
         ContentData parent=ContentCache.getContent(data.getParentId());
-        if (!parent.hasUserReadRight(rdata)) {
-            //todo
-            //String token = rdata.getAttributes().getString("token");
-            //checkRights(Token.matchToken(data.getId(), token));
-        }
         File file = new File(ApplicationPath.getAppFilePath(), data.getStaticFileName());
         // if not exists, create from database
         if (!file.exists() && !FileBean.getInstance().createTempFile(file)) {
