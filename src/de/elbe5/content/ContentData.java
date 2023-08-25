@@ -222,17 +222,17 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         if (isOpenAccess() && isPublished())
             return true;
         UserData user = rdata.getLoginUser();
-        return user != null && (user.hasSystemRight(SystemZone.CONTENTREAD) || (hasUserRight(user, Right.READ) && isPublished()) || hasUserEditRight(rdata));
+        return user != null && (user.isRoot() ||user.hasSystemRight(SystemZone.CONTENTREAD) || (hasUserRight(user, Right.READ) && isPublished()) || hasUserEditRight(rdata));
     }
 
     public boolean hasUserEditRight(RequestData rdata) {
         UserData user = rdata.getLoginUser();
-        return (user != null && (user.hasSystemRight(SystemZone.CONTENTEDIT) || hasUserRight(user, Right.EDIT)));
+        return (user != null && (user.isRoot() || user.hasSystemRight(SystemZone.CONTENTEDIT) || hasUserRight(user, Right.EDIT)));
     }
 
     public boolean hasUserApproveRight(RequestData rdata) {
         UserData user = rdata.getLoginUser();
-        return (user != null && (user.hasSystemRight(SystemZone.CONTENTAPPROVE) || hasUserRight(user, Right.APPROVE)));
+        return (user != null && (user.isRoot() ||user.hasSystemRight(SystemZone.CONTENTAPPROVE) || hasUserRight(user, Right.APPROVE)));
     }
 
     // tree data
