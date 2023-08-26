@@ -341,6 +341,15 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         }
     }
 
+    public int getChildIndex(ContentData child){
+        for (int i= 0; i<children.size(); i++){
+            if (children.get(i).getId() == child.getId()){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void addChild(ContentData data) {
         children.add(data);
     }
