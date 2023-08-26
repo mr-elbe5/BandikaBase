@@ -8,7 +8,7 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.administration.ContentAdminController;
+import de.elbe5.administration.AdminController;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.JsonWebToken;
 import de.elbe5.base.Log;
@@ -38,15 +38,13 @@ public class BandikaInitServlet extends InitServlet {
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
         Configuration.setConfigs(context);
         LocalizedStrings.addBundle("bandika", Configuration.getLocale());
-        LocalizedStrings.addBundle("content", Configuration.getLocale());
-        LocalizedStrings.addBundle("cms", Configuration.getLocale());
         LocalizedStrings.addBundle("application", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
         Configuration.setAppTitle("Bandika");
         JsonWebToken.createSecretKey(Configuration.getSalt());
-        AdminController.register(new ContentAdminController());
+        AdminController.register(new AdminController());
         ContentController.register(new ContentController());
         DocumentController.register(new DocumentController());
         ImageController.register(new ImageController());

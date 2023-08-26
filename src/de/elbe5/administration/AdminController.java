@@ -6,11 +6,14 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.application;
+package de.elbe5.administration;
 
+import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.Log;
 import de.elbe5.base.FileHelper;
+import de.elbe5.content.ContentCache;
+import de.elbe5.file.PreviewCache;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.servlet.ResponseException;
@@ -51,6 +54,8 @@ public class AdminController extends Controller {
 
     public IResponse openAdministration(RequestData rdata){
         assertSessionCall(rdata);
+        if (rdata.hasContentEditRight())
+            return openContentAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.USER))
             return openPersonAdministration(rdata);
         if (rdata.hasSystemRight(SystemZone.APPLICATION))
@@ -68,6 +73,11 @@ public class AdminController extends Controller {
         assertSessionCall(rdata);
         checkRights(rdata.hasAnySystemRight());
         return showPersonAdministration(rdata);
+    }
+
+    public IResponse openContentAdministration(RequestData rdata) {
+        checkRights(rdata.hasContentEditRight());
+        return showContentAdministration(rdata);
     }
 
     public IResponse restart(RequestData rdata) {
@@ -93,12 +103,31 @@ public class AdminController extends Controller {
         return openSystemAdministration(rdata);
     }
 
+    public IResponse clearPreviewCache(RequestData rdata) {
+        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        PreviewCache.clear();
+        rdata.setMessage(LocalizedStrings.string("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return openSystemAdministration(rdata);
+    }
+
+    public IResponse reloadContentCache(RequestData rdata) {
+        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        ContentCache.setDirty();
+        ContentCache.checkDirty();
+        rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return openSystemAdministration(rdata);
+    }
+
     protected IResponse showExecuteDatabaseScript() {
         return new ForwardResponse("/WEB-INF/_jsp/administration/executeDatabaseScript.ajax.jsp");
     }
 
     private IResponse showEditConfiguration() {
         return new ForwardResponse("/WEB-INF/_jsp/administration/editConfiguration.ajax.jsp");
+    }
+
+    protected IResponse showContentAdministration(RequestData rdata) {
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", LocalizedStrings.string("_contentAdministration"));
     }
 
 }

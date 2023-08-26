@@ -611,8 +611,7 @@ main {
 .col-auto, .col-12, .col-11, .col-10, .col-9, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3, .col-2, .col-1 {
   position: relative;
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding: 15px;
 }
 
 .col {
@@ -1798,7 +1797,7 @@ main {
   color-adjust: exact;
 }
 .form-switch .form-check-input:focus {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='hsl%28211deg, 100%, 75%%29'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='hsl%28211, 100%, 75%%29'/%3e%3c/svg%3e");
 }
 .form-switch .form-check-input:checked {
   background-position: right center;
@@ -2030,7 +2029,7 @@ main {
     display: inline-block;
   }
   .form-inline .input-group,
-.form-inline .form-select {
+  .form-inline .form-select {
     width: auto;
   }
   .form-inline .form-check {
@@ -4095,7 +4094,7 @@ button.close {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 11050;
+  z-index: 1050;
   display: none;
   width: 100%;
   height: 100%;
@@ -4175,7 +4174,7 @@ button.close {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 11040;
+  z-index: 1040;
   width: 100vw;
   height: 100vh;
   background-color: #000;
@@ -4257,7 +4256,7 @@ button.close {
 }
 @media (min-width: 992px) {
   .modal-lg,
-.modal-xl {
+  .modal-xl {
     max-width: 800px;
   }
 }
@@ -4268,7 +4267,7 @@ button.close {
 }
 .tooltip {
   position: absolute;
-  z-index: 11070;
+  z-index: 1070;
   display: block;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -4370,7 +4369,7 @@ button.close {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 11060;
+  z-index: 1060;
   display: block;
   max-width: 276px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";

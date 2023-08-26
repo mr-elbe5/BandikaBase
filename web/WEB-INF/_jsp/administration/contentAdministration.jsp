@@ -1,4 +1,6 @@
-<%--
+<%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.content.ContentCache" %>
+<%@ page import="java.util.List" %><%--
   Bandika CMS - A Java based modular Content Management System
   Copyright (C) 2009-2021 Michael Roennau
 
@@ -10,6 +12,12 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
+<%
+    RequestData rdata = RequestData.getRequestData(request);
+    int openId = rdata.getAttributes().getInt("contentId");
+    List<Integer> openIds = ContentCache.getParentContentIds(openId);
+    rdata.getAttributes().put("openIds", openIds);
+%>
 <div id="pageContent">
     <form:message/>
     <jsp:include page="/WEB-INF/_jsp/content/contentAdministration.inc.jsp" flush="true" />

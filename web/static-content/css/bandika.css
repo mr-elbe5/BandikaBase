@@ -130,19 +130,19 @@ form .form-control-file, form .form-control-range {
 }
 
 .modal-backdrop {
-  z-index: 11040;
+  z-index: 1040;
 }
 
 .modal {
-  z-index: 11050;
+  z-index: 1050;
 }
 
 .popover {
-  z-index: 11060;
+  z-index: 1060;
 }
 
 .tooltip {
-  z-index: 11070;
+  z-index: 1070;
 }
 
 .modal-dialog-wide {
@@ -267,7 +267,7 @@ form .form-control-file, form .form-control-range {
 }
 .treeSection span.hoverLine span.hoverImage {
   position: absolute;
-  z-index: 11070;
+  z-index: 1070;
   left: 200px;
   display: none;
 }
