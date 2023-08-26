@@ -108,18 +108,18 @@ public class FileController extends Controller {
 
     public IResponse cutFile(RequestData rdata) {
         assertSessionCall(rdata);
-        int contentId = rdata.getId();
-        FileData data = FileBean.getInstance().getFile(contentId,true);
+        int fileId = rdata.getId();
+        FileData data = FileBean.getInstance().getFile(fileId,true);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         rdata.setClipboardData(ContentRequestKeys.KEY_FILE, data);
-        return showContentAdministration(rdata,data.getParentId());
+        return showContentAdministration(rdata,parent.getId());
     }
 
     public IResponse copyFile(RequestData rdata) {
         assertSessionCall(rdata);
-        int contentId = rdata.getId();
-        FileData data = FileBean.getInstance().getFile(contentId,true);
+        int fileId = rdata.getId();
+        FileData data = FileBean.getInstance().getFile(fileId,true);
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.setNew(true);
@@ -127,7 +127,7 @@ public class FileController extends Controller {
         data.setCreatorId(rdata.getUserId());
         data.setChangerId(rdata.getUserId());
         rdata.setClipboardData(ContentRequestKeys.KEY_FILE, data);
-        return showContentAdministration(rdata,data.getId());
+        return showContentAdministration(rdata,parent.getId());
     }
 
     public IResponse pasteFile(RequestData rdata) {
@@ -152,11 +152,11 @@ public class FileController extends Controller {
 
     public IResponse deleteFile(RequestData rdata) {
         assertSessionCall(rdata);
-        int contentId = rdata.getId();
-        int parentId = ContentCache.getFileParentId(contentId);
+        int fileId = rdata.getId();
+        int parentId = ContentCache.getFileParentId(fileId);
         ContentData parent=ContentCache.getContent(parentId);
         checkRights(parent.hasUserReadRight(rdata));
-        FileData data = ContentCache.getFile(contentId);
+        FileData data = ContentCache.getFile(fileId);
         FileBean.getInstance().deleteFile(data);
         ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));

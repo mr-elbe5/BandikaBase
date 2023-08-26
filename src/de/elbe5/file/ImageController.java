@@ -52,8 +52,9 @@ public class ImageController extends FileController {
 
     public IResponse saveFile(RequestData rdata) {
         assertSessionCall(rdata);
-        int contentId = rdata.getId();
+        int fileId = rdata.getId();
         ImageData data = rdata.getSessionObject(ContentRequestKeys.KEY_FILE,ImageData.class);
+        assert fileId == data.getId();
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
@@ -68,7 +69,7 @@ public class ImageController extends FileController {
         data.setNew(false);
         ContentCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + parent.getId());
     }
 
     public IResponse showPreview(RequestData rdata) {

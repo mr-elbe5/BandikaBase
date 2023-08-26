@@ -54,8 +54,9 @@ public class MediaController extends FileController {
 
     public IResponse saveFile(RequestData rdata) {
         assertSessionCall(rdata);
-        int contentId = rdata.getId();
+        int fileId = rdata.getId();
         MediaData data = rdata.getSessionObject(ContentRequestKeys.KEY_FILE,MediaData.class);
+        assert fileId == data.getId();
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);

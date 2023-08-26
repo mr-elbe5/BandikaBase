@@ -16,9 +16,14 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = ContentData.getCurrentContent(rdata, ContentData.class);
+    @SuppressWarnings("unchecked")
+    List<Integer> openIds = rdata.getAttributes().get("openIds", List.class);
+    String liClass = openIds != null
+            ? openIds.contains(contentData.getId()) ? "open" : ""
+            : "";
     List<Class<? extends ContentData>> childClasses = contentData.getChildClasses();
 %>
-<li class="open">
+<li class="<%=liClass%>">
     <span class="<%=contentData.hasUnpublishedDraft() ? "unpublished" : "published"%>">
         <%=$H(contentData.getDisplayName())%>
     </span>

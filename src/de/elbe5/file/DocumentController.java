@@ -54,8 +54,9 @@ public class DocumentController extends FileController {
 
     public IResponse saveFile(RequestData rdata) {
         assertSessionCall(rdata);
-        int contentId = rdata.getId();
+        int fileId = rdata.getId();
         DocumentData data = rdata.getSessionObject(ContentRequestKeys.KEY_FILE,DocumentData.class);
+        assert fileId == data.getId();
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
         data.readSettingsRequestData(rdata);
@@ -63,7 +64,7 @@ public class DocumentController extends FileController {
             return showEditFile();
         }
         data.setChangerId(rdata.getUserId());
-        //bytes=null, if no new file selected
+        //bytes=null, if no new file selfileIdected
         if (!FileBean.getInstance().saveFile(data,data.isNew() || data.getBytes()!=null)) {
             setSaveError(rdata);
             return showEditFile();
@@ -71,7 +72,7 @@ public class DocumentController extends FileController {
         data.setNew(false);
         ContentCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
+        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + parent.getId());
     }
 
     protected IResponse showEditFile() {
