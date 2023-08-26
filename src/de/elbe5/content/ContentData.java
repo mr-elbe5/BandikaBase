@@ -455,8 +455,24 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return new ContentResponse(this);
     }
 
-    public String getContentDataJsp() {
-        return "/WEB-INF/_jsp/content/editData.ajax.jsp";
+    public String getAdminContentTreeJsp() {
+        return "/WEB-INF/_jsp/content/adminTreeContent.inc.jsp";
+    }
+
+    //used in admin jsp
+    public void displayAdminTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+        if (hasUserReadRight(rdata)) {
+            //backup
+            ContentData currentContent = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
+            context.include(getAdminContentTreeJsp(), true);
+            //restore
+            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
+        }
+    }
+
+    public String getAdminEditJsp() {
+        return "/WEB-INF/_jsp/content/adminEditData.ajax.jsp";
     }
 
     public String getContentTreeJsp() {
@@ -475,21 +491,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         }
     }
 
-    public String getAdminContentTreeJsp() {
-        return "/WEB-INF/_jsp/content/adminTreeContent.inc.jsp";
-    }
 
-    //used in admin jsp
-    public void displayAdminTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
-        if (hasUserReadRight(rdata)) {
-            //backup
-            ContentData currentContent = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
-            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
-            context.include(getAdminContentTreeJsp(), true);
-            //restore
-            rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
-        }
-    }
 
     //used in jsp/tag
     @Override

@@ -302,7 +302,7 @@ public class ContentController extends Controller {
     }
 
     protected IResponse showEditData(ContentData contentData) {
-        return new ForwardResponse(contentData.getContentDataJsp());
+        return new ForwardResponse(contentData.getAdminEditJsp());
     }
 
     protected IResponse showEditRights(ContentData contentData) {
