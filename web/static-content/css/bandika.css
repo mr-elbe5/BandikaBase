@@ -39,65 +39,6 @@ p:last-child {
   overflow-x: auto;
 }
 
-.flexBoxContainer {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px;
-}
-
-.flexBox {
-  width: 100%;
-  padding: 15px;
-}
-
-.flexBox4 {
-  flex: 0 0 33.3333333333%;
-  max-width: 33.3333333333%;
-}
-
-.flexBox3 {
-  flex: 0 0 25%;
-  max-width: 25%;
-}
-
-.flexBox2 {
-  flex: 0 0 16.6666666667%;
-  max-width: 16.6666666667%;
-}
-
-.flexBox.img a {
-  display: block;
-}
-.flexBox.img a img {
-  width: 100%;
-}
-
-.flexBox.doc a img {
-  display: inline-block;
-  width: 50%;
-}
-.flexBox.doc a span {
-  display: inline-block;
-}
-
-div.flexTable div.tableRow {
-  width: 100%;
-  display: flex;
-  flex-flow: row;
-  align-items: stretch;
-}
-div.flexTable div.tableRow div {
-  display: inline-block;
-  overflow: hidden;
-  margin: 0;
-  padding: 0.5em;
-}
-div.flexTable div.tableBody {
-  height: 100%;
-  overflow-y: auto;
-}
-
 div.tableWrapper {
   overflow-x: auto;
   overflow-y: hidden;
@@ -130,19 +71,19 @@ form .form-control-file, form .form-control-range {
 }
 
 .modal-backdrop {
-  z-index: 11040;
+  z-index: 1040;
 }
 
 .modal {
-  z-index: 11050;
+  z-index: 1050;
 }
 
 .popover {
-  z-index: 11060;
+  z-index: 1060;
 }
 
 .tooltip {
-  z-index: 11070;
+  z-index: 1070;
 }
 
 .modal-dialog-wide {
@@ -267,7 +208,7 @@ form .form-control-file, form .form-control-range {
 }
 .treeSection span.hoverLine span.hoverImage {
   position: absolute;
-  z-index: 11070;
+  z-index: 1070;
   left: 200px;
   display: none;
 }
