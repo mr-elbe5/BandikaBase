@@ -22,7 +22,7 @@
     <ul>
         <%if (contentData.hasChildren()) {
             for (ContentData childData : contentData.getChildren()) {
-                childData.displayTreeContent(pageContext, rdata);
+                childData.displayFrontendTreeContent(pageContext, rdata);
             }
         }%>
     </ul>

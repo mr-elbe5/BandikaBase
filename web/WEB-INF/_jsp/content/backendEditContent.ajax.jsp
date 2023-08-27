@@ -17,7 +17,7 @@
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData contentData = ContentData.getSessionContent(rdata, ContentData.class);
-    String url = "/ctrl/content/saveData/" + contentData.getId();
+    String url = "/ctrl/content/saveBackendData/" + contentData.getId();
     UserData creator = UserCache.getUser(contentData.getCreatorId());
     String creatorName = creator == null ? "" : creator.getName();
     UserData changer = UserCache.getUser(contentData.getChangerId());

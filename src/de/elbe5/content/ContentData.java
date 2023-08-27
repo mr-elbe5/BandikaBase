@@ -455,43 +455,41 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return new ContentResponse(this);
     }
 
-    public String getAdminContentTreeJsp() {
-        return "/WEB-INF/_jsp/content/adminTreeContent.inc.jsp";
+    public String getBackendContentTreeJsp() {
+        return "/WEB-INF/_jsp/content/backendTreeContent.inc.jsp";
     }
 
     //used in admin jsp
-    public void displayAdminTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+    public void displayBackendTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
         if (hasUserReadRight(rdata)) {
             //backup
             ContentData currentContent = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
-            context.include(getAdminContentTreeJsp(), true);
+            context.include(getBackendContentTreeJsp(), true);
             //restore
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
         }
     }
 
-    public String getAdminEditJsp() {
-        return "/WEB-INF/_jsp/content/adminEditData.ajax.jsp";
+    public String getBackendEditJsp() {
+        return "/WEB-INF/_jsp/content/backendEditContent.ajax.jsp";
     }
 
-    public String getContentTreeJsp() {
-        return "/WEB-INF/_jsp/content/treeContent.inc.jsp";
+    public String getFrontendContentTreeJsp() {
+        return "/WEB-INF/_jsp/content/frontendTreeContent.inc.jsp";
     }
 
     //used in jsp
-    public void displayTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
+    public void displayFrontendTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
         if (hasUserReadRight(rdata)) {
             //backup
             ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
-            context.include(getContentTreeJsp(), true);
+            context.include(getFrontendContentTreeJsp(), true);
             //restore
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, currentContent);
         }
     }
-
-
 
     //used in jsp/tag
     @Override
@@ -551,15 +549,15 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         setRanking(data.getRanking() + 1);
     }
 
-    public void readCreateRequestData(RequestData rdata) {
-        readRequestData(rdata);
+    public void readBackendCreateRequestData(RequestData rdata) {
+        readBackendRequestData(rdata);
     }
 
-    public void readUpdateRequestData(RequestData rdata) {
-        readRequestData(rdata);
+    public void readBackendUpdateRequestData(RequestData rdata) {
+        readBackendRequestData(rdata);
     }
 
-    public void readRequestData(RequestData rdata) {
+    public void readBackendRequestData(RequestData rdata) {
         setDisplayName(rdata.getAttributes().getString("displayName").trim());
         setName(StringHelper.toSafeWebName(getDisplayName()));
         setDescription(rdata.getAttributes().getString("description"));
@@ -580,7 +578,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public void readFrontendRequestData(RequestData rdata) {
-        readRequestData(rdata);
+        readBackendRequestData(rdata);
     }
 
     public void readRightsRequestData(RequestData rdata) {

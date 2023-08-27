@@ -54,7 +54,6 @@ public class ContentController extends Controller {
         return KEY;
     }
 
-    //frontend
     public IResponse show(RequestData rdata) {
         assertSessionCall(rdata);
         //Log.log("show");
@@ -65,7 +64,6 @@ public class ContentController extends Controller {
         return data.getDefaultView();
     }
 
-    //frontend
     public IResponse show(String url, RequestData rdata) {
         assertSessionCall(rdata);
         ContentData data;
@@ -79,8 +77,33 @@ public class ContentController extends Controller {
     protected void increaseViewCount(ContentData data){
     }
 
-    //backend
-    public IResponse openCreateData(RequestData rdata) {
+    public IResponse openCreateFrontendContent(RequestData rdata) {
+        throw new ResponseException(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    public IResponse openEditFrontendContent(RequestData rdata) {
+        throw new ResponseException(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    public IResponse showEditFrontendContent(RequestData rdata) {
+        throw new ResponseException(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    public IResponse cancelEditFrontendContent(RequestData rdata) {
+        assertSessionCall(rdata);
+        ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
+        checkRights(data.hasUserEditRight(rdata));
+        rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
+        return show(rdata);
+    }
+
+    public IResponse saveFrontendContent(RequestData rdata) {
+        throw new ResponseException(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    /* Content Administration */
+
+    public IResponse openCreateBackendContent(RequestData rdata) {
         assertSessionCall(rdata);
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
@@ -90,37 +113,35 @@ public class ContentController extends Controller {
         data.setCreateValues(parentData, rdata);
         data.setRanking(parentData.getChildren().size());
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return showEditData(data);
+        return showEditBackendContent(data);
     }
 
-    //backend
-    public IResponse openEditData(RequestData rdata) {
+    public IResponse openEditBackendContent(RequestData rdata) {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
         data.setEditValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return showEditData(data);
+        return showEditBackendContent(data);
     }
 
-    //backend
-    public IResponse saveData(RequestData rdata) {
+    public IResponse saveBackendContent(RequestData rdata) {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
         checkRights(data.hasUserEditRight(rdata));
         if (data.isNew())
-            data.readCreateRequestData(rdata);
+            data.readBackendCreateRequestData(rdata);
         else
-            data.readUpdateRequestData(rdata);
+            data.readBackendUpdateRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditData(data);
+            return showEditBackendContent(data);
         }
         data.setChangerId(rdata.getUserId());
         if (!ContentBean.getInstance().saveContent(data)) {
             setSaveError(rdata);
-            return showEditData(data);
+            return showEditBackendContent(data);
         }
         data.setNew(false);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
@@ -129,7 +150,24 @@ public class ContentController extends Controller {
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
-    //backend
+    public IResponse deleteBackendContent(RequestData rdata) {
+        assertSessionCall(rdata);
+        int contentId = rdata.getId();
+        ContentData data=ContentCache.getContent(contentId);
+        checkRights(data.hasUserEditRight(rdata)) ;
+        if (contentId < BaseData.ID_MIN) {
+            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            return showContentAdministration(rdata, contentId);
+        }
+        int parentId = ContentCache.getParentContentId(contentId);
+        ContentBean.getInstance().deleteContent(contentId);
+        ContentCache.setDirty();
+        rdata.getAttributes().put("contentId", Integer.toString(parentId));
+        ContentCache.setDirty();
+        rdata.setMessage(LocalizedStrings.string("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        return showContentAdministration(rdata,parentId);
+    }
+
     public IResponse openEditRights(RequestData rdata) {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
@@ -225,25 +263,6 @@ public class ContentController extends Controller {
     }
 
     //backend
-    public IResponse deleteContent(RequestData rdata) {
-        assertSessionCall(rdata);
-        int contentId = rdata.getId();
-        ContentData data=ContentCache.getContent(contentId);
-        checkRights(data.hasUserEditRight(rdata)) ;
-        if (contentId < BaseData.ID_MIN) {
-            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
-            return showContentAdministration(rdata, contentId);
-        }
-        int parentId = ContentCache.getParentContentId(contentId);
-        ContentBean.getInstance().deleteContent(contentId);
-        ContentCache.setDirty();
-        rdata.getAttributes().put("contentId", Integer.toString(parentId));
-        ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return showContentAdministration(rdata,parentId);
-    }
-
-    //backend
     public IResponse openSortChildContents(RequestData rdata) {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
@@ -274,35 +293,8 @@ public class ContentController extends Controller {
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 
-    public IResponse openCreateContent(RequestData rdata) {
-        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    //frontend
-    public IResponse openEditContent(RequestData rdata) {
-        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    //frontend
-    public IResponse showEditContent(RequestData rdata) {
-        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    //frontend
-    public IResponse saveContent(RequestData rdata) {
-        throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    public IResponse cancelEditContent(RequestData rdata) {
-        assertSessionCall(rdata);
-        ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        checkRights(data.hasUserEditRight(rdata));
-        rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
-        return show(rdata);
-    }
-
-    protected IResponse showEditData(ContentData contentData) {
-        return new ForwardResponse(contentData.getAdminEditJsp());
+    protected IResponse showEditBackendContent(ContentData contentData) {
+        return new ForwardResponse(contentData.getBackendEditJsp());
     }
 
     protected IResponse showEditRights(ContentData contentData) {

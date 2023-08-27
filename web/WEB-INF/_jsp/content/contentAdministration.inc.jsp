@@ -23,7 +23,7 @@
                     <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/clearClipboard"><%=$SH("_clearClipboard")%></a>
                 </div>
                 <ul class="tree pagetree">
-                    <% rootContent.displayAdminTreeContent(pageContext,rdata);%>
+                    <% rootContent.displayBackendTreeContent(pageContext,rdata);%>
                 </ul>
                 <%}%>
             </section>
