@@ -35,7 +35,6 @@
         <% if (contentData.getId() != ContentData.ID_ROOT){%>
         <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/content/cutContent/<%=contentData.getId()%>');" title="<%=$SH("_cut")%>"> </a>
         <%}%>
-        <a class="icon fa fa-copy" href="" onclick="return linkTo('/ctrl/content/copyContent/<%=contentData.getId()%>');" title="<%=$SH("_copy")%>"> </a>
         <%if (contentData.hasChildren()){%>
         <a class="icon fa fa-sort" href="" onclick="return openModalDialog('/ctrl/content/openSortChildContents/<%=contentData.getId()%>');" title="<%=$SH("_sortChildPages")%>"> </a>
         <%}%>

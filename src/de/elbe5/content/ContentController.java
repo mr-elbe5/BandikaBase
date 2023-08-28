@@ -118,8 +118,7 @@ public class ContentController extends Controller {
         checkRights(parentData.hasUserEditRight(rdata));
         String type = rdata.getAttributes().getString("type");
         ContentData data = ContentBean.getInstance().getNewContentData(type);
-        data.setCreateValues(parentData, rdata);
-        data.setRanking(parentData.getChildren().size());
+        data.setBackendCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditBackendContent(data);
     }
@@ -129,7 +128,7 @@ public class ContentController extends Controller {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
-        data.setEditValues(ContentCache.getContent(data.getId()), rdata);
+        data.setBackendEditValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditBackendContent(data);
     }
@@ -181,7 +180,7 @@ public class ContentController extends Controller {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
-        data.setEditValues(ContentCache.getContent(data.getId()), rdata);
+        data.setBackendEditValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditRights(data);
     }
@@ -207,7 +206,6 @@ public class ContentController extends Controller {
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
-    //backend
     public IResponse cutContent(RequestData rdata) {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
@@ -217,20 +215,6 @@ public class ContentController extends Controller {
         return showContentAdministration(rdata,data.getId());
     }
 
-    //backend
-    public IResponse copyContent(RequestData rdata) {
-        assertSessionCall(rdata);
-        int contentId = rdata.getId();
-        ContentData srcData = ContentBean.getInstance().getContent(contentId);
-        checkRights(srcData.hasUserEditRight(rdata));
-        ContentData data = ContentBean.getInstance().getNewContentData(srcData.getType());
-        data.copyData(srcData, rdata);
-        data.setChangerId(rdata.getUserId());
-        rdata.setClipboardData(ContentRequestKeys.KEY_CONTENT, data);
-        return showContentAdministration(rdata,data.getId());
-    }
-
-    //backend
     public IResponse pasteContent(RequestData rdata) {
         assertSessionCall(rdata);
         int parentId = rdata.getAttributes().getInt("parentId");

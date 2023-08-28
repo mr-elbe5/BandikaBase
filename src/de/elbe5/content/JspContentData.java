@@ -41,14 +41,4 @@ public class JspContentData extends ContentData {
         writer.write("</div>");
     }
 
-    // multiple data
-
-    @Override
-    public void copyData(ContentData data, RequestData rdata) {
-        super.copyData(data, rdata);
-        if (!(data instanceof JspContentData jpdata))
-            return;
-        setJsp(jpdata.getJsp());
-    }
-
 }

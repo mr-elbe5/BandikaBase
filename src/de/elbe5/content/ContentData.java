@@ -507,7 +507,9 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     // multiple data
 
-    public void setCreateValues(ContentData parent, RequestData rdata) {
+    // on openCreateBackend
+    public void setBackendCreateValues(ContentData parent, RequestData rdata) {
+        Log.log("ContentData.setBackendCreateValues");
         setNew(true);
         setId(ContentBean.getInstance().getNextId());
         setCreatorId(rdata.getUserId());
@@ -515,9 +517,12 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         setParentId(parent.getId());
         setParent(parent);
         inheritRightsFromParent();
+        setRanking(parent.getChildren().size());
     }
 
-    public void setEditValues(ContentData cachedData, RequestData rdata) {
+    // on openEditBackend
+    public void setBackendEditValues(ContentData cachedData, RequestData rdata) {
+        Log.log("ContentData.setBackendEditValues");
         if (cachedData == null)
             return;
         if (!isNew()) {
@@ -533,35 +538,18 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         setChangerId(rdata.getUserId());
     }
 
-    public void copyData(ContentData data, RequestData rdata) {
-        setNew(true);
-        setId(ContentBean.getInstance().getNextId());
-        setName(data.getName());
-        setDisplayName(data.getDisplayName());
-        setDescription(data.getDescription());
-        setCreatorId(rdata.getUserId());
-        setChangerId(rdata.getUserId());
-        setAccessType(data.getAccessType());
-        setNavType(data.getNavType());
-        setActive(data.isActive());
-        getGroupRights().clear();
-        if (hasIndividualAccess()) {
-            getGroupRights().putAll(data.getGroupRights());
-        }
-        setParentId(data.getParentId());
-        setParent(data.getParent());
-        setRanking(data.getRanking() + 1);
-    }
-
     public void readBackendCreateRequestData(RequestData rdata) {
+        Log.log("ContentData.readBackendCreateRequestData");
         readBackendRequestData(rdata);
     }
 
     public void readBackendUpdateRequestData(RequestData rdata) {
+        Log.log("ContentData.readBackendUpdateRequestData");
         readBackendRequestData(rdata);
     }
 
     public void readBackendRequestData(RequestData rdata) {
+        Log.log("ContentData.readBackendRequestData");
         setDisplayName(rdata.getAttributes().getString("displayName").trim());
         setName(StringHelper.toSafeWebName(getDisplayName()));
         setDescription(rdata.getAttributes().getString("description"));
@@ -574,14 +562,17 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public void readFrontendCreateRequestData(RequestData rdata) {
+        Log.log("ContentData.readFrontendCreateRequestData");
         readFrontendRequestData(rdata);
     }
 
     public void readFrontendUpdateRequestData(RequestData rdata) {
+        Log.log("ContentData.readFrontendUpdateRequestData");
         readFrontendRequestData(rdata);
     }
 
     public void readFrontendRequestData(RequestData rdata) {
+        Log.log("ContentData.readFrontendRequestData");
         readBackendRequestData(rdata);
     }
 
