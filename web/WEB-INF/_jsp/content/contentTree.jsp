@@ -9,24 +9,24 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.content.ContentCache" %>
-<%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="de.elbe5.content.ContentData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
+<%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.content.ContentCache" %>
+<%@ page import="java.util.List" %>
+<%@ page import="de.elbe5.content.ContentData" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData rootContent = ContentCache.getContentRoot();
 %>
-            <section class="treeSection">
-                <% if (rdata.hasContentEditRight()) { %>
-                <div class = "">
-                    <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/clearClipboard"><%=$SH("_clearClipboard")%></a>
-                </div>
-                <ul class="tree pagetree">
-                    <% rootContent.displayBackendTreeContent(pageContext,rdata);%>
-                </ul>
-                <%}%>
-            </section>
-
-
+<div id="pageContent">
+    <form:message/>
+    <section class="treeSection">
+        <ul class="tree pagetree">
+            <% rootContent.displayFrontendTreeContent(pageContext,rdata);%>
+        </ul>
+    </section>
+</div>
+<script type="text/javascript">
+    $('.tree').treed('fa fa-minus-square-o', 'fa fa-plus-square-o');
+</script>
 

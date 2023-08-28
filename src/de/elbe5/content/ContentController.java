@@ -101,6 +101,14 @@ public class ContentController extends Controller {
         throw new ResponseException(HttpServletResponse.SC_NOT_FOUND);
     }
 
+    public IResponse openContentTree(RequestData rdata) {
+        return showContentTree(rdata);
+    }
+
+    protected IResponse showContentTree(RequestData rdata) {
+        return openAdminPage(rdata, "/WEB-INF/_jsp/content/contentTree.jsp", LocalizedStrings.string("_contentTree"));
+    }
+
     /* Content Administration */
 
     public IResponse openCreateBackendContent(RequestData rdata) {
