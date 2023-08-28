@@ -118,14 +118,6 @@ public class AdminController extends Controller {
         return openSystemAdministration(rdata);
     }
 
-    protected IResponse showExecuteDatabaseScript() {
-        return new ForwardResponse("/WEB-INF/_jsp/administration/executeDatabaseScript.ajax.jsp");
-    }
-
-    private IResponse showEditConfiguration() {
-        return new ForwardResponse("/WEB-INF/_jsp/administration/editConfiguration.ajax.jsp");
-    }
-
     protected IResponse showContentAdministration(RequestData rdata) {
         return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", LocalizedStrings.string("_contentAdministration"));
     }
