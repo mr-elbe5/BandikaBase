@@ -4256,9 +4256,13 @@ button.close {
   }
 }
 @media (min-width: 992px) {
-  .modal-lg,
-  .modal-xl {
+  .modal-lg {
     max-width: 800px;
+  }
+}
+@media (min-width: 1600px) {
+  .modal-xl {
+    max-width: 1140px;
   }
 }
 @media (min-width: 1600px) {
