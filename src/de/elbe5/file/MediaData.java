@@ -31,8 +31,8 @@ public class MediaData extends FileData {
     // multiple data
 
     @Override
-    public void readSettingsRequestData(RequestData rdata) {
-        super.readSettingsRequestData(rdata);
+    public void readRequestData(RequestData rdata) {
+        super.readRequestData(rdata);
         if (!isNew()){
             return;
         }

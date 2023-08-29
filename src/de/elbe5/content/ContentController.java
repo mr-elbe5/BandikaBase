@@ -118,7 +118,7 @@ public class ContentController extends Controller {
         checkRights(parentData.hasUserEditRight(rdata));
         String type = rdata.getAttributes().getString("type");
         ContentData data = ContentBean.getInstance().getNewContentData(type);
-        data.setBackendCreateValues(parentData, rdata);
+        data.setCreateValues(parentData, rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditBackendContent(data);
     }
@@ -128,7 +128,7 @@ public class ContentController extends Controller {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
-        data.setBackendEditValues(ContentCache.getContent(data.getId()), rdata);
+        data.setUpdateValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditBackendContent(data);
     }
@@ -180,7 +180,7 @@ public class ContentController extends Controller {
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
         checkRights(data.hasUserEditRight(rdata));
-        data.setBackendEditValues(ContentCache.getContent(data.getId()), rdata);
+        data.setUpdateValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditRights(data);
     }

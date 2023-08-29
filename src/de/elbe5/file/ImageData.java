@@ -132,8 +132,8 @@ public class ImageData extends FileData implements IJsonData {
     // multiple data
 
     @Override
-    public void readSettingsRequestData(RequestData rdata) {
-        super.readSettingsRequestData(rdata);
+    public void readRequestData(RequestData rdata) {
+        super.readRequestData(rdata);
         if (!isNew()){
             return;
         }

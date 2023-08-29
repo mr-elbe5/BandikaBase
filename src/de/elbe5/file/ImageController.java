@@ -57,7 +57,7 @@ public class ImageController extends FileController {
         assert fileId == data.getId();
         ContentData parent=ContentCache.getContent(data.getParentId());
         checkRights(parent.hasUserEditRight(rdata));
-        data.readSettingsRequestData(rdata);
+        data.readRequestData(rdata);
         if (!rdata.checkFormErrors()) {
             return showEditFile();
         }

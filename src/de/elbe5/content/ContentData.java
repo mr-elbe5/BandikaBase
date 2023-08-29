@@ -254,6 +254,15 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return parent;
     }
 
+    public <T extends ContentData> T getParent(Class<T> cls) {
+        try {
+            return cls.cast(getParent());
+        }
+        catch(NullPointerException | ClassCastException e){
+            return null;
+        }
+    }
+
     public void setParent(ContentData parent) {
         this.parent = parent;
     }
@@ -508,8 +517,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     // multiple data
 
     // on openCreateBackend
-    public void setBackendCreateValues(ContentData parent, RequestData rdata) {
-        Log.log("ContentData.setBackendCreateValues");
+    public void setCreateValues(ContentData parent, RequestData rdata) {
         setNew(true);
         setId(ContentBean.getInstance().getNextId());
         setCreatorId(rdata.getUserId());
@@ -521,8 +529,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     // on openEditBackend
-    public void setBackendEditValues(ContentData cachedData, RequestData rdata) {
-        Log.log("ContentData.setBackendEditValues");
+    public void setUpdateValues(ContentData cachedData, RequestData rdata) {
         if (cachedData == null)
             return;
         if (!isNew()) {
@@ -539,12 +546,10 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public void readBackendCreateRequestData(RequestData rdata) {
-        Log.log("ContentData.readBackendCreateRequestData");
         readBackendRequestData(rdata);
     }
 
     public void readBackendUpdateRequestData(RequestData rdata) {
-        Log.log("ContentData.readBackendUpdateRequestData");
         readBackendRequestData(rdata);
     }
 
@@ -562,17 +567,14 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public void readFrontendCreateRequestData(RequestData rdata) {
-        Log.log("ContentData.readFrontendCreateRequestData");
         readFrontendRequestData(rdata);
     }
 
     public void readFrontendUpdateRequestData(RequestData rdata) {
-        Log.log("ContentData.readFrontendUpdateRequestData");
         readFrontendRequestData(rdata);
     }
 
     public void readFrontendRequestData(RequestData rdata) {
-        Log.log("ContentData.readFrontendRequestData");
         readBackendRequestData(rdata);
     }
 
