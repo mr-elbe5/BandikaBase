@@ -11,7 +11,6 @@ package de.elbe5.user;
 import de.elbe5.base.*;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
-import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.*;
@@ -150,7 +149,7 @@ public class UserController extends Controller {
 
     public IResponse openEditUser(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.USER));
+        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
         rdata.setSessionObject("userData", data);
@@ -159,7 +158,7 @@ public class UserController extends Controller {
 
     public IResponse openCreateUser(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.USER));
+        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
         UserData data = new UserData();
         data.setNew(true);
         data.setId(UserBean.getInstance().getNextId());
@@ -169,7 +168,7 @@ public class UserController extends Controller {
 
     public IResponse saveUser(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.USER));
+        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
         UserData data = (UserData) rdata.getSessionObject("userData");
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
@@ -186,7 +185,7 @@ public class UserController extends Controller {
 
     public IResponse deleteUser(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.USER));
+        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);

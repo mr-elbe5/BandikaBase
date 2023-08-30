@@ -12,13 +12,12 @@ import java.util.*;
 
 public enum SystemZone {
     APPLICATION, USER, CONTENTREAD,
-    CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION;
+    CONTENTEDIT, CONTENTAPPROVE;
 
-    private static final List<SystemZone> elevatedZones = Arrays.asList(APPLICATION, USER, CONTENTREAD, CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
-    private static final List<SystemZone> contentReadZones = Arrays.asList(CONTENTREAD, CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
-    private static final List<SystemZone> contentEditZones = Arrays.asList(CONTENTEDIT, CONTENTAPPROVE, CONTENTADMINISTRATION);
-    private static final List<SystemZone> contentApproveZones = Arrays.asList(CONTENTAPPROVE, CONTENTADMINISTRATION);
-    private static final List<SystemZone> contentAdminZones = List.of(CONTENTADMINISTRATION);
+    private static final List<SystemZone> elevatedZones = List.of(APPLICATION, USER, CONTENTREAD, CONTENTEDIT, CONTENTAPPROVE);
+    private static final List<SystemZone> contentReadZones = List.of(CONTENTREAD, CONTENTEDIT, CONTENTAPPROVE);
+    private static final List<SystemZone> contentEditZones = List.of(CONTENTEDIT, CONTENTAPPROVE);
+    private static final List<SystemZone> contentApproveZones = List.of(CONTENTAPPROVE);
 
     public static boolean includesElevatedZone(Set<SystemZone> zones){
         return includesAnyZoneOf(zones, elevatedZones);
@@ -34,10 +33,6 @@ public enum SystemZone {
 
     public static boolean includesContentApproveZone(Set<SystemZone> zones){
         return includesAnyZoneOf(zones, contentApproveZones);
-    }
-
-    public static boolean includesContentAdminZone(Set<SystemZone> zones){
-        return includesAnyZoneOf(zones, contentAdminZones);
     }
 
     private static boolean includesAnyZoneOf(Set<SystemZone> zones, List<SystemZone> validZones){

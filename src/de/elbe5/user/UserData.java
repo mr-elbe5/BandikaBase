@@ -200,7 +200,7 @@ public class UserData extends BaseData implements IJsonData {
         return !systemRights.isEmpty() || isRoot();
     }
 
-    public boolean hasSystemRight(SystemZone zone) {
+    private boolean hasSystemRight(SystemZone zone) {
         return systemRights.contains(zone) || isRoot();
     }
 
@@ -208,20 +208,24 @@ public class UserData extends BaseData implements IJsonData {
         return SystemZone.includesElevatedZone(systemRights) || isRoot();
     }
 
-    public boolean hasContentReadRight() {
+    public boolean hasGlobalContentReadRight() {
         return SystemZone.includesContentReadZone(systemRights) || isRoot();
     }
 
-    public boolean hasContentEditRight() {
+    public boolean hasGlobalContentEditRight() {
         return SystemZone.includesContentEditZone(systemRights) || isRoot();
     }
 
-    public boolean hasContentApproveRight() {
+    public boolean hasGlobalContentApproveRight() {
         return SystemZone.includesContentApproveZone(systemRights) || isRoot();
     }
 
-    public boolean hasContentAdminRight() {
-        return SystemZone.includesContentAdminZone(systemRights) || isRoot();
+    public boolean hasGlobalUserEditRight() {
+        return systemRights.contains(SystemZone.USER) || isRoot();
+    }
+
+    public boolean hasGlobalApplicationEditRight() {
+        return systemRights.contains(SystemZone.APPLICATION) || isRoot();
     }
 
     public boolean isRoot(){

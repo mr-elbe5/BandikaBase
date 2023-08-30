@@ -22,7 +22,7 @@
 %>
         <li class="files open">
             <span>[<%=$SH("_files")%>]</span>
-            <%if (contentData.hasUserEditRight(rdata)) {%>
+            <%if (contentData.hasUserEditRight(rdata.getLoginUser())) {%>
             <div class="icons">
                 <% if (rdata.hasClipboardData(ContentRequestKeys.KEY_FILE)) {%>
                 <a class="icon fa fa-paste" href="" onclick="return linkTo('/ctrl/file/pasteFile?parentId=<%=contentData.getId()%>');" title="<%=$SH("_pasteFile")%>"> </a>

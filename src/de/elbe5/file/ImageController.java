@@ -45,7 +45,7 @@ public class ImageController extends FileController {
         assertSessionCall(rdata);
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
         ContentData parent=ContentCache.getContent(data.getParentId());
-        checkRights(parent.hasUserEditRight(rdata));
+        checkRights(parent.hasUserEditRight(rdata.getLoginUser()));
         rdata.setSessionObject(ContentRequestKeys.KEY_FILE,data);
         return showEditFile();
     }
@@ -56,7 +56,7 @@ public class ImageController extends FileController {
         ImageData data = rdata.getSessionObject(ContentRequestKeys.KEY_FILE,ImageData.class);
         assert fileId == data.getId();
         ContentData parent=ContentCache.getContent(data.getParentId());
-        checkRights(parent.hasUserEditRight(rdata));
+        checkRights(parent.hasUserEditRight(rdata.getLoginUser()));
         data.readRequestData(rdata);
         if (!rdata.checkFormErrors()) {
             return showEditFile();

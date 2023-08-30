@@ -14,7 +14,6 @@ import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.request.RequestData;
-import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
@@ -47,7 +46,7 @@ public class TimerController extends Controller {
 
     public IResponse openEditTimerTask(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        checkRights(rdata.isLoggedIn() && rdata.getLoginUser().hasGlobalApplicationEditRight());
         String name = rdata.getAttributes().getString("timerName");
         TimerTaskData task = Timer.getInstance().getTaskCopy(name);
         rdata.setSessionObject("timerTaskData", task);
@@ -56,7 +55,7 @@ public class TimerController extends Controller {
 
     public IResponse saveTimerTask(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        checkRights(rdata.isLoggedIn() && rdata.getLoginUser().hasGlobalApplicationEditRight());
         TimerTaskData data = (TimerTaskData) rdata.getSessionObject("timerTaskData");
         if (data==null){
             return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

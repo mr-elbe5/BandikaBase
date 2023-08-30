@@ -47,8 +47,6 @@
                     </form:radio><br/>
                     <form:radio name="<%=name%>" value="<%=Right.EDIT.name()%>" checked="<%=contentData.isGroupRight(group.getId(), Right.EDIT)%>"><%=$SH("_rightedit")%>
                     </form:radio><br/>
-                    <form:radio name="<%=name%>" value="<%=Right.APPROVE.name()%>" checked="<%=contentData.isGroupRight(group.getId(), Right.APPROVE)%>"><%=$SH("_rightapprove")%>
-                    </form:radio><br/>
                 </form:line>
                 <%}%>
             </div>

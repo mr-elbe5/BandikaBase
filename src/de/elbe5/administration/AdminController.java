@@ -54,35 +54,35 @@ public class AdminController extends Controller {
 
     public IResponse openAdministration(RequestData rdata){
         assertSessionCall(rdata);
-        if (rdata.hasContentEditRight())
+        if (rdata.getLoginUser().hasGlobalContentEditRight())
             return openContentAdministration(rdata);
-        if (rdata.hasSystemRight(SystemZone.USER))
+        if (rdata.getLoginUser().hasGlobalUserEditRight())
             return openPersonAdministration(rdata);
-        if (rdata.hasSystemRight(SystemZone.APPLICATION))
+        if (rdata.getLoginUser().hasGlobalApplicationEditRight())
             return openSystemAdministration(rdata);
         throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     public IResponse openSystemAdministration(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasAnySystemRight());
+        checkRights(rdata.getLoginUser().hasAnySystemRight());
         return showSystemAdministration(rdata);
     }
 
     public IResponse openPersonAdministration(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasAnySystemRight());
+        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
         return showPersonAdministration(rdata);
     }
 
     public IResponse openContentAdministration(RequestData rdata) {
-        checkRights(rdata.hasContentEditRight());
+        checkRights(rdata.getLoginUser().hasGlobalContentEditRight());
         return showContentAdministration(rdata);
     }
 
     public IResponse restart(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        checkRights(rdata.getLoginUser().hasGlobalApplicationEditRight());
         String path = ApplicationPath.getAppROOTPath() + "/WEB-INF/web.xml";
         File f = new File(path);
         try {
@@ -96,7 +96,7 @@ public class AdminController extends Controller {
 
     public IResponse reloadUserCache(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        checkRights(rdata.getLoginUser().hasGlobalApplicationEditRight());
         UserCache.setDirty();
         UserCache.checkDirty();
         rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
@@ -104,14 +104,14 @@ public class AdminController extends Controller {
     }
 
     public IResponse clearPreviewCache(RequestData rdata) {
-        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        checkRights(rdata.getLoginUser().hasGlobalApplicationEditRight());
         PreviewCache.clear();
         rdata.setMessage(LocalizedStrings.string("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
     public IResponse reloadContentCache(RequestData rdata) {
-        checkRights(rdata.hasSystemRight(SystemZone.APPLICATION));
+        checkRights(rdata.getLoginUser().hasGlobalApplicationEditRight());
         ContentCache.setDirty();
         ContentCache.checkDirty();
         rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);

@@ -59,7 +59,7 @@ public class ContentController extends Controller {
         //Log.log("show");
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
-        checkRights(data.hasUserReadRight(rdata));
+        checkRights(data.hasUserReadRight(rdata.getLoginUser()));
         increaseViewCount(data);
         return data.getDefaultView();
     }
@@ -68,7 +68,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         ContentData data;
         data = ContentCache.getContent(url);
-        checkRights(data.hasUserReadRight(rdata));
+        checkRights(data.hasUserReadRight(rdata.getLoginUser()));
         //Log.log("show: "+data.getClass().getSimpleName());
         increaseViewCount(data);
         return data.getDefaultView();
@@ -92,7 +92,7 @@ public class ContentController extends Controller {
     public IResponse cancelEditFrontendContent(RequestData rdata) {
         assertSessionCall(rdata);
         ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        checkRights(data.hasUserEditRight(rdata));
+        checkRights(data.hasUserEditRight(rdata.getLoginUser()));
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         return show(rdata);
     }
@@ -115,7 +115,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
-        checkRights(parentData.hasUserEditRight(rdata));
+        checkRights(parentData.hasUserEditRight(rdata.getLoginUser()));
         String type = rdata.getAttributes().getString("type");
         ContentData data = ContentBean.getInstance().getNewContentData(type);
         data.setCreateValues(parentData, rdata);
@@ -127,7 +127,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
-        checkRights(data.hasUserEditRight(rdata));
+        checkRights(data.hasUserEditRight(rdata.getLoginUser()));
         data.setUpdateValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditBackendContent(data);
@@ -137,7 +137,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        checkRights(data.hasUserEditRight(rdata));
+        checkRights(data.hasUserEditRight(rdata.getLoginUser()));
         if (data.isNew())
             data.readBackendCreateRequestData(rdata);
         else
@@ -161,7 +161,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data=ContentCache.getContent(contentId);
-        checkRights(data.hasUserEditRight(rdata)) ;
+        checkRights(data.hasUserEditRight(rdata.getLoginUser())) ;
         if (contentId < BaseData.ID_MIN) {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, contentId);
@@ -179,7 +179,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
-        checkRights(data.hasUserEditRight(rdata));
+        checkRights(data.hasUserEditRight(rdata.getLoginUser()));
         data.setUpdateValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditRights(data);
@@ -190,7 +190,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        checkRights(data.hasUserEditRight(rdata));
+        checkRights(data.hasUserEditRight(rdata.getLoginUser()));
         data.readRightsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
             return showEditRights(data);
@@ -210,7 +210,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
-        checkRights(data.hasUserEditRight(rdata));
+        checkRights(data.hasUserEditRight(rdata.getLoginUser()));
         rdata.setClipboardData(ContentRequestKeys.KEY_CONTENT, data);
         return showContentAdministration(rdata,data.getId());
     }
@@ -228,7 +228,7 @@ public class ContentController extends Controller {
             rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, parentId);
         }
-        checkRights(parent.hasUserEditRight(rdata));
+        checkRights(parent.hasUserEditRight(rdata.getLoginUser()));
         Set<Integer> parentIds=new HashSet<>();
         parent.collectParentIds(parentIds);
         if (parentIds.contains(data.getId())){
@@ -249,7 +249,7 @@ public class ContentController extends Controller {
     //backend
     public IResponse clearClipboard(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.CONTENTEDIT));
+        checkRights(rdata.isLoggedIn() && rdata.getLoginUser().hasGlobalContentEditRight());
         rdata.clearAllClipboardData();
         return showContentAdministration(rdata, 1);
     }
@@ -259,7 +259,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
-        checkRights(data.hasUserEditRight(rdata));
+        checkRights(data.hasUserEditRight(rdata.getLoginUser()));
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showSortChildContents();
     }
@@ -269,7 +269,7 @@ public class ContentController extends Controller {
         assertSessionCall(rdata);
         int contentId = rdata.getId();
         ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        checkRights(data.hasUserEditRight(rdata));
+        checkRights(data.hasUserEditRight(rdata.getLoginUser()));
         for (ContentData child : data.getChildren()){
             int ranking=rdata.getAttributes().getInt("select"+child.getId(),-1);
             if (ranking!=-1){

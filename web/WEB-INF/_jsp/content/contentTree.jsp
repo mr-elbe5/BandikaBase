@@ -12,7 +12,6 @@
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.content.ContentCache" %>
-<%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);

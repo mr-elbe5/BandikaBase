@@ -98,7 +98,7 @@ public class FileController extends Controller {
         assertSessionCall(rdata);
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
-        checkRights(parentData.hasUserEditRight(rdata));
+        checkRights(parentData.hasUserEditRight(rdata.getLoginUser()));
         String type=rdata.getAttributes().getString("type");
         FileData data = FileBean.getInstance().getNewFileData(type);
         data.setCreateValues(parentData, rdata);
@@ -111,7 +111,7 @@ public class FileController extends Controller {
         int fileId = rdata.getId();
         FileData data = FileBean.getInstance().getFile(fileId,true);
         ContentData parent=ContentCache.getContent(data.getParentId());
-        checkRights(parent.hasUserEditRight(rdata));
+        checkRights(parent.hasUserEditRight(rdata.getLoginUser()));
         rdata.setClipboardData(ContentRequestKeys.KEY_FILE, data);
         return showContentAdministration(rdata,parent.getId());
     }
@@ -121,7 +121,7 @@ public class FileController extends Controller {
         int fileId = rdata.getId();
         FileData data = FileBean.getInstance().getFile(fileId,true);
         ContentData parent=ContentCache.getContent(data.getParentId());
-        checkRights(parent.hasUserEditRight(rdata));
+        checkRights(parent.hasUserEditRight(rdata.getLoginUser()));
         data.setNew(true);
         data.setId(FileBean.getInstance().getNextId());
         data.setCreatorId(rdata.getUserId());
@@ -139,7 +139,7 @@ public class FileController extends Controller {
             rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, parentId);
         }
-        checkRights(parent.hasUserEditRight(rdata));
+        checkRights(parent.hasUserEditRight(rdata.getLoginUser()));
         data.setParentId(parentId);
         data.setParent(parent);
         data.setChangerId(rdata.getUserId());
@@ -155,7 +155,7 @@ public class FileController extends Controller {
         int fileId = rdata.getId();
         int parentId = ContentCache.getFileParentId(fileId);
         ContentData parent=ContentCache.getContent(parentId);
-        checkRights(parent.hasUserReadRight(rdata));
+        checkRights(parent.hasUserReadRight(rdata.getLoginUser()));
         FileData data = ContentCache.getFile(fileId);
         FileBean.getInstance().deleteFile(data);
         ContentCache.setDirty();

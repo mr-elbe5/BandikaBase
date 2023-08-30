@@ -50,7 +50,7 @@ public class FileServlet extends WebServlet {
             int id = Integer.parseInt(name);
             FileData data = ContentCache.getFile(id);
             ContentData parent=ContentCache.getContent(data.getParentId());
-            if (!parent.hasUserReadRight(rdata)) {
+            if (!parent.hasUserReadRight(rdata.getLoginUser())) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }

@@ -229,21 +229,18 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return false;
     }
 
-    public boolean hasUserReadRight(RequestData rdata) {
+    public boolean hasUserReadRight(UserData user) {
         if (isOpenAccess() && isPublished())
             return true;
-        UserData user = rdata.getLoginUser();
-        return user != null && (user.isRoot() ||user.hasSystemRight(SystemZone.CONTENTREAD) || (hasUserRight(user, Right.READ) && isPublished()) || hasUserEditRight(rdata));
+        return user != null && (user.hasGlobalContentReadRight() || (hasUserRight(user, Right.READ) && isPublished()) || hasUserEditRight(user));
     }
 
-    public boolean hasUserEditRight(RequestData rdata) {
-        UserData user = rdata.getLoginUser();
-        return (user != null && (user.isRoot() || user.hasSystemRight(SystemZone.CONTENTEDIT) || hasUserRight(user, Right.EDIT)));
+    public boolean hasUserEditRight(UserData user) {
+        return (user != null && (user.hasGlobalContentEditRight() || hasUserRight(user, Right.EDIT)));
     }
 
-    public boolean hasUserApproveRight(RequestData rdata) {
-        UserData user = rdata.getLoginUser();
-        return (user != null && (user.isRoot() ||user.hasSystemRight(SystemZone.CONTENTAPPROVE) || hasUserRight(user, Right.APPROVE)));
+    public boolean hasUserApproveRight(UserData user) {
+        return (user != null && (user.hasGlobalContentApproveRight() || hasUserRight(user, Right.APPROVE)));
     }
 
     // tree data
@@ -494,7 +491,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     //used in admin jsp
     public void displayBackendTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
-        if (hasUserReadRight(rdata)) {
+        if (hasUserReadRight(rdata.getLoginUser())) {
             //backup
             ContentData currentContent = rdata.getRequestObject(ContentRequestKeys.KEY_CONTENT, ContentData.class);
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);
@@ -518,7 +515,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     //used in jsp
     public void displayFrontendTreeContent(PageContext context, RequestData rdata) throws IOException, ServletException {
-        if (hasUserReadRight(rdata)) {
+        if (hasUserReadRight(rdata.getLoginUser())) {
             //backup
             ContentData currentContent = rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
             rdata.setRequestObject(ContentRequestKeys.KEY_CONTENT, this);

@@ -12,7 +12,6 @@ import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
 import de.elbe5.response.StatusResponse;
-import de.elbe5.rights.SystemZone;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.user.UserCache;
@@ -48,7 +47,7 @@ public class GroupController extends Controller {
 
     public IResponse openEditGroup(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.USER));
+        checkRights(rdata.isLoggedIn() && rdata.getLoginUser().hasGlobalUserEditRight());
         int groupId = rdata.getId();
         GroupData data = GroupBean.getInstance().getGroup(groupId);
         rdata.setSessionObject("groupData", data);
@@ -57,7 +56,7 @@ public class GroupController extends Controller {
 
     public IResponse openCreateGroup(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.USER));
+        checkRights(rdata.isLoggedIn() && rdata.getLoginUser().hasGlobalUserEditRight());
         GroupData data = new GroupData();
         data.setNew(true);
         data.setId(GroupBean.getInstance().getNextId());
@@ -67,7 +66,7 @@ public class GroupController extends Controller {
 
     public IResponse saveGroup(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.USER));
+        checkRights(rdata.isLoggedIn() && rdata.getLoginUser().hasGlobalUserEditRight());
         GroupData data = (GroupData) rdata.getSessionObject("groupData");
         if (data==null){
             return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -84,7 +83,7 @@ public class GroupController extends Controller {
 
     public IResponse deleteGroup(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.hasSystemRight(SystemZone.USER));
+        checkRights(rdata.isLoggedIn() && rdata.getLoginUser().hasGlobalUserEditRight());
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);

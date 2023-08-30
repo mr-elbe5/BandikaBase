@@ -130,41 +130,6 @@ public class RequestData {
         return user != null;
     }
 
-    public boolean hasAnySystemRight() {
-        UserData data = getLoginUser();
-        return data != null && (data.hasAnySystemRight());
-    }
-
-    public boolean hasSystemRight(SystemZone zone) {
-        UserData data = getLoginUser();
-        return data != null && (data.hasSystemRight(zone));
-    }
-
-    public boolean hasElevatedSystemRight() {
-        UserData data = getLoginUser();
-        return data != null && (data.hasElevatedSystemRight());
-    }
-
-    public boolean hasContentReadRight() {
-        UserData data = getLoginUser();
-        return data != null && (data.hasContentReadRight());
-    }
-
-    public boolean hasContentEditRight() {
-        UserData data = getLoginUser();
-        return data != null && (data.hasContentEditRight());
-    }
-
-    public boolean hasContentApproveRight() {
-        UserData data = getLoginUser();
-        return data != null && (data.hasContentApproveRight());
-    }
-
-    public boolean hasContentAdminRight() {
-        UserData data = getLoginUser();
-        return data != null && (data.hasContentAdminRight());
-    }
-
     /************ form error *************/
 
     public FormError getFormError(boolean create) {
@@ -519,7 +484,7 @@ public class RequestData {
         setSessionObject(RequestKeys.KEY_LOGIN, data);
     }
 
-    public UserData getSessionUser() {
+    protected UserData getSessionUser() {
         return (UserData) getSessionObject(RequestKeys.KEY_LOGIN);
     }
 
