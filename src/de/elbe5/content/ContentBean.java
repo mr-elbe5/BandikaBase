@@ -238,8 +238,8 @@ public class ContentBean extends DbBean {
             pst.setString(i++, data.getDescription());
             pst.setInt(i++, data.getCreatorId());
             pst.setInt(i++, data.getChangerId());
-            pst.setString(i++, data.getAccessType());
-            pst.setString(i++, data.getNavType());
+            pst.setString(i++, data.getAccessTypeString());
+            pst.setString(i++, data.getNavTypeString());
             pst.setBoolean(i++,data.isActive());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
@@ -268,8 +268,8 @@ public class ContentBean extends DbBean {
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
             pst.setInt(i++, data.getChangerId());
-            pst.setString(i++, data.getAccessType());
-            pst.setString(i++, data.getNavType());
+            pst.setString(i++, data.getAccessTypeString());
+            pst.setString(i++, data.getNavTypeString());
             pst.setBoolean(i++,data.isActive());
             pst.setInt(i, data.getId());
             pst.executeUpdate();

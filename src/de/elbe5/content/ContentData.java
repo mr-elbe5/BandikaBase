@@ -43,19 +43,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return rdata.getCurrentDataInRequestOrSession(ContentRequestKeys.KEY_CONTENT, ContentData.class);
     }
 
-    public static final String ACCESS_TYPE_OPEN = "OPEN";
-    public static final String ACCESS_TYPE_INHERITS = "INHERIT";
-    public static final String ACCESS_TYPE_INDIVIDUAL = "INDIVIDUAL";
-
-    public static final String NAV_TYPE_NONE = "NONE";
-    public static final String NAV_TYPE_HEADER = "HEADER";
-    public static final String NAV_TYPE_FOOTER = "FOOTER";
-
-    public static final String VIEW_TYPE_SHOW = "SHOW";
-    public static final String VIEW_TYPE_SHOWPUBLISHED = "PUBLISHED";
-    public static final String VIEW_TYPE_EDIT = "EDIT";
-    public static final String VIEW_TYPE_PUBLISH = "PUBLISH";
-
     public static final int ID_ROOT = 1;
 
     public static List<Class<? extends ContentData>> childClasses = new ArrayList<>();
@@ -66,8 +53,8 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     private String path = "";
     private String displayName = "";
     private String description = "";
-    private String accessType = ACCESS_TYPE_OPEN;
-    private String navType = NAV_TYPE_NONE;
+    private ContentAccessType accessType = ContentAccessType.OPEN;
+    private ContentNavType navType = ContentNavType.NONE;
     private boolean active = true;
     private Map<Integer, Right> groupRights = new HashMap<>();
 
@@ -81,7 +68,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     //runtime
 
     protected boolean openAccess = true;
-    protected String viewType = VIEW_TYPE_SHOW;
+    protected ContentViewType viewType = ContentViewType.SHOW;
 
     public ContentData() {
     }
@@ -150,8 +137,11 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         this.description = description;
     }
 
-    public String getAccessType() {
+    public ContentAccessType getAccessType() {
         return accessType;
+    }
+    public String getAccessTypeString() {
+        return accessType.toString();
     }
 
     public boolean isOpenAccess() {
@@ -159,29 +149,50 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public boolean hasIndividualAccess() {
-        return accessType.equals(ACCESS_TYPE_INDIVIDUAL);
+        return accessType.equals(ContentAccessType.INDIVIDUAL);
     }
 
-    public void setAccessType(String accessType) {
+    public void setAccessType(ContentAccessType accessType) {
         this.accessType = accessType;
-        if (accessType.equals(ACCESS_TYPE_OPEN))
+        if (accessType.equals(ContentAccessType.OPEN))
             openAccess = true;
     }
 
-    public String getNavType() {
+    public void setAccessType(String type) {
+        try{
+            accessType = ContentAccessType.valueOf(type);
+        }
+        catch(IllegalArgumentException e){
+            accessType = ContentAccessType.OPEN;
+        }
+    }
+
+    public ContentNavType getNavType() {
         return navType;
     }
 
+    public String getNavTypeString() {
+        return navType.toString();
+    }
+
     public boolean isInHeaderNav() {
-        return navType.equals(ContentData.NAV_TYPE_HEADER);
+        return navType.equals(ContentNavType.HEADER);
     }
 
     public boolean isInFooterNav() {
-        return navType.equals(ContentData.NAV_TYPE_FOOTER);
+        return navType.equals(ContentNavType.FOOTER);
     }
 
-    public void setNavType(String navType) {
+    public void setNavType(ContentNavType navType) {
         this.navType = navType;
+    }
+    public void setNavType(String type) {
+        try{
+            navType = ContentNavType.valueOf(type);
+        }
+        catch(IllegalArgumentException e){
+            navType = ContentNavType.NONE;
+        }
     }
 
     public boolean isActive() {
@@ -297,7 +308,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void inheritRightsFromParent() {
         getGroupRights().clear();
-        if (!getAccessType().equals(ACCESS_TYPE_INHERITS) || parent == null) {
+        if (!getAccessType().equals(ContentAccessType.INHERIT) || parent == null) {
             return;
         }
         if (parent.isOpenAccess())
@@ -432,32 +443,45 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     // view
 
 
-    public String getViewType() {
+    public ContentViewType getViewType() {
         return viewType;
     }
 
-    public boolean isEditing() {
-        return viewType.equals(VIEW_TYPE_EDIT);
+    public String getViewTypeString() {
+        return viewType.toString();
     }
 
-    public void setViewType(String viewType) {
+    public boolean isEditing() {
+        return viewType.equals(ContentViewType.EDIT);
+    }
+
+    public void setViewType(ContentViewType viewType) {
         this.viewType = viewType;
     }
 
+    public void setViewType(String type) {
+        try{
+            viewType = ContentViewType.valueOf(type);
+        }
+        catch(IllegalArgumentException e){
+            viewType = ContentViewType.SHOW;
+        }
+    }
+
     public void stopEditing() {
-        this.viewType = VIEW_TYPE_SHOW;
+        this.viewType = ContentViewType.SHOW;
     }
 
     public void startEditing() {
-        this.viewType = VIEW_TYPE_EDIT;
+        this.viewType = ContentViewType.EDIT;
     }
 
     public boolean isPublishedView() {
-        return viewType.equals(VIEW_TYPE_SHOWPUBLISHED);
+        return viewType.equals(ContentViewType.PUBLISHED);
     }
 
     public boolean isStandardView() {
-        return viewType.equals(VIEW_TYPE_SHOW);
+        return viewType.equals(ContentViewType.SHOW);
     }
 
     public IResponse getDefaultView() {
