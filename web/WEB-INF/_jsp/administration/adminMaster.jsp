@@ -10,9 +10,10 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="de.elbe5.rights.SystemZone" %>
+<%@ page import="de.elbe5.rights.GlobalRights" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
 <%@ page import="de.elbe5.application.Configuration" %>
+<%@ page import="de.elbe5.content.ContentData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -52,23 +53,23 @@
                     <nav class="navbar navbar-expand-lg navbar-light">
                         <a class="navbar-brand" href="/"><img src="/static-content/img/logo.png" alt=""/></a>
                         <ul class="nav">
-                            <% if (rdata.hasSystemRight(SystemZone.APPLICATION)){%>
+                            <% if (GlobalRights.hasGlobalApplicationEditRight(rdata.getLoginUser())){%>
                             <li class="nav-item">
                                 <a class="nav-link"
                                         href="/ctrl/admin/openSystemAdministration"><%=$SH("_systemAdministration")%>
                                 </a>
                             </li>
                             <%}%>
-                            <% if (rdata.hasSystemRight(SystemZone.USER)){%>
+                            <% if (GlobalRights.hasGlobalUserEditRight(rdata.getLoginUser())){%>
                             <li class="nav-item">
                                 <a class="nav-link"
                                         href="/ctrl/admin/openPersonAdministration"><%=$SH("_personAdministration")%>
                                 </a>
                             </li>
                             <%}%>
-                            <% if (rdata.hasSystemRight(SystemZone.CONTENTEDIT)){%>
+                            <% if (GlobalRights.hasGlobalContentEditRight(rdata.getLoginUser())){%>
                             <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/admin/openContentAdministration"><%=$SH("_contentAdministration")%>
+                                <a class="nav-link" href="/ctrl/admin/openContentAdministration?contentId=<%=ContentData.ID_ROOT%>"><%=$SH("_contentAdministration")%>
                                 </a>
                             </li>
                             <%}%>

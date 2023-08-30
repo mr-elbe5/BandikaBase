@@ -16,7 +16,7 @@ public abstract class Controller {
         return new ForwardResponse("/");
     }
 
-    protected void checkRights(boolean hasRights){
+    protected void assertRights(boolean hasRights){
         if (!hasRights)
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
@@ -45,10 +45,27 @@ public abstract class Controller {
         }
     }
 
+    protected void assertLoggedInSessionCall(RequestData rdata){
+        if (!rdata.isLoggedIn() || (rdata.getType()!=RequestType.session && rdata.getType()!=RequestType.content)){
+            throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
+
     protected void assertApiCall(RequestData rdata){
         if (rdata.getType()!=RequestType.api){
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
         }
+    }
+
+    protected void assertLoggedInApiCall(RequestData rdata){
+        if (!rdata.isLoggedIn() || rdata.getType()!=RequestType.api){
+            throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
+
+    protected void assertLoggedIn(RequestData rdata){
+        if (!rdata.isLoggedIn())
+            throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     protected JsonObject getIdJson(int id) {

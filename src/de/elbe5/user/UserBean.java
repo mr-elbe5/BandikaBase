@@ -13,7 +13,7 @@ import de.elbe5.base.Log;
 import de.elbe5.base.StringFormatter;
 import de.elbe5.application.Configuration;
 import de.elbe5.database.DbBean;
-import de.elbe5.rights.SystemZone;
+import de.elbe5.rights.GlobalRights;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -536,7 +536,7 @@ public class UserBean extends DbBean {
     private static final String GET_SYSTEM_RIGHTS_SQL = "select name from t_system_right where group_id in({1})";
 
     public void readUserRights(Connection con, UserData data) {
-        data.clearSystemRights();
+        data.clearGlobalRights();
         PreparedStatement pst = null;
         try {
             if (data.getGroupIds().isEmpty()) {
@@ -552,7 +552,7 @@ public class UserBean extends DbBean {
             pst = con.prepareStatement(StringFormatter.format(GET_SYSTEM_RIGHTS_SQL, buffer.toString()));
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                data.addSystemRight(SystemZone.valueOf(rs.getString(1)));
+                data.addGlobalRight(GlobalRights.valueOf(rs.getString(1)));
             }
             rs.close();
         } catch (SQLException se) {

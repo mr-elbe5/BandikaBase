@@ -13,7 +13,7 @@ import de.elbe5.application.Configuration;
 import de.elbe5.base.BaseData;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.RequestData;
-import de.elbe5.rights.SystemZone;
+import de.elbe5.rights.GlobalRights;
 
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class UserData extends BaseData implements IJsonData {
     protected List<GroupData> groups = new ArrayList<>();
 
     //from groups
-    protected Set<SystemZone> systemRights = new HashSet<>();
+    protected Set<GlobalRights> globalRights = new HashSet<>();
 
     // base data
 
@@ -188,44 +188,16 @@ public class UserData extends BaseData implements IJsonData {
         this.notes = notes;
     }
 
-    public void clearSystemRights(){
-        systemRights.clear();
+    public Set<GlobalRights> getGlobalRights() {
+        return globalRights;
     }
 
-    public void addSystemRight(SystemZone zone) {
-        systemRights.add(zone);
+    public void clearGlobalRights(){
+        globalRights.clear();
     }
 
-    public boolean hasAnySystemRight() {
-        return !systemRights.isEmpty() || isRoot();
-    }
-
-    private boolean hasSystemRight(SystemZone zone) {
-        return systemRights.contains(zone) || isRoot();
-    }
-
-    public boolean hasElevatedSystemRight() {
-        return SystemZone.includesElevatedZone(systemRights) || isRoot();
-    }
-
-    public boolean hasGlobalContentReadRight() {
-        return SystemZone.includesContentReadZone(systemRights) || isRoot();
-    }
-
-    public boolean hasGlobalContentEditRight() {
-        return SystemZone.includesContentEditZone(systemRights) || isRoot();
-    }
-
-    public boolean hasGlobalContentApproveRight() {
-        return SystemZone.includesContentApproveZone(systemRights) || isRoot();
-    }
-
-    public boolean hasGlobalUserEditRight() {
-        return systemRights.contains(SystemZone.USER) || isRoot();
-    }
-
-    public boolean hasGlobalApplicationEditRight() {
-        return systemRights.contains(SystemZone.APPLICATION) || isRoot();
+    public void addGlobalRight(GlobalRights right) {
+        globalRights.add(right);
     }
 
     public boolean isRoot(){
@@ -292,9 +264,8 @@ public class UserData extends BaseData implements IJsonData {
                 .add("login",getLogin())
                 .add("name", getName())
                 .add("token", getToken())
-                .add("isEditor", isRoot() || hasSystemRight(SystemZone.CONTENTEDIT))
-                .add("isAdministrator", isRoot() || hasSystemRight(SystemZone.USER));
+                .add("isEditor", GlobalRights.hasGlobalContentEditRight(this))
+                .add("isAdministrator", GlobalRights.hasGlobalUserEditRight(this));
     }
-
 
 }

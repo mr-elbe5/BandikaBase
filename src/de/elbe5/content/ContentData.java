@@ -16,8 +16,8 @@ import de.elbe5.group.GroupData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
+import de.elbe5.rights.GlobalRights;
 import de.elbe5.rights.Right;
-import de.elbe5.rights.SystemZone;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
 
@@ -232,15 +232,15 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public boolean hasUserReadRight(UserData user) {
         if (isOpenAccess() && isPublished())
             return true;
-        return user != null && (user.hasGlobalContentReadRight() || (hasUserRight(user, Right.READ) && isPublished()) || hasUserEditRight(user));
+        return GlobalRights.hasGlobalContentReadRight(user) || (hasUserRight(user, Right.READ) && isPublished()) || hasUserEditRight(user);
     }
 
     public boolean hasUserEditRight(UserData user) {
-        return (user != null && (user.hasGlobalContentEditRight() || hasUserRight(user, Right.EDIT)));
+        return GlobalRights.hasGlobalContentEditRight(user) || hasUserRight(user, Right.EDIT);
     }
 
     public boolean hasUserApproveRight(UserData user) {
-        return (user != null && (user.hasGlobalContentApproveRight() || hasUserRight(user, Right.APPROVE)));
+        return GlobalRights.hasGlobalContentApproveRight(user) || hasUserRight(user, Right.APPROVE);
     }
 
     // tree data
@@ -438,7 +438,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     // view
-
 
     public ContentViewType getViewType() {
         return viewType;

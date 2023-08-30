@@ -10,7 +10,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="de.elbe5.rights.SystemZone" %>
+<%@ page import="de.elbe5.rights.GlobalRights" %>
 <%@ page import="de.elbe5.group.GroupData" %>
 <%@ page import="de.elbe5.user.UserBean" %>
 <%@ page import="de.elbe5.user.UserData" %>
@@ -43,7 +43,7 @@
                 <form:textarea name="notes" label="_notes" height="5rem"><%=$H(group.getNotes())%>
                 </form:textarea>
                 <form:line label="_globalRights" padded="true">
-                <%for (SystemZone zone : SystemZone.values()) {
+                <%for (GlobalRights zone : GlobalRights.values()) {
                     name="zoneright_"+zone.name();
                 %>
                     <form:check name="<%=name%>" value="true" checked="<%=group.hasSystemRight(zone)%>"><%=$H(zone.name())%>

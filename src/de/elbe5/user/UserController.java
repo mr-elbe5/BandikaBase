@@ -11,6 +11,7 @@ package de.elbe5.user;
 import de.elbe5.base.*;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
+import de.elbe5.rights.GlobalRights;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.*;
@@ -55,7 +56,7 @@ public class UserController extends Controller {
 
     protected IResponse webLogin(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.isPostback());
+        assertRights(rdata.isPostback());
         String login = rdata.getAttributes().getString("login");
         String pwd = rdata.getAttributes().getString("password");
         if (login.length() == 0 || pwd.length() == 0) {
@@ -115,8 +116,7 @@ public class UserController extends Controller {
         assertApiCall(rdata);
         if (!rdata.isPostback())
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
-        UserData data=rdata.getLoginUser();
-        if (data==null)
+        if (!rdata.isLoggedIn())
             return new StatusResponse(HttpServletResponse.SC_UNAUTHORIZED);
         return new StatusResponse(HttpServletResponse.SC_OK);
     }
@@ -148,8 +148,8 @@ public class UserController extends Controller {
     }
 
     public IResponse openEditUser(RequestData rdata) {
-        assertSessionCall(rdata);
-        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
+        assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRights.hasGlobalUserEditRight(rdata.getLoginUser()));
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
         rdata.setSessionObject("userData", data);
@@ -157,8 +157,8 @@ public class UserController extends Controller {
     }
 
     public IResponse openCreateUser(RequestData rdata) {
-        assertSessionCall(rdata);
-        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
+        assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRights.hasGlobalUserEditRight(rdata.getLoginUser()));
         UserData data = new UserData();
         data.setNew(true);
         data.setId(UserBean.getInstance().getNextId());
@@ -167,8 +167,8 @@ public class UserController extends Controller {
     }
 
     public IResponse saveUser(RequestData rdata) {
-        assertSessionCall(rdata);
-        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
+        assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRights.hasGlobalUserEditRight(rdata.getLoginUser()));
         UserData data = (UserData) rdata.getSessionObject("userData");
         data.readSettingsRequestData(rdata);
         if (!rdata.checkFormErrors()) {
@@ -184,8 +184,8 @@ public class UserController extends Controller {
     }
 
     public IResponse deleteUser(RequestData rdata) {
-        assertSessionCall(rdata);
-        checkRights(rdata.getLoginUser().hasGlobalUserEditRight());
+        assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRights.hasGlobalUserEditRight(rdata.getLoginUser()));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
@@ -209,19 +209,19 @@ public class UserController extends Controller {
 
     public IResponse openProfile(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.isLoggedIn());
+        assertRights(rdata.isLoggedIn());
         return showProfile();
     }
 
     public IResponse openChangePassword(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.isLoggedIn());
+        assertRights(rdata.isLoggedIn());
         return showChangePassword();
     }
 
     public IResponse changePassword(RequestData rdata) {
-        assertSessionCall(rdata);
-        checkRights(rdata.isLoggedIn() && rdata.getUserId() == rdata.getId());
+        assertLoggedInSessionCall(rdata);
+        assertRights(rdata.isLoggedIn() && rdata.getUserId() == rdata.getId());
         UserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId());
         if (user==null){
             return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -254,14 +254,14 @@ public class UserController extends Controller {
 
     public IResponse openChangeProfile(RequestData rdata) {
         assertSessionCall(rdata);
-        checkRights(rdata.isLoggedIn());
+        assertRights(rdata.isLoggedIn());
         return showChangeProfile();
     }
 
     public IResponse changeProfile(RequestData rdata) {
         assertSessionCall(rdata);
         int userId = rdata.getId();
-        checkRights(rdata.isLoggedIn() && rdata.getUserId() == userId);
+        assertRights(rdata.isLoggedIn() && rdata.getUserId() == userId);
         UserData data = UserBean.getInstance().getUser(userId);
         data.readProfileRequestData(rdata);
         if (!rdata.checkFormErrors()) {
