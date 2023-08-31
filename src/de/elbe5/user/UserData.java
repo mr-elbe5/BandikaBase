@@ -13,7 +13,7 @@ import de.elbe5.application.Configuration;
 import de.elbe5.base.BaseData;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.RequestData;
-import de.elbe5.rights.GlobalRights;
+import de.elbe5.rights.GlobalRight;
 
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class UserData extends BaseData implements IJsonData {
     protected List<GroupData> groups = new ArrayList<>();
 
     //from groups
-    protected Set<GlobalRights> globalRights = new HashSet<>();
+    protected Set<GlobalRight> globalRights = new HashSet<>();
 
     // base data
 
@@ -188,7 +188,7 @@ public class UserData extends BaseData implements IJsonData {
         this.notes = notes;
     }
 
-    public Set<GlobalRights> getGlobalRights() {
+    public Set<GlobalRight> getGlobalRights() {
         return globalRights;
     }
 
@@ -196,7 +196,7 @@ public class UserData extends BaseData implements IJsonData {
         globalRights.clear();
     }
 
-    public void addGlobalRight(GlobalRights right) {
+    public void addGlobalRight(GlobalRight right) {
         globalRights.add(right);
     }
 
@@ -264,8 +264,8 @@ public class UserData extends BaseData implements IJsonData {
                 .add("login",getLogin())
                 .add("name", getName())
                 .add("token", getToken())
-                .add("isEditor", GlobalRights.hasGlobalContentEditRight(this))
-                .add("isAdministrator", GlobalRights.hasGlobalUserEditRight(this));
+                .add("isEditor", GlobalRight.hasGlobalContentEditRight(this))
+                .add("isAdministrator", GlobalRight.hasGlobalUserEditRight(this));
     }
 
 }

@@ -1,5 +1,6 @@
 -- noinspection SqlNoDataSourceInspectionForFile
 
+
 CREATE SEQUENCE s_group_id START 1000;
 CREATE TABLE IF NOT EXISTS t_group
 (
@@ -15,8 +16,6 @@ CREATE TABLE IF NOT EXISTS t_user
 (
     id                 INTEGER      NOT NULL,
     change_date        TIMESTAMP    NOT NULL DEFAULT now(),
-    company_id         INTEGER      NULL,
-    title              VARCHAR(30)  NOT NULL DEFAULT '',
     first_name         VARCHAR(100) NOT NULL DEFAULT '',
     last_name          VARCHAR(100) NOT NULL,
     street             VARCHAR(100) NOT NULL DEFAULT '',
@@ -25,18 +24,14 @@ CREATE TABLE IF NOT EXISTS t_user
     country            VARCHAR(50)  NOT NULL DEFAULT '',
     email              VARCHAR(100) NOT NULL DEFAULT '',
     phone              VARCHAR(50)  NOT NULL DEFAULT '',
-    fax                VARCHAR(50)  NOT NULL DEFAULT '',
     mobile             VARCHAR(50)  NOT NULL DEFAULT '',
     notes              VARCHAR(500) NOT NULL DEFAULT '',
-    portrait_name      VARCHAR(255) NOT NULL DEFAULT '',
-    portrait           BYTEA        NULL,
     login              VARCHAR(30)  NOT NULL,
     pwd                VARCHAR(100) NOT NULL,
     token              VARCHAR(100) NOT NULL DEFAULT '',
     locked             BOOLEAN      NOT NULL DEFAULT FALSE,
     deleted            BOOLEAN      NOT NULL DEFAULT FALSE,
-    CONSTRAINT t_user_pk PRIMARY KEY (id),
-    CONSTRAINT t_user_fk1 FOREIGN KEY (company_id) REFERENCES t_company (id) ON DELETE SET NULL
+    CONSTRAINT t_user_pk PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS t_user2group
@@ -71,6 +66,81 @@ CREATE TABLE t_timer_task
     active             BOOLEAN      NOT NULL DEFAULT TRUE,
     CONSTRAINT t_timer_task_pk PRIMARY KEY (name)
 );
+
+CREATE SEQUENCE IF NOT EXISTS s_content_id START 1000;
+
+CREATE TABLE IF NOT EXISTS t_content
+(
+    id            INTEGER       NOT NULL,
+    type          VARCHAR(30)   NOT NULL,
+    creation_date TIMESTAMP     NOT NULL DEFAULT now(),
+    change_date   TIMESTAMP     NOT NULL DEFAULT now(),
+    parent_id     INTEGER       NULL,
+    ranking       INTEGER       NOT NULL DEFAULT 0,
+    name          VARCHAR(60)   NOT NULL,
+    display_name  VARCHAR(100)  NOT NULL,
+    description   VARCHAR(2000) NOT NULL DEFAULT '',
+    creator_id    INTEGER       NOT NULL DEFAULT 1,
+    changer_id    INTEGER       NOT NULL DEFAULT 1,
+    open_access   BOOLEAN       NOT NULL DEFAULT true,
+    reader_group_id INTEGER     NULL,
+    editor_group_id INTEGER     NULL,
+    nav_type      VARCHAR(10)   NOT NULL DEFAULT 'NONE',
+    active        BOOLEAN       NOT NULL DEFAULT TRUE,
+    CONSTRAINT t_content_pk PRIMARY KEY (id),
+    CONSTRAINT t_content_fk1 FOREIGN KEY (parent_id) REFERENCES t_content (id) ON DELETE CASCADE,
+    CONSTRAINT t_content_fk2 FOREIGN KEY (creator_id) REFERENCES t_user (id) ON DELETE SET DEFAULT,
+    CONSTRAINT t_content_fk3 FOREIGN KEY (changer_id) REFERENCES t_user (id) ON DELETE SET DEFAULT,
+    CONSTRAINT t_content_fk4 FOREIGN KEY (reader_group_id) REFERENCES t_group (id) ON DELETE SET DEFAULT,
+    CONSTRAINT t_content_fk5 FOREIGN KEY (editor_group_id) REFERENCES t_group (id) ON DELETE SET DEFAULT,
+    CONSTRAINT t_content_un1 UNIQUE (id, parent_id, name)
+);
+
+CREATE TABLE IF NOT EXISTS t_link
+(
+    id            INTEGER       NOT NULL,
+    link_url      VARCHAR(500)  NOT NULL DEFAULT '',
+    link_icon     VARCHAR(255)  NOT NULL DEFAULT '',
+    CONSTRAINT t_link_pk PRIMARY KEY (id),
+    CONSTRAINT t_link_fk1 FOREIGN KEY (id) REFERENCES t_content (id) ON DELETE CASCADE
+);
+
+CREATE SEQUENCE IF NOT EXISTS s_file_id START 1000;
+
+CREATE TABLE IF NOT EXISTS t_file
+(
+    id            INTEGER       NOT NULL,
+    type          VARCHAR(30)   NOT NULL,
+    creation_date TIMESTAMP     NOT NULL DEFAULT now(),
+    change_date   TIMESTAMP     NOT NULL DEFAULT now(),
+    parent_id     INTEGER       NULL,
+    file_name     VARCHAR(60)   NOT NULL,
+    display_name  VARCHAR(100)  NOT NULL,
+    description   VARCHAR(2000) NOT NULL DEFAULT '',
+    creator_id    INTEGER       NOT NULL DEFAULT 1,
+    changer_id    INTEGER       NOT NULL DEFAULT 1,
+    content_type  VARCHAR(255)  NOT NULL DEFAULT '',
+    file_size     INTEGER       NOT NULL DEFAULT 0,
+    bytes         BYTEA         NOT NULL,
+    CONSTRAINT t_file_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS t_image
+(
+    id            INTEGER       NOT NULL,
+    width         INTEGER       NOT NULL DEFAULT 0,
+    height        INTEGER       NOT NULL DEFAULT 0,
+    preview_bytes BYTEA         NULL,
+    CONSTRAINT t_image_pk PRIMARY KEY (id),
+    CONSTRAINT t_image_fk1 FOREIGN KEY (id) REFERENCES t_file (id) ON DELETE CASCADE
+);
+
+CREATE OR REPLACE VIEW v_preview_file as (
+                                         select t_file.id,file_name,content_type,preview_bytes
+                                         from t_file, t_image
+                                         where t_file.id=t_image.id
+                                             );
+
 
 -- root user
 INSERT INTO t_user (id,first_name,last_name,email,login,pwd)

@@ -6,26 +6,31 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.user;
+package de.elbe5.group;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class UserCache {
+public class GroupCache {
 
     private static int version = 1;
     private static volatile boolean dirty = true;
     private static final Object lockObj = new Object();
 
-    private static Map<Integer, UserData> userMap = new HashMap<>();
+    private static List<GroupData> groupList = new ArrayList<>();
+    private static Map<Integer, GroupData> groupMap = new HashMap<>();
 
     public static synchronized void load() {
-        UserBean bean = UserBean.getInstance();
-        List<UserData> userList = bean.getAllUsers();
-        Map<Integer, UserData> users = new HashMap<>();
-        for (UserData user : userList) {
-            users.put(user.getId(), user);
+        GroupBean bean = GroupBean.getInstance();
+        List<GroupData> list = bean.getAllGroups();
+        Map<Integer, GroupData> groups = new HashMap<>();
+        for (GroupData user : list) {
+            groups.put(user.getId(), user);
         }
-        userMap = users;
+        groupList = list;
+        groupMap = groups;
     }
 
     public static void setDirty() {
@@ -52,8 +57,12 @@ public class UserCache {
         return version;
     }
 
-    public static UserData getUser(int id) {
+    public static List<GroupData> getAllGroups(){
+        return groupList;
+    }
+
+    public static GroupData getGroup(int id) {
         checkDirty();
-        return userMap.get(id);
+        return groupMap.get(id);
     }
 }

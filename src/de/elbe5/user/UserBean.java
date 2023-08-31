@@ -13,7 +13,7 @@ import de.elbe5.base.Log;
 import de.elbe5.base.StringFormatter;
 import de.elbe5.application.Configuration;
 import de.elbe5.database.DbBean;
-import de.elbe5.rights.GlobalRights;
+import de.elbe5.rights.GlobalRight;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -552,7 +552,7 @@ public class UserBean extends DbBean {
             pst = con.prepareStatement(StringFormatter.format(GET_SYSTEM_RIGHTS_SQL, buffer.toString()));
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                data.addGlobalRight(GlobalRights.valueOf(rs.getString(1)));
+                data.addGlobalRight(GlobalRight.valueOf(rs.getString(1)));
             }
             rs.close();
         } catch (SQLException se) {

@@ -12,14 +12,15 @@
 <%@ page import="de.elbe5.content.ContentCache" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.content.ContentData" %>
-<%@ page import="de.elbe5.rights.GlobalRights" %>
+<%@ page import="de.elbe5.rights.GlobalRight" %>
+<%@ page import="de.elbe5.rights.GlobalRight" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
     ContentData rootContent = ContentCache.getContentRoot();
 %>
             <section class="treeSection">
-                <% if (GlobalRights.hasGlobalContentEditRight(rdata.getLoginUser())) { %>
+                <% if (GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser())) { %>
                 <div class = "">
                     <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/clearClipboard"><%=$SH("_clearClipboard")%></a>
                 </div>

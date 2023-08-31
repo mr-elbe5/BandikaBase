@@ -15,6 +15,7 @@ import de.elbe5.base.Log;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
 import de.elbe5.file.*;
+import de.elbe5.group.GroupCache;
 import de.elbe5.group.GroupController;
 import de.elbe5.servlet.InitServlet;
 import de.elbe5.timer.CleanupTaskData;
@@ -55,6 +56,7 @@ public class BandikaInitServlet extends InitServlet {
 
         ContentCache.load();
         UserCache.load();
+        GroupCache.load();
         if (!FileBean.getInstance().assertFileDirectory()){
             Log.error("could not create file directory");
         }

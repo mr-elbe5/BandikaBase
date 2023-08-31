@@ -13,7 +13,7 @@ import de.elbe5.base.BaseData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
-import de.elbe5.rights.GlobalRights;
+import de.elbe5.rights.GlobalRight;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
@@ -112,9 +112,9 @@ public class ContentController extends Controller {
 
     public IResponse openCreateBackendContent(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData parentData = ContentCache.getContent(parentId);
-        assertRights(parentData.hasUserEditRight(rdata.getLoginUser()));
         String type = rdata.getAttributes().getString("type");
         ContentData data = ContentBean.getInstance().getNewContentData(type);
         data.setCreateValues(parentData, rdata);
@@ -124,9 +124,9 @@ public class ContentController extends Controller {
 
     public IResponse openEditBackendContent(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
-        assertRights(data.hasUserEditRight(rdata.getLoginUser()));
         data.setUpdateValues(ContentCache.getContent(data.getId()), rdata);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditBackendContent(data);
@@ -134,9 +134,9 @@ public class ContentController extends Controller {
 
     public IResponse saveBackendContent(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int contentId = rdata.getId();
         ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        assertRights(data.getId() == contentId && data.hasUserEditRight(rdata.getLoginUser()));
         if (data.isNew())
             data.readBackendCreateRequestData(rdata);
         else
@@ -158,9 +158,9 @@ public class ContentController extends Controller {
 
     public IResponse deleteBackendContent(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int contentId = rdata.getId();
         ContentData data=ContentCache.getContent(contentId);
-        assertRights(data.hasUserEditRight(rdata.getLoginUser())) ;
         if (contentId < BaseData.ID_MIN) {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, contentId);
@@ -174,48 +174,18 @@ public class ContentController extends Controller {
         return showContentAdministration(rdata,parentId);
     }
 
-    public IResponse openEditRights(RequestData rdata) {
-        assertLoggedInSessionCall(rdata);
-        int contentId = rdata.getId();
-        ContentData data = ContentBean.getInstance().getContent(contentId);
-        assertRights(data.hasUserEditRight(rdata.getLoginUser()));
-        data.setUpdateValues(ContentCache.getContent(data.getId()), rdata);
-        rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
-        return showEditRights(data);
-    }
-
-    //backend
-    public IResponse saveRights(RequestData rdata) {
-        assertLoggedInSessionCall(rdata);
-        int contentId = rdata.getId();
-        ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        assertRights(data.hasUserEditRight(rdata.getLoginUser()));
-        data.readRightsRequestData(rdata);
-        if (!rdata.checkFormErrors()) {
-            return showEditRights(data);
-        }
-        data.setChangerId(rdata.getUserId());
-        if (!ContentBean.getInstance().saveRights(data)) {
-            setSaveError(rdata);
-            return showEditRights(data);
-        }
-        rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
-        ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_rightsSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
-        return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
-    }
-
     public IResponse cutContent(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int contentId = rdata.getId();
         ContentData data = ContentBean.getInstance().getContent(contentId);
-        assertRights(data.hasUserEditRight(rdata.getLoginUser()));
         rdata.setClipboardData(ContentRequestKeys.KEY_CONTENT, data);
         return showContentAdministration(rdata,data.getId());
     }
 
     public IResponse pasteContent(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData data=rdata.getClipboardData(ContentRequestKeys.KEY_CONTENT,ContentData.class);
         if (data==null){
@@ -227,7 +197,6 @@ public class ContentController extends Controller {
             rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, parentId);
         }
-        assertRights(parent.hasUserEditRight(rdata.getLoginUser()));
         Set<Integer> parentIds=new HashSet<>();
         parent.collectParentIds(parentIds);
         if (parentIds.contains(data.getId())){
@@ -248,7 +217,7 @@ public class ContentController extends Controller {
     //backend
     public IResponse clearClipboard(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
-        assertRights(GlobalRights.hasGlobalContentEditRight(rdata.getLoginUser()));
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         rdata.clearAllClipboardData();
         return showContentAdministration(rdata, 1);
     }
@@ -256,9 +225,9 @@ public class ContentController extends Controller {
     //backend
     public IResponse openSortChildContents(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int contentId = rdata.getId();
         ContentData data = ContentCache.getContent(contentId);
-        assertRights(data.hasUserEditRight(rdata.getLoginUser()));
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showSortChildContents();
     }
@@ -266,9 +235,9 @@ public class ContentController extends Controller {
     //backend
     public IResponse saveChildRankings(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int contentId = rdata.getId();
         ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        assertRights(data.hasUserEditRight(rdata.getLoginUser()));
         for (ContentData child : data.getChildren()){
             int ranking=rdata.getAttributes().getInt("select"+child.getId(),-1);
             if (ranking!=-1){
@@ -286,10 +255,6 @@ public class ContentController extends Controller {
 
     protected IResponse showEditBackendContent(ContentData contentData) {
         return new ForwardResponse(contentData.getBackendEditJsp());
-    }
-
-    protected IResponse showEditRights(ContentData contentData) {
-        return new ForwardResponse("/WEB-INF/_jsp/content/editGroupRights.ajax.jsp");
     }
 
     protected IResponse showSortChildContents() {

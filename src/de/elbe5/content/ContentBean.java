@@ -10,7 +10,6 @@ package de.elbe5.content;
 
 import de.elbe5.base.Log;
 import de.elbe5.database.DbBean;
-import de.elbe5.rights.Right;
 
 import java.lang.reflect.Constructor;
 import java.sql.*;
@@ -49,7 +48,7 @@ public class ContentBean extends DbBean {
         return changedItem(con, CHANGED_SQL, data);
     }
 
-    private static final String GET_ALL_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id, access_type, nav_type, active FROM t_content";
+    private static final String GET_ALL_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,open_access,reader_group_id,editor_group_id,nav_type,active FROM t_content";
 
     public List<ContentData> getAllContents() {
         List<ContentData> list = new ArrayList<>();
@@ -102,7 +101,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String GET_CONTENT_SQL = "SELECT type, id, creation_date, change_date, parent_id, ranking, name, display_name, description, creator_id, changer_id, access_type, nav_type, active FROM t_content WHERE id=?";
+    private static final String GET_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,open_access,reader_group_id,editor_group_id,nav_type,active FROM t_content WHERE id=?";
 
     public ContentData readContent(Connection con, int id) throws SQLException {
         ContentData data = null;
@@ -113,9 +112,6 @@ public class ContentBean extends DbBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     data = readContentData(rs);
-                    if (data!=null && data.hasIndividualAccess()) {
-                        data.setGroupRights(getContentRights(con, data.getId()));
-                    }
                 }
             }
         } finally {
@@ -142,54 +138,13 @@ public class ContentBean extends DbBean {
             data.setDescription(rs.getString(i++));
             data.setCreatorId(rs.getInt(i++));
             data.setChangerId(rs.getInt(i++));
-            data.setAccessType(rs.getString(i++));
+            data.setOpenAccess(rs.getBoolean(i++));
+            data.setReaderGroupId(rs.getInt(i++));
+            data.setEditorGroupId(rs.getInt(i++));
             data.setNavType(rs.getString(i++));
             data.setActive(rs.getBoolean(i));
         }
         return data;
-    }
-
-    private static final String GET_CONTENT_RIGHTS_SQL = "SELECT group_id,value FROM t_content_right WHERE content_id=?";
-
-    public Map<Integer, Right> getContentRights(Connection con, int contentId) throws SQLException {
-        PreparedStatement pst = null;
-        Map<Integer, Right> list = new HashMap<>();
-        try {
-            pst = con.prepareStatement(GET_CONTENT_RIGHTS_SQL);
-            pst.setInt(1, contentId);
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    list.put(rs.getInt(1), Right.valueOf(rs.getString(2)));
-                }
-            }
-        } finally {
-            closeStatement(pst);
-        }
-        return list;
-    }
-
-    public List<ContentInfoData> getContentInfos() {
-        List<ContentInfoData> list = new ArrayList<>();
-        Connection con = getConnection();
-        try {
-            PreparedStatement pst;
-            pst = con.prepareStatement("select id,name,display_name,description from t_content");
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                ContentInfoData info = new ContentInfoData();
-                int i=1;
-                info.setId(rs.getInt(i++));
-                info.setName(rs.getString(i++));
-                info.setDisplayName(rs.getString(i++));
-                info.setDescription(rs.getString(i));
-                list.add(info);
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeConnection(con);
-        }
-        return list;
     }
 
     public boolean saveContent(ContentData data) {
@@ -217,7 +172,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String INSERT_CONTENT_SQL = "insert into t_content (type,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,access_type,nav_type,active,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String INSERT_CONTENT_SQL = "insert into t_content (type,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,open_access,reader_group_id,editor_group_id,nav_type,active,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     protected void createContent(Connection con, ContentData data) throws SQLException {
         PreparedStatement pst = null;
@@ -238,7 +193,17 @@ public class ContentBean extends DbBean {
             pst.setString(i++, data.getDescription());
             pst.setInt(i++, data.getCreatorId());
             pst.setInt(i++, data.getChangerId());
-            pst.setString(i++, data.getAccessTypeString());
+            pst.setBoolean(i++, data.isOpenAccess());
+            if (data.getReaderGroupId() == 0) {
+                pst.setNull(i++, Types.INTEGER);
+            } else {
+                pst.setInt(i++, data.getReaderGroupId());
+            }
+            if (data.getEditorGroupId() == 0) {
+                pst.setNull(i++, Types.INTEGER);
+            } else {
+                pst.setInt(i++, data.getEditorGroupId());
+            }
             pst.setString(i++, data.getNavTypeString());
             pst.setBoolean(i++,data.isActive());
             pst.setInt(i, data.getId());
@@ -249,7 +214,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String UPDATE_CONTENT_SQL = "update t_content set change_date=?,parent_id=?,ranking=?,name=?,display_name=?,description=?,changer_id=?,access_type=?,nav_type=?,active=? where id=?";
+    private static final String UPDATE_CONTENT_SQL = "update t_content set change_date=?,parent_id=?,ranking=?,name=?,display_name=?,description=?,changer_id=?,open_access=?,reader_group_id=?,editor_group_id=?,nav_type=?,active=? where id=?";
 
     protected void updateContent(Connection con, ContentData data) throws SQLException {
         PreparedStatement pst = null;
@@ -268,7 +233,17 @@ public class ContentBean extends DbBean {
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
             pst.setInt(i++, data.getChangerId());
-            pst.setString(i++, data.getAccessTypeString());
+            pst.setBoolean(i++, data.isOpenAccess());
+            if (data.getReaderGroupId() == 0) {
+                pst.setNull(i++, Types.INTEGER);
+            } else {
+                pst.setInt(i++, data.getReaderGroupId());
+            }
+            if (data.getEditorGroupId() == 0) {
+                pst.setNull(i++, Types.INTEGER);
+            } else {
+                pst.setInt(i++, data.getEditorGroupId());
+            }
             pst.setString(i++, data.getNavTypeString());
             pst.setBoolean(i++,data.isActive());
             pst.setInt(i, data.getId());
@@ -307,65 +282,10 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String GET_GROUP_RIGHT_SQL = "SELECT content_id,value FROM t_content_right WHERE group_id=?";
-
-    public Map<Integer, Integer> getGroupRights(int groupId) {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        Map<Integer, Integer> map = new HashMap<>();
-        try {
-            pst = con.prepareStatement(GET_GROUP_RIGHT_SQL);
-            pst.setInt(1, groupId);
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                map.put(rs.getInt(1), rs.getInt(2));
-            }
-            rs.close();
-            return map;
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-        return null;
-    }
-
-    private static final String DELETE_RIGHTS_SQL = "DELETE FROM t_content_right WHERE content_id=?";
-    private static final String INSERT_RIGHT_SQL = "INSERT INTO t_content_right (content_id,group_id,value) VALUES(?,?,?)";
-
-    public boolean saveRights(ContentData data) {
-        PreparedStatement pst = null;
-        Connection con = startTransaction();
-        try {
-            pst = con.prepareStatement(DELETE_RIGHTS_SQL);
-            pst.setInt(1, data.getId());
-            pst.executeUpdate();
-            if (data.hasIndividualAccess()) {
-                pst.close();
-                pst = con.prepareStatement(INSERT_RIGHT_SQL);
-                pst.setInt(1, data.getId());
-                for (int id : data.getGroupRights().keySet()) {
-                    pst.setInt(2, id);
-                    pst.setString(3, data.getGroupRights().get(id).name());
-                    pst.executeUpdate();
-                }
-            }
-            return commitTransaction(con);
-        } catch (SQLException e){
-            return rollbackTransaction(con);
-        } finally {
-            closeStatement(pst);
-        }
-    }
-
     private static final String DELETE_SQL = "DELETE FROM t_content WHERE id=?";
 
     public boolean deleteContent(int id) {
         return deleteItem(DELETE_SQL, id);
-    }
-
-    public void replaceStringInContent(String oldFileName,String fileName){
     }
 
 }

@@ -11,13 +11,12 @@ package de.elbe5.content;
 import de.elbe5.base.*;
 import de.elbe5.base.BaseData;
 import de.elbe5.file.*;
-import de.elbe5.group.GroupBean;
+import de.elbe5.group.GroupCache;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IMasterInclude;
-import de.elbe5.rights.GlobalRights;
-import de.elbe5.rights.Right;
+import de.elbe5.rights.GlobalRight;
 import de.elbe5.user.UserData;
 import de.elbe5.response.IResponse;
 
@@ -53,10 +52,11 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     private String path = "";
     private String displayName = "";
     private String description = "";
-    private ContentAccessType accessType = ContentAccessType.OPEN;
+    private boolean openAccess = true;
+    protected int readerGroupId=0;
+    protected int editorGroupId=0;
     private ContentNavType navType = ContentNavType.NONE;
     private boolean active = true;
-    private Map<Integer, Right> groupRights = new HashMap<>();
 
     // tree data
     protected int parentId = 0;
@@ -67,7 +67,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     //runtime
 
-    protected boolean openAccess = true;
     protected ContentViewType viewType = ContentViewType.SHOW;
 
     public ContentData() {
@@ -137,34 +136,69 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         this.description = description;
     }
 
-    public ContentAccessType getAccessType() {
-        return accessType;
-    }
-    public String getAccessTypeString() {
-        return accessType.toString();
-    }
-
     public boolean isOpenAccess() {
         return openAccess;
     }
 
-    public boolean hasIndividualAccess() {
-        return accessType.equals(ContentAccessType.INDIVIDUAL);
+    public void setOpenAccess(boolean openAccess) {
+        this.openAccess = openAccess;
+        if (openAccess)
+            setReaderGroupId(0);
     }
 
-    public void setAccessType(ContentAccessType accessType) {
-        this.accessType = accessType;
-        if (accessType.equals(ContentAccessType.OPEN))
-            openAccess = true;
+    public int getReaderGroupId() {
+        return readerGroupId;
     }
 
-    public void setAccessType(String type) {
-        try{
-            accessType = ContentAccessType.valueOf(type);
+    public GroupData getReaderGroup(){
+        if (readerGroupId == 0)
+            return null;
+        return GroupCache.getGroup(readerGroupId);
+    }
+
+    public boolean hasUserReadRight(UserData user) {
+        if (isOpenAccess() && isPublished())
+            return true;
+        else if (user==null)
+            return false;
+        if (GlobalRight.hasGlobalContentReadRight(user))
+            return true;
+        if (getReaderGroupId() != 0) {
+            GroupData group = getReaderGroup();
+            if (group != null && group.getUserIds().contains(user.getId()) && isPublished())
+                return true;
         }
-        catch(IllegalArgumentException e){
-            accessType = ContentAccessType.OPEN;
+        return hasUserEditRight(user);
+    }
+
+    public void setReaderGroupId(int readerGroupId) {
+        this.readerGroupId = readerGroupId;
+    }
+
+    public int getEditorGroupId() {
+        return editorGroupId;
+    }
+
+    public boolean hasUserEditRight(UserData user) {
+        if (user==null)
+            return false;
+        if (GlobalRight.hasGlobalContentEditRight(user))
+            return true;
+        if (getEditorGroupId() != 0) {
+            GroupData group = getEditorGroup();
+            return group != null && group.getUserIds().contains(user.getId());
         }
+        return false;
+    }
+
+    public GroupData getEditorGroup(){
+        if (editorGroupId == 0)
+            return null;
+        return GroupCache.getGroup(editorGroupId);
+    }
+
+    public void setEditorGroupId(int editorGroupId) {
+        this.editorGroupId = editorGroupId;
     }
 
     public ContentNavType getNavType() {
@@ -201,46 +235,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public Map<Integer, Right> getGroupRights() {
-        return groupRights;
-    }
-
-    public boolean isGroupRight(int id, Right right) {
-        return groupRights.containsKey(id) && groupRights.get(id) == right;
-    }
-
-    public boolean hasAnyGroupRight(int id) {
-        return groupRights.containsKey(id);
-    }
-
-    public void setGroupRights(Map<Integer, Right> groupRights) {
-        this.groupRights = groupRights;
-    }
-
-    public boolean hasUserRight(UserData user, Right right) {
-        if (user == null)
-            return false;
-        for (int groupId : groupRights.keySet()) {
-            if (user.getGroupIds().contains(groupId) && groupRights.get(groupId).includesRight(right))
-                return true;
-        }
-        return false;
-    }
-
-    public boolean hasUserReadRight(UserData user) {
-        if (isOpenAccess() && isPublished())
-            return true;
-        return GlobalRights.hasGlobalContentReadRight(user) || (hasUserRight(user, Right.READ) && isPublished()) || hasUserEditRight(user);
-    }
-
-    public boolean hasUserEditRight(UserData user) {
-        return GlobalRights.hasGlobalContentEditRight(user) || hasUserRight(user, Right.EDIT);
-    }
-
-    public boolean hasUserApproveRight(UserData user) {
-        return GlobalRights.hasGlobalContentApproveRight(user) || hasUserRight(user, Right.APPROVE);
     }
 
     // tree data
@@ -304,14 +298,14 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public void inheritRightsFromParent() {
-        getGroupRights().clear();
-        if (!getAccessType().equals(ContentAccessType.INHERIT) || parent == null) {
-            return;
-        }
-        if (parent.isOpenAccess())
+        if (parent.isOpenAccess()) {
             openAccess = true;
-        else
-            getGroupRights().putAll(parent.getGroupRights());
+            setReaderGroupId(0);
+        }
+        else if (parent.getReaderGroupId()!=0)
+            setReaderGroupId(parent.getReaderGroupId());
+        if (parent.getEditorGroupId()!=0)
+            setEditorGroupId(parent.getEditorGroupId());
     }
 
     public List<ContentData> getChildren() {
@@ -578,7 +572,9 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         setDisplayName(rdata.getAttributes().getString("displayName").trim());
         setName(StringHelper.toSafeWebName(getDisplayName()));
         setDescription(rdata.getAttributes().getString("description"));
-        setAccessType(rdata.getAttributes().getString("accessType"));
+        setOpenAccess(rdata.getAttributes().getBoolean("openAccess"));
+        setReaderGroupId(rdata.getAttributes().getInt("readerGroupId"));
+        setEditorGroupId(rdata.getAttributes().getInt("editorGroupId"));
         setNavType(rdata.getAttributes().getString("navType"));
         setActive(rdata.getAttributes().getBoolean("active"));
         if (name.isEmpty()) {
@@ -596,18 +592,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void readFrontendRequestData(RequestData rdata) {
         readBackendRequestData(rdata);
-    }
-
-    public void readRightsRequestData(RequestData rdata) {
-        List<GroupData> groups = GroupBean.getInstance().getAllGroups();
-        getGroupRights().clear();
-        for (GroupData group : groups) {
-            if (group.getId() <= GroupData.ID_MAX_FINAL)
-                continue;
-            String value = rdata.getAttributes().getString("groupright_" + group.getId());
-            if (!value.isEmpty())
-                getGroupRights().put(group.getId(), Right.valueOf(value));
-        }
     }
 
     @Override

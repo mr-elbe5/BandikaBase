@@ -10,7 +10,7 @@ package de.elbe5.group;
 
 import de.elbe5.base.BaseData;
 import de.elbe5.request.RequestData;
-import de.elbe5.rights.GlobalRights;
+import de.elbe5.rights.GlobalRight;
 import de.elbe5.user.UserData;
 
 import java.util.*;
@@ -34,7 +34,7 @@ public class GroupData extends BaseData {
     protected Collection<Integer> userIds = new HashSet<>();
     protected List<UserData> users = new ArrayList<>();
 
-    protected Set<GlobalRights> systemRights = new HashSet<>();
+    protected Set<GlobalRight> systemRights = new HashSet<>();
 
     // base data
 
@@ -66,15 +66,15 @@ public class GroupData extends BaseData {
         return users;
     }
 
-    public Set<GlobalRights> getSystemRights() {
+    public Set<GlobalRight> getSystemRights() {
         return systemRights;
     }
 
-    public void addSystemRight(GlobalRights zone) {
+    public void addSystemRight(GlobalRight zone) {
         systemRights.add(zone);
     }
 
-    public boolean hasSystemRight(GlobalRights zone) {
+    public boolean hasSystemRight(GlobalRight zone) {
         return systemRights.contains(zone);
     }
 
@@ -84,7 +84,7 @@ public class GroupData extends BaseData {
         setName(rdata.getAttributes().getString("name"));
         setNotes(rdata.getAttributes().getString("notes"));
         getSystemRights().clear();
-        for (GlobalRights zone : GlobalRights.values()) {
+        for (GlobalRight zone : GlobalRight.values()) {
             boolean hasRight = rdata.getAttributes().getBoolean("zoneright_" + zone.name());
             if (hasRight)
                 addSystemRight(zone);

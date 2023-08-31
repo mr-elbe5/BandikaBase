@@ -9,8 +9,9 @@
 <%response.setContentType("text/html;charset=UTF-8");%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
-<%@ page import="de.elbe5.rights.GlobalRights" %>
+<%@ page import="de.elbe5.rights.GlobalRight" %>
 <%@ page import="de.elbe5.request.RequestData" %>
+<%@ page import="de.elbe5.rights.GlobalRight" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -23,7 +24,7 @@
                 <a class="treeRoot"><%=$SH("_system")%>
                 </a>
                 <ul>
-                    <%if (GlobalRights.hasGlobalApplicationEditRight(rdata.getLoginUser())) {%>
+                    <%if (GlobalRight.hasGlobalApplicationEditRight(rdata.getLoginUser())) {%>
                     <li>
                         <a href="" onclick="if (confirmExecute()) return openModalDialog('/ctrl/admin/restart');"><%=$SH("_restart")%>
                         </a>

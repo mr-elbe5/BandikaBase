@@ -31,7 +31,6 @@
     <div class="icons">
         <a class="icon fa fa-eye" href="" onclick="return linkTo('/ctrl/content/show/<%=contentData.getId()%>');" title="<%=$SH("_view")%>"> </a>
         <a class="icon fa fa-pencil" href="" onclick="return openModalDialog('/ctrl/content/openEditBackendContent/<%=contentData.getId()%>');" title="<%=$SH("_edit")%>"> </a>
-        <a class="icon fa fa-key" href="" onclick="return openModalDialog('/ctrl/content/openEditRights/<%=contentData.getId()%>');" title="<%=$SH("_rights")%>"> </a>
         <% if (contentData.getId() != ContentData.ID_ROOT){%>
         <a class="icon fa fa-scissors" href="" onclick="return linkTo('/ctrl/content/cutContent/<%=contentData.getId()%>');" title="<%=$SH("_cut")%>"> </a>
         <%}%>

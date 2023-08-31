@@ -10,7 +10,7 @@ package de.elbe5.group;
 
 import de.elbe5.base.Log;
 import de.elbe5.database.DbBean;
-import de.elbe5.rights.GlobalRights;
+import de.elbe5.rights.GlobalRight;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -195,7 +195,7 @@ public class GroupBean extends DbBean {
             pst.setInt(1, data.getId());
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                data.addSystemRight(GlobalRights.valueOf(rs.getString(1)));
+                data.addSystemRight(GlobalRight.valueOf(rs.getString(1)));
             }
             rs.close();
         } catch (SQLException se) {
@@ -217,7 +217,7 @@ public class GroupBean extends DbBean {
             pst.close();
             pst = con.prepareStatement(INSERT_SYSTEM_RIGHT_SQL);
             pst.setInt(2, data.getId());
-            for (GlobalRights zone : data.getSystemRights()) {
+            for (GlobalRight zone : data.getSystemRights()) {
                 pst.setString(1, zone.name());
                 pst.setInt(2, data.getId());
                 pst.executeUpdate();
