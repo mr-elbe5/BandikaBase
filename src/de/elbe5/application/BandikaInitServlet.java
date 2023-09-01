@@ -47,6 +47,7 @@ public class BandikaInitServlet extends InitServlet {
         JsonWebToken.createSecretKey(Configuration.getSalt());
         AdminController.register(new AdminController());
         ContentController.register(new ContentController());
+        FileController.register(new FileController());
         DocumentController.register(new DocumentController());
         ImageController.register(new ImageController());
         MediaController.register(new MediaController());
