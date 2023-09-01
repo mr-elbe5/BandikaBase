@@ -105,7 +105,7 @@ public class ImageBean extends FileBean {
         return data;
     }
 
-    private static final String GET_FILE_DATA_SQL = "SELECT file_name,content_type,preview_bytes FROM v_preview_file WHERE id=?";
+    private static final String GET_FILE_DATA_SQL = "SELECT t_file.file_name,t_file.content_type,t_image.preview_bytes FROM t_file, t_image WHERE t_file.id=? and t_image.id=?";
 
     public BinaryFile getBinaryFile(int id) {
         Connection con = getConnection();
@@ -114,6 +114,7 @@ public class ImageBean extends FileBean {
         try {
             pst = con.prepareStatement(GET_FILE_DATA_SQL);
             pst.setInt(1, id);
+            pst.setInt(2, id);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
