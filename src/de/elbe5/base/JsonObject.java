@@ -28,6 +28,12 @@ public class JsonObject extends JSONObject {
         return this;
     }
 
+    public JsonObject add(String key, double val){
+        if (val != 0)
+            put(key, val);
+        return this;
+    }
+
     public JsonObject add(String key, LocalDateTime val){
         if (val != null)
             put(key, DateHelper.toISODateTime(val));
