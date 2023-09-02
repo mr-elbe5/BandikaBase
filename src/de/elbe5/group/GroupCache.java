@@ -58,6 +58,7 @@ public class GroupCache {
     }
 
     public static List<GroupData> getAllGroups(){
+        checkDirty();
         return groupList;
     }
 

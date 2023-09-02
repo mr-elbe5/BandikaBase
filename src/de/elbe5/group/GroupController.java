@@ -77,7 +77,7 @@ public class GroupController extends Controller {
             return showEditGroup();
         }
         GroupBean.getInstance().saveGroup(data);
-        UserCache.setDirty();
+        GroupCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?groupId=" + data.getId());
     }
@@ -91,7 +91,7 @@ public class GroupController extends Controller {
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
-        UserCache.setDirty();
+        GroupCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
