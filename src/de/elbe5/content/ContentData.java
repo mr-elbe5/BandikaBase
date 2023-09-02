@@ -66,8 +66,8 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     private final List<FileData> files = new ArrayList<>();
 
     //runtime
-
-    protected ContentViewType viewType = ContentViewType.SHOW;
+    boolean editMode = false;
+    //protected ContentViewType viewType = ContentViewType.SHOW;
 
     public ContentData() {
     }
@@ -157,7 +157,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public boolean hasUserReadRight(UserData user) {
-        if (isOpenAccess() && isPublished())
+        if (isOpenAccess())
             return true;
         else if (user==null)
             return false;
@@ -165,7 +165,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
             return true;
         if (getReaderGroupId() != 0) {
             GroupData group = getReaderGroup();
-            if (group != null && group.getUserIds().contains(user.getId()) && isPublished())
+            if (group != null && group.getUserIds().contains(user.getId()))
                 return true;
         }
         return hasUserEditRight(user);
@@ -423,55 +423,14 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return "";
     }
 
-    public boolean isPublished() {
-        return true;
-    }
-
-    public boolean hasUnpublishedDraft() {
-        return false;
-    }
-
     // view
 
-    public ContentViewType getViewType() {
-        return viewType;
+    public boolean isEditMode() {
+        return editMode;
     }
 
-    public String getViewTypeString() {
-        return viewType.toString();
-    }
-
-    public boolean isEditing() {
-        return viewType.equals(ContentViewType.EDIT);
-    }
-
-    public void setViewType(ContentViewType viewType) {
-        this.viewType = viewType;
-    }
-
-    public void setViewType(String type) {
-        try{
-            viewType = ContentViewType.valueOf(type);
-        }
-        catch(IllegalArgumentException e){
-            viewType = ContentViewType.SHOW;
-        }
-    }
-
-    public void stopEditing() {
-        this.viewType = ContentViewType.SHOW;
-    }
-
-    public void startEditing() {
-        this.viewType = ContentViewType.EDIT;
-    }
-
-    public boolean isPublishedView() {
-        return viewType.equals(ContentViewType.PUBLISHED);
-    }
-
-    public boolean isStandardView() {
-        return viewType.equals(ContentViewType.SHOW);
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
     }
 
     public IResponse getDefaultView() {

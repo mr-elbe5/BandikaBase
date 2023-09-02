@@ -24,7 +24,7 @@
     List<Class<? extends ContentData>> childClasses = contentData.getChildClasses();
 %>
 <li class="<%=liClass%>">
-    <span class="<%=contentData.hasUnpublishedDraft() ? "unpublished" : "published"%>">
+    <span>
         <%=$H(contentData.getDisplayName())%>
     </span>
     <%if (contentData.hasUserEditRight(rdata.getLoginUser())) {%>

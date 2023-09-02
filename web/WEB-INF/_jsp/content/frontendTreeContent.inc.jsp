@@ -16,7 +16,7 @@
     ContentData contentData = ContentData.getCurrentContent(rdata);
 %>
 <li class="open">
-    <span class="<%=contentData.hasUnpublishedDraft() ? "unpublished" : "published"%>">
+    <span>
         <a href="/ctrl/content/show/<%=contentData.getId()%>"><%=$H(contentData.getDisplayName())%></a>
     </span>
     <ul>
