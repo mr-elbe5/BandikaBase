@@ -10,48 +10,46 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
-<%@ page import="de.elbe5.group.GroupBean" %>
-<%@ page import="de.elbe5.group.GroupData" %>
-<%@ page import="de.elbe5.user.UserData" %>
-<%@ page import="java.util.List" %>
+<%@ page import="de.elbe5.user.UserBean" %>
+<%@ page import="de.elbe5.extendeduser.ExtendedUserData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    UserData user = (UserData) rdata.getSessionObject("userData");
-    List<GroupData> groups = GroupBean.getInstance().getAllGroups();
-    String label;
-    String url = "/ctrl/user/saveUser/" + user.getId();
+    ExtendedUserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId(), ExtendedUserData.class);
+    String url = "/ctrl/user/changeProfile/" + user.getId();
 %>
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title"><%=$SH("_editUser")%>
+            <h5 class="modal-title"><%=$SH("_changeProfile")%>
             </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form:form url="<%=url%>" name="userform" multi="true" ajax="true">
+        <form:form url="<%=url%>" name="changeprofileform" ajax="true" multi="true">
+            <input type="hidden" name="userId" value="<%=rdata.getUserId()%>"/>
             <div class="modal-body">
                 <form:formerror/>
-                <h3><%=$SH("_settings")%>
-                </h3>
                 <form:line label="_id"><%=$I(user.getId())%>
                 </form:line>
-                <form:text name="login" label="_login" required="true" value="<%=$H(user.getLogin())%>"/>
-                <form:password name="password" label="_password"/>
-                <form:text name="name" label="_name" value="<%=$H(user.getName())%>"/>
-                <form:text name="email" label="_email" required="true" value="<%=$H(user.getEmail())%>"/>
-                <h3><%=$SH("_groups")%>
+                <form:line label="_login" required="true"><%=$H(user.getLogin())%>
+                </form:line>
+                <form:text name="firstName" label="_firstName" value="<%=$H(user.getFirstName())%>"/>
+                <form:text name="name" label="_lastName" required="true" value="<%=$H(user.getName())%>"/>
+                <form:textarea name="notes" label="_notes" height="5rem"><%=$H(user.getNotes())%>
+                </form:textarea>
+                <h3><%=$SH("_address")%>
                 </h3>
-                <form:line label="_group"><%=$SH("_inGroup")%>
-                </form:line>
-                <% for (GroupData gdata : groups) {%><%
-                label = gdata.getName();%>
-                <form:line label="<%=label%>" padded="true">
-                    <form:check name="groupIds" value="<%=$I(gdata.getId())%>" checked="<%=user.getGroupIds().contains(gdata.getId())%>"/>
-                </form:line>
-                <%}%>
+                <form:text name="street" label="_street" value="<%=$H(user.getStreet())%>"/>
+                <form:text name="zipCode" label="_zipCode" value="<%=$H(user.getZipCode())%>"/>
+                <form:text name="city" label="_city" value="<%=$H(user.getCity())%>"/>
+                <form:text name="country" label="_country" value="<%=$H(user.getCountry())%>"/>
+                <h3><%=$SH("_contact")%>
+                </h3>
+                <form:text name="email" label="_email" required="true" value="<%=$H(user.getEmail())%>"/>
+                <form:text name="phone" label="_phone" value="<%=$H(user.getPhone())%>"/>
+                <form:text name="mobile" label="_mobile" value="<%=$H(user.getMobile())%>"/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close")%>
@@ -62,3 +60,4 @@
         </form:form>
     </div>
 </div>
+

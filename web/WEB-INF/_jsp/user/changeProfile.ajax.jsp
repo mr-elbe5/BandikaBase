@@ -35,21 +35,7 @@
                 </form:line>
                 <form:line label="_login" required="true"><%=$H(user.getLogin())%>
                 </form:line>
-                <form:text name="firstName" label="_firstName" value="<%=$H(user.getFirstName())%>"/>
-                <form:text name="lastName" label="_lastName" required="true" value="<%=$H(user.getLastName())%>"/>
-                <form:textarea name="notes" label="_notes" height="5rem"><%=$H(user.getNotes())%>
-                </form:textarea>
-                <h3><%=$SH("_address")%>
-                </h3>
-                <form:text name="street" label="_street" value="<%=$H(user.getStreet())%>"/>
-                <form:text name="zipCode" label="_zipCode" value="<%=$H(user.getZipCode())%>"/>
-                <form:text name="city" label="_city" value="<%=$H(user.getCity())%>"/>
-                <form:text name="country" label="_country" value="<%=$H(user.getCountry())%>"/>
-                <h3><%=$SH("_contact")%>
-                </h3>
                 <form:text name="email" label="_email" required="true" value="<%=$H(user.getEmail())%>"/>
-                <form:text name="phone" label="_phone" value="<%=$H(user.getPhone())%>"/>
-                <form:text name="mobile" label="_mobile" value="<%=$H(user.getMobile())%>"/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close")%>

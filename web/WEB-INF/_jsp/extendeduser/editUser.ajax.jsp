@@ -12,12 +12,12 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.group.GroupBean" %>
 <%@ page import="de.elbe5.group.GroupData" %>
-<%@ page import="de.elbe5.user.UserData" %>
 <%@ page import="java.util.List" %>
+<%@ page import="de.elbe5.extendeduser.ExtendedUserData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    UserData user = (UserData) rdata.getSessionObject("userData");
+    ExtendedUserData user = rdata.getSessionObject("userData", ExtendedUserData.class);
     List<GroupData> groups = GroupBean.getInstance().getAllGroups();
     String label;
     String url = "/ctrl/user/saveUser/" + user.getId();
@@ -40,8 +40,21 @@
                 </form:line>
                 <form:text name="login" label="_login" required="true" value="<%=$H(user.getLogin())%>"/>
                 <form:password name="password" label="_password"/>
-                <form:text name="name" label="_name" value="<%=$H(user.getName())%>"/>
+                <form:text name="firstName" label="_firstName" value="<%=$H(user.getFirstName())%>"/>
+                <form:text name="name" label="_lastName" required="true" value="<%=$H(user.getName())%>"/>
+                <form:textarea name="notes" label="_notes" height="5rem"><%=$H(user.getNotes())%>
+                </form:textarea>
+                <h3><%=$SH("_address")%>
+                </h3>
+                <form:text name="street" label="_street" value="<%=$H(user.getStreet())%>"/>
+                <form:text name="zipCode" label="_zipCode" value="<%=$H(user.getZipCode())%>"/>
+                <form:text name="city" label="_city" value="<%=$H(user.getCity())%>"/>
+                <form:text name="country" label="_country" value="<%=$H(user.getCountry())%>"/>
+                <h3><%=$SH("_contact")%>
+                </h3>
                 <form:text name="email" label="_email" required="true" value="<%=$H(user.getEmail())%>"/>
+                <form:text name="phone" label="_phone" value="<%=$H(user.getPhone())%>"/>
+                <form:text name="mobile" label="_mobile" value="<%=$H(user.getMobile())%>"/>
                 <h3><%=$SH("_groups")%>
                 </h3>
                 <form:line label="_group"><%=$SH("_inGroup")%>

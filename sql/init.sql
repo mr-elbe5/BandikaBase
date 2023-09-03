@@ -15,6 +15,7 @@ CREATE SEQUENCE s_user_id START 1000;
 CREATE TABLE IF NOT EXISTS t_user
 (
     id                 INTEGER      NOT NULL,
+    type               VARCHAR(60)  NOT NULL,
     change_date        TIMESTAMP    NOT NULL DEFAULT now(),
     first_name         VARCHAR(100) NOT NULL DEFAULT '',
     last_name          VARCHAR(100) NOT NULL,
@@ -72,7 +73,7 @@ CREATE SEQUENCE IF NOT EXISTS s_content_id START 1000;
 CREATE TABLE IF NOT EXISTS t_content
 (
     id            INTEGER       NOT NULL,
-    type          VARCHAR(30)   NOT NULL,
+    type          VARCHAR(60)   NOT NULL,
     creation_date TIMESTAMP     NOT NULL DEFAULT now(),
     change_date   TIMESTAMP     NOT NULL DEFAULT now(),
     parent_id     INTEGER       NULL,

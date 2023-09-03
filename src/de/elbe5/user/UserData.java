@@ -23,8 +23,7 @@ public class UserData extends BaseData implements IJsonData {
 
     public static int MIN_PASSWORD_LENGTH = 8;
 
-    protected String firstName = "";
-    protected String lastName = "";
+    protected String name = "";
     protected String email = "";
     protected String login = "";
     protected String passwordHash = "";
@@ -33,13 +32,6 @@ public class UserData extends BaseData implements IJsonData {
     protected boolean locked = false;
     protected boolean deleted = false;
 
-    protected String street = "";
-    protected String zipCode = "";
-    protected String city = "";
-    protected String country = "";
-    protected String phone = "";
-    protected String mobile = "";
-    protected String notes = "";
     protected Set<Integer> groupIds = new HashSet<>();
 
     protected List<GroupData> groups = new ArrayList<>();
@@ -47,29 +39,25 @@ public class UserData extends BaseData implements IJsonData {
     //from groups
     protected Set<GlobalRight> globalRights = new HashSet<>();
 
+    public UserData(){
+    }
+
+    public String getType() {
+        return getClass().getName();
+    }
+
+    public UserBean getBean() {
+        return UserBean.getInstance();
+    }
+
     // base data
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getName() {
-        if (firstName.length() == 0) {
-            return lastName;
-        }
-        return firstName + ' ' + lastName;
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -132,61 +120,6 @@ public class UserData extends BaseData implements IJsonData {
         this.deleted = deleted;
     }
 
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
 
     public Set<GlobalRight> getGlobalRights() {
         return globalRights;
@@ -214,28 +147,21 @@ public class UserData extends BaseData implements IJsonData {
 
     // multiple data
 
-    private void readBasicData(RequestData rdata) {
-        setFirstName(rdata.getAttributes().getString("firstName"));
-        setLastName(rdata.getAttributes().getString("lastName"));
+    public String getBackendEditJsp() {
+        return "/WEB-INF/_jsp/user/editUser.ajax.jsp";
+    }
+
+    public String getProfileJsp() {
+        return "/WEB-INF/_jsp/user/profile.jsp";
+    }
+
+    public String getProfileEditJsp() {
+        return "/WEB-INF/_jsp/user/changeProfile.ajax.jsp";
+    }
+
+    public void readBackendRequestData(RequestData rdata) {
+        setName(rdata.getAttributes().getString("name"));
         setEmail(rdata.getAttributes().getString("email"));
-        setStreet(rdata.getAttributes().getString("street"));
-        setZipCode(rdata.getAttributes().getString("zipCode"));
-        setCity(rdata.getAttributes().getString("city"));
-        setCountry(rdata.getAttributes().getString("country"));
-        setPhone(rdata.getAttributes().getString("phone"));
-        setMobile(rdata.getAttributes().getString("mobile"));
-        setNotes(rdata.getAttributes().getString("notes"));
-    }
-
-    private void checkBasics(RequestData rdata) {
-        if (lastName.isEmpty())
-            rdata.addIncompleteField("lastName");
-        if (email.isEmpty() && Configuration.isEmailMandatory())
-            rdata.addIncompleteField("email");
-    }
-
-    public void readSettingsRequestData(RequestData rdata) {
-        readBasicData(rdata);
         setLogin(rdata.getAttributes().getString("login"));
         setPassword(rdata.getAttributes().getString("password"));
         setGroupIds(rdata.getAttributes().getIntegerSet("groupIds"));
@@ -243,12 +169,15 @@ public class UserData extends BaseData implements IJsonData {
             rdata.addIncompleteField("login");
         if (isNew() && !hasPassword())
             rdata.addIncompleteField("password");
-        checkBasics(rdata);
+        if (name.isEmpty())
+            rdata.addIncompleteField("name");
     }
 
     public void readProfileRequestData(RequestData rdata) {
-        readBasicData(rdata);
-        checkBasics(rdata);
+        setName(rdata.getAttributes().getString("name"));
+        setEmail(rdata.getAttributes().getString("email"));
+        if (name.isEmpty())
+            rdata.addIncompleteField("name");
     }
 
     @Override

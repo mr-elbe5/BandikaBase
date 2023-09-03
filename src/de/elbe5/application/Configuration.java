@@ -8,8 +8,6 @@
  */
 package de.elbe5.application;
 
-import de.elbe5.base.Mailer;
-
 import jakarta.servlet.ServletContext;
 import java.util.*;
 
@@ -19,19 +17,9 @@ public class Configuration {
 
     private static String appTitle = "";
     private static String salt = "";
-    private static String smtpHost = null;
-    private static int smtpPort = 25;
-    private static Mailer.SmtpConnectionType smtpConnectionType = Mailer.SmtpConnectionType.plain;
-    private static String smtpUser = "";
-    private static String smtpPassword = "";
-    private static String mailSender = null;
-    private static String mailReceiver = null;
     private static int timerInterval = 30;
     private static Locale locale = Locale.GERMAN;
     private static final Map<String,Locale> locales = new HashMap<>();
-
-    private static boolean emailMandatory = true;
-    private static boolean logContent = true;
 
     static{
         locales.put("de",Locale.GERMAN);
@@ -56,62 +44,6 @@ public class Configuration {
         Configuration.salt = salt;
     }
 
-    public static String getSmtpHost() {
-        return smtpHost;
-    }
-
-    public static void setSmtpHost(String smtpHost) {
-        Configuration.smtpHost = smtpHost;
-    }
-
-    public static int getSmtpPort() {
-        return smtpPort;
-    }
-
-    public static void setSmtpPort(int smtpPort) {
-        Configuration.smtpPort = smtpPort;
-    }
-
-    public static Mailer.SmtpConnectionType getSmtpConnectionType() {
-        return smtpConnectionType;
-    }
-
-    public static void setSmtpConnectionType(Mailer.SmtpConnectionType smtpConnectionType) {
-        Configuration.smtpConnectionType = smtpConnectionType;
-    }
-
-    public static String getSmtpUser() {
-        return smtpUser;
-    }
-
-    public static void setSmtpUser(String smtpUser) {
-        Configuration.smtpUser = smtpUser;
-    }
-
-    public static String getSmtpPassword() {
-        return smtpPassword;
-    }
-
-    public static void setSmtpPassword(String smtpPassword) {
-        Configuration.smtpPassword = smtpPassword;
-    }
-
-    public static String getMailSender() {
-        return mailSender;
-    }
-
-    public static void setMailSender(String mailSender) {
-        Configuration.mailSender = mailSender;
-    }
-
-    public static String getMailReceiver() {
-        return mailReceiver;
-    }
-
-    public static void setMailReceiver(String mailReceiver) {
-        Configuration.mailReceiver = mailReceiver;
-    }
-
     public static Locale getLocale() {
         return locale;
     }
@@ -120,22 +52,6 @@ public class Configuration {
         if (locale == null || !locales.containsValue(locale))
             return;
         Configuration.locale = locale;
-    }
-
-    public static boolean isLogContent() {
-        return logContent;
-    }
-
-    public static void setLogContent(boolean logContent) {
-        Configuration.logContent = logContent;
-    }
-
-    public static boolean isEmailMandatory() {
-        return emailMandatory;
-    }
-
-    public static void setEmailMandatory(boolean emailMandatory) {
-        Configuration.emailMandatory = emailMandatory;
     }
 
     public static int getTimerInterval() {
@@ -148,20 +64,13 @@ public class Configuration {
 
     // read from config file
 
-    protected static String getSafeInitParameter(ServletContext servletContext, String key){
+    public static String getSafeInitParameter(ServletContext servletContext, String key){
         String s=servletContext.getInitParameter(key);
         return s==null ? "" : s;
     }
 
     public static void setConfigs(ServletContext servletContext) {
         setSalt(getSafeInitParameter(servletContext,"salt"));
-        setSmtpHost(getSafeInitParameter(servletContext,"mailHost"));
-        setSmtpPort(Integer.parseInt(getSafeInitParameter(servletContext,"mailPort")));
-        setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(getSafeInitParameter(servletContext,"mailConnectionType")));
-        setSmtpUser(getSafeInitParameter(servletContext,"mailUser"));
-        setSmtpPassword(getSafeInitParameter(servletContext,"mailPassword"));
-        setMailSender(getSafeInitParameter(servletContext,"mailSender"));
-        setMailReceiver(getSafeInitParameter(servletContext,"mailReceiver"));
         setTimerInterval(Integer.parseInt(getSafeInitParameter(servletContext,"timerInterval")));
         String language = getSafeInitParameter(servletContext,"defaultLanguage");
         try {

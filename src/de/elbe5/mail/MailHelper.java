@@ -6,7 +6,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.application;
+package de.elbe5.mail;
 
 import de.elbe5.base.Log;
 import de.elbe5.base.Mailer;
@@ -49,13 +49,13 @@ public class MailHelper {
 
     public static Mailer getMailer() {
         Mailer mailer = new Mailer();
-        mailer.setSmtpHost(Configuration.getSmtpHost());
-        mailer.setSmtpPort(Configuration.getSmtpPort());
-        mailer.setSmtpConnectionType(Configuration.getSmtpConnectionType());
-        mailer.setSmtpUser(Configuration.getSmtpUser());
-        mailer.setSmtpPassword(Configuration.getSmtpPassword());
-        mailer.setFrom(Configuration.getMailSender());
-        mailer.setReplyTo(Configuration.getMailSender());
+        mailer.setSmtpHost(MailConfiguration.getSmtpHost());
+        mailer.setSmtpPort(MailConfiguration.getSmtpPort());
+        mailer.setSmtpConnectionType(MailConfiguration.getSmtpConnectionType());
+        mailer.setSmtpUser(MailConfiguration.getSmtpUser());
+        mailer.setSmtpPassword(MailConfiguration.getSmtpPassword());
+        mailer.setFrom(MailConfiguration.getMailSender());
+        mailer.setReplyTo(MailConfiguration.getMailSender());
         return mailer;
     }
 }

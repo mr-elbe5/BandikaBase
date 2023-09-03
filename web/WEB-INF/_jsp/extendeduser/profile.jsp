@@ -11,11 +11,11 @@
 <%@include file="/WEB-INF/_jsp/_include/_functions.inc.jsp" %>
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.user.UserBean" %>
-<%@ page import="de.elbe5.user.UserData" %>
+<%@ page import="de.elbe5.extendeduser.ExtendedUserData" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
-    UserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId());
+    ExtendedUserData user = UserBean.getInstance().getUser(rdata.getLoginUser().getId(), ExtendedUserData.class);
 %>
 <form:message/>
 <section class="contentTop">
@@ -30,9 +30,29 @@
             </form:line>
             <form:line label="_login"><%=$H(user.getLogin())%>
             </form:line>
-            <form:line label="_name"><%=$H(user.getName())%>
+            <form:line label="_firstName"><%=$H(user.getFirstName())%>
             </form:line>
+            <form:line label="_lastName"><%=$H(user.getName())%>
+            </form:line>
+            <form:line label="_notes"><%=$H(user.getNotes())%>
+            </form:line>
+            <h3><%=$SH("_address")%>
+            </h3>
+            <form:line label="_street"><%=$H(user.getStreet())%>
+            </form:line>
+            <form:line label="_zipCode"><%=$H(user.getZipCode())%>
+            </form:line>
+            <form:line label="_city"><%=$H(user.getCity())%>
+            </form:line>
+            <form:line label="_country"><%=$H(user.getCountry())%>
+            </form:line>
+            <h3><%=$SH("_contact")%>
+            </h3>
             <form:line label="_email"><%=$H(user.getEmail())%>
+            </form:line>
+            <form:line label="_phone"><%=$H(user.getPhone())%>
+            </form:line>
+            <form:line label="_mobile"><%=$H(user.getMobile())%>
             </form:line>
         </div>
     </section>

@@ -153,26 +153,30 @@ public class UserController extends Controller {
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
         rdata.setSessionObject("userData", data);
-        return showEditUser();
+        return showEditUser(data);
     }
 
     public IResponse openCreateUser(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
         assertRights(GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser()));
-        UserData data = new UserData();
+        UserData data = getNewUserData();
         data.setNew(true);
         data.setId(UserBean.getInstance().getNextId());
         rdata.setSessionObject("userData", data);
-        return showEditUser();
+        return showEditUser(data);
+    }
+
+    protected UserData getNewUserData(){
+        return new UserData();
     }
 
     public IResponse saveUser(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
         assertRights(GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser()));
         UserData data = (UserData) rdata.getSessionObject("userData");
-        data.readSettingsRequestData(rdata);
+        data.readBackendRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showEditUser();
+            return showEditUser(data);
         }
         UserBean.getInstance().saveUser(data);
         UserCache.setDirty();
@@ -197,20 +201,10 @@ public class UserController extends Controller {
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
-    public IResponse showPortrait(RequestData rdata) {
-        assertSessionCall(rdata);
-        int userId = rdata.getId();
-        BinaryFile file = UserBean.getInstance().getBinaryPortraitData(userId);
-        if (file==null){
-            return new StatusResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-        return new MemoryFileResponse(file);
-    }
-
     public IResponse openProfile(RequestData rdata) {
         assertSessionCall(rdata);
         assertRights(rdata.isLoggedIn());
-        return showProfile();
+        return showProfile(rdata.getLoginUser());
     }
 
     public IResponse openChangePassword(RequestData rdata) {
@@ -255,7 +249,7 @@ public class UserController extends Controller {
     public IResponse openChangeProfile(RequestData rdata) {
         assertSessionCall(rdata);
         assertRights(rdata.isLoggedIn());
-        return showChangeProfile();
+        return showChangeProfile(rdata.getLoginUser());
     }
 
     public IResponse changeProfile(RequestData rdata) {
@@ -265,7 +259,7 @@ public class UserController extends Controller {
         UserData data = UserBean.getInstance().getUser(userId);
         data.readProfileRequestData(rdata);
         if (!rdata.checkFormErrors()) {
-            return showChangeProfile();
+            return showChangeProfile(data);
         }
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
@@ -274,8 +268,8 @@ public class UserController extends Controller {
         return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
-    protected IResponse showProfile() {
-        JspInclude jsp = new JspInclude("/WEB-INF/_jsp/user/profile.jsp");
+    protected IResponse showProfile(UserData data) {
+        JspInclude jsp = new JspInclude(data.getProfileJsp());
         return new MasterResponse(MasterResponse.DEFAULT_MASTER, jsp);
     }
 
@@ -283,20 +277,16 @@ public class UserController extends Controller {
         return new ForwardResponse("/WEB-INF/_jsp/user/changePassword.ajax.jsp");
     }
 
-    protected IResponse showChangeProfile() {
-        return new ForwardResponse("/WEB-INF/_jsp/user/changeProfile.ajax.jsp");
+    protected IResponse showChangeProfile(UserData data) {
+        return new ForwardResponse(data.getProfileEditJsp());
     }
 
     protected IResponse showLogin() {
         return new ForwardResponse("/WEB-INF/_jsp/user/login.jsp");
     }
 
-    protected IResponse showEditGroup() {
-        return new ForwardResponse("/WEB-INF/_jsp/user/editGroup.ajax.jsp");
-    }
-
-    protected IResponse showEditUser() {
-        return new ForwardResponse("/WEB-INF/_jsp/user/editUser.ajax.jsp");
+    protected IResponse showEditUser(UserData data) {
+        return new ForwardResponse(data.getBackendEditJsp());
     }
 
 }
