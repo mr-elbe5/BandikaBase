@@ -39,8 +39,6 @@ public class ContentServlet extends WebServlet {
             else{
                 result=new RedirectResponse(getDefaultRoute(rdata));
             }
-            if (rdata.hasCookies())
-                rdata.setCookies(response);
             result.processResponse(getServletContext(), rdata, response);
         }
         catch (ResponseException ce){

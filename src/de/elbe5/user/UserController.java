@@ -74,10 +74,10 @@ public class UserController extends Controller {
         String next = rdata.getAttributes().getString("next");
         if (!next.isEmpty())
                 return new ForwardResponse(next);
-        return showLoginHome();
+        return showLoginHome(rdata);
     }
 
-    protected IResponse showLoginHome() {
+    protected IResponse showLoginHome(RequestData rdata) {
         return showHome();
     }
 
@@ -224,19 +224,19 @@ public class UserController extends Controller {
         String newPassword = rdata.getAttributes().getString("newPassword1");
         String newPassword2 = rdata.getAttributes().getString("newPassword2");
         if (newPassword.length() < UserData.MIN_PASSWORD_LENGTH) {
-            rdata.addFormField("newPassword1");
+            rdata.addFormErrorField("newPassword1");
             rdata.addFormError(LocalizedStrings.string("_passwordLengthError"));
             return showChangePassword();
         }
         if (!newPassword.equals(newPassword2)) {
-            rdata.addFormField("newPassword1");
-            rdata.addFormField("newPassword2");
+            rdata.addFormErrorField("newPassword1");
+            rdata.addFormErrorField("newPassword2");
             rdata.addFormError(LocalizedStrings.string("_passwordsDontMatch"));
             return showChangePassword();
         }
         UserData data = UserBean.getInstance().loginUser(user.getLogin(), oldPassword);
         if (data == null) {
-            rdata.addFormField("newPassword1");
+            rdata.addFormErrorField("newPassword1");
             rdata.addFormError(LocalizedStrings.string("_badLogin"));
             return showChangePassword();
         }

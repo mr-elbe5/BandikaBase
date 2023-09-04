@@ -87,17 +87,8 @@ public class KeyValueMap extends HashMap<String, Object> {
         List<Integer> list = new ArrayList<>();
         Object obj = get(key);
         if (obj != null) {
-            if (obj instanceof String) {
-                StringTokenizer stk = new StringTokenizer((String) obj, ",");
-                String token = null;
-                while (stk.hasMoreTokens()) {
-                    try {
-                        token = stk.nextToken();
-                        list.add(Integer.parseInt(token));
-                    } catch (NumberFormatException e) {
-                        Log.error("wrong number format: " + token);
-                    }
-                }
+            if (obj instanceof String src) {
+                list = StringHelper.toIntList(src);
             } else if (obj instanceof String[]) {
                 String[] values = (String[]) get(key);
                 if (values != null) {

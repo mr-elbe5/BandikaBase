@@ -8,6 +8,8 @@
  */
 package de.elbe5.user;
 
+import de.elbe5.content.ContentData;
+
 import java.util.*;
 
 public class UserCache {
@@ -55,5 +57,15 @@ public class UserCache {
     public static UserData getUser(int id) {
         checkDirty();
         return userMap.get(id);
+    }
+
+    public static <T extends UserData> T getUser(int id, Class<T> cls) {
+        checkDirty();
+        try {
+            return cls.cast(userMap.get(id));
+        }
+        catch(NullPointerException | ClassCastException e){
+            return null;
+        }
     }
 }

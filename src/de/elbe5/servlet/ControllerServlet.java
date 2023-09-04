@@ -54,8 +54,6 @@ public class ControllerServlet extends WebServlet {
         rdata.init();
         try {
             IResponse result = getResponse(controller, methodName, rdata);
-            if (rdata.hasCookies())
-                rdata.setCookies(response);
             result.processResponse(getServletContext(), rdata, response);
         } catch (ResponseException ce) {
             handleException(request, response, ce.getResponseCode());

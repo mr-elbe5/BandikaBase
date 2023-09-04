@@ -119,6 +119,15 @@ public class RequestData {
         return getSessionUser();
     }
 
+    public <T extends UserData> T getLoginUser(Class<T> cls) {
+        try {
+            return cls.cast(getLoginUser());
+        }
+        catch(NullPointerException | ClassCastException e){
+            return null;
+        }
+    }
+
     public int getUserId() {
         UserData user = getLoginUser();
         return user == null ? 0 : user.getId();
@@ -141,7 +150,7 @@ public class RequestData {
         getFormError(true).addFormError(s);
     }
 
-    public void addFormField(String field) {
+    public void addFormErrorField(String field) {
         getFormError(true).addFormField(field);
     }
 
@@ -499,36 +508,6 @@ public class RequestData {
         removeAllSessionObjects();
         request.getSession(true);
     }
-
-    /*************** cookie methods ***************/
-
-    public void addLoginCookie(String name, String value, int expirationDays){
-        Cookie cookie=new Cookie("elbe5cms_"+name,value);
-        cookie.setPath("/ctrl/user/login");
-        cookie.setMaxAge(expirationDays*24*60*60);
-        cookies.put(cookie.getName(),cookie);
-    }
-
-    public boolean hasCookies(){
-        return !(cookies.isEmpty());
-    }
-
-    public void setCookies(HttpServletResponse response){
-        for (Cookie cookie : cookies.values()){
-            response.addCookie(cookie);
-        }
-    }
-
-    public Map<String,String> readLoginCookies(){
-        Map<String, String> map=new HashMap<>();
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().startsWith("elbe5cms_")) {
-                map.put(cookie.getName().substring(9), cookie.getValue());
-            }
-        }
-        return map;
-    }
-
 }
 
 

@@ -30,30 +30,12 @@ delete from t_system_right where name = 'CONTENTAPPROVE';
 alter table t_content alter column type type VARCHAR(60);
 
 alter table t_user add type VARCHAR(60);
-update t_user set type='de.elbe5.user.ExtendedUserData';
+update t_user set type='de.elbe5.user.UserData';
 alter table t_user alter column type set NOT NULL;
 
 alter table t_user add name VARCHAR(255);
 update t_user set name = last_name where first_name = '';
 update t_user set name = first_name || ' ' || last_name where first_name <> '';
-
-CREATE TABLE IF NOT EXISTS t_extended_user
-(
-    id                 INTEGER      NOT NULL,
-    first_name         VARCHAR(100) NOT NULL DEFAULT '',
-    street             VARCHAR(100) NOT NULL DEFAULT '',
-    zipCode            VARCHAR(16)  NOT NULL DEFAULT '',
-    city               VARCHAR(50)  NOT NULL DEFAULT '',
-    country            VARCHAR(50)  NOT NULL DEFAULT '',
-    phone              VARCHAR(50)  NOT NULL DEFAULT '',
-    mobile             VARCHAR(50)  NOT NULL DEFAULT '',
-    notes              VARCHAR(500) NOT NULL DEFAULT '',
-    CONSTRAINT t_extended_user_pk PRIMARY KEY (id),
-    CONSTRAINT t_extended_user_fk1 FOREIGN KEY (id) REFERENCES t_user(id) ON DELETE CASCADE
-);
-
-insert into t_extended_user (id, first_name, street, zipCode, city, country, phone, mobile, notes)
-select id, first_name, street, zipCode, city, country, phone, mobile, notes from t_user;
 
 alter table t_user drop column first_name;
 alter table t_user drop column last_name;
@@ -64,4 +46,6 @@ alter table t_user drop column country;
 alter table t_user drop column phone;
 alter table t_user drop column mobile;
 alter table t_user drop column notes;
+
+
 

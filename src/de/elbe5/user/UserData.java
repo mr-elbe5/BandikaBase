@@ -163,10 +163,18 @@ public class UserData extends BaseData implements IJsonData {
         setName(rdata.getAttributes().getString("name"));
         setEmail(rdata.getAttributes().getString("email"));
         setLogin(rdata.getAttributes().getString("login"));
-        setPassword(rdata.getAttributes().getString("password"));
+        String pwd = rdata.getAttributes().getString("password");
+        String pwd2 = rdata.getAttributes().getString("password2");
+        if (pwd.equals(pwd2))
+            setPassword(pwd);
         setGroupIds(rdata.getAttributes().getIntegerSet("groupIds"));
         if (login.isEmpty())
             rdata.addIncompleteField("login");
+        if (!pwd.equals(pwd2)){
+            rdata.addFormError(LocalizedStrings.string("_passwordsDontMatch"));
+            rdata.addFormErrorField("password");
+            rdata.addFormErrorField("password2");
+        }
         if (isNew() && !hasPassword())
             rdata.addIncompleteField("password");
         if (name.isEmpty())

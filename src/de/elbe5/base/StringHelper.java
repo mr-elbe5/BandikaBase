@@ -83,6 +83,21 @@ public class StringHelper {
         return sb.toString();
     }
 
+    public static List<Integer> toIntList(String src){
+        List<Integer> list = new ArrayList<>();
+        StringTokenizer stk = new StringTokenizer(src, ",");
+        String token = null;
+        while (stk.hasMoreTokens()) {
+            try {
+                token = stk.nextToken();
+                list.add(Integer.parseInt(token));
+            } catch (NumberFormatException e) {
+                Log.error("wrong number format: " + token);
+            }
+        }
+        return list;
+    }
+
     public static boolean isNullOrEmpty(String s) {
         return s == null || s.length() == 0;
     }
