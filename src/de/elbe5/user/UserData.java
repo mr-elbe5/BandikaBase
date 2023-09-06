@@ -182,10 +182,7 @@ public class UserData extends BaseData implements IJsonData {
     }
 
     public void readProfileRequestData(RequestData rdata) {
-        setName(rdata.getAttributes().getString("name"));
         setEmail(rdata.getAttributes().getString("email"));
-        if (name.isEmpty())
-            rdata.addIncompleteField("name");
     }
 
     @Override
