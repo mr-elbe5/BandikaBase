@@ -572,8 +572,9 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
                 .add("documents", getDocumentsForJson());
     }
 
-    public JsonArray getImagesForJson() {
-        JsonArray jsImages = new JsonArray();
+    @SuppressWarnings("unchecked")
+    public JSONArray getImagesForJson() {
+        JSONArray jsImages = new JSONArray();
         for (ImageData image : getFiles(ImageData.class)) {
             JsonObject jsImage = image.getJson();
             jsImages.add(jsImage);
@@ -581,8 +582,9 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         return jsImages;
     }
 
-    public JsonArray getDocumentsForJson() {
-        JsonArray jsDocuments = new JsonArray();
+    @SuppressWarnings("unchecked")
+    public JSONArray getDocumentsForJson() {
+        JSONArray jsDocuments = new JSONArray();
         for (DocumentData document : getFiles(DocumentData.class)) {
             JsonObject jsDocument = document.getJson();
             jsDocuments.add(jsDocument);

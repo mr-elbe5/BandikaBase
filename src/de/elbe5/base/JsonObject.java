@@ -8,6 +8,7 @@
  */
 package de.elbe5.base;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.time.LocalDate;
@@ -51,7 +52,7 @@ public class JsonObject extends JSONObject {
         return this;
     }
 
-    public JsonObject add(String key, JsonArray val){
+    public JsonObject add(String key, JSONArray val){
         if (val != null && !val.isEmpty())
             put(key, val);
         return this;
