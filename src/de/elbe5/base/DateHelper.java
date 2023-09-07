@@ -1,5 +1,7 @@
 package de.elbe5.base;
 
+import de.elbe5.application.Configuration;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -109,6 +111,10 @@ public class DateHelper {
         if (s == null || s.isEmpty())
             return null;
         return LocalDateTime.parse(s, DateTimeFormatter.ofPattern(getDateTimePattern()));
+    }
+
+    public static String toHtml(LocalDateTime date){
+        return Configuration.showDateTime() ? toHtmlDateTime(date) : toHtmlDate(date);
     }
 
     public static String toISODateTime(LocalDateTime date) {

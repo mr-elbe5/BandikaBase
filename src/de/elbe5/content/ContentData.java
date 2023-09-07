@@ -491,10 +491,8 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     // on openCreateBackend
     public void setCreateValues(ContentData parent, RequestData rdata) {
-        setNew(true);
+        super.setCreateValues(rdata);
         setId(ContentBean.getInstance().getNextId());
-        setCreatorId(rdata.getUserId());
-        setChangerId(rdata.getUserId());
         setParentId(parent.getId());
         setParent(parent);
         inheritRightsFromParent();
@@ -505,17 +503,15 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     public void setUpdateValues(ContentData cachedData, RequestData rdata) {
         if (cachedData == null)
             return;
-        if (!isNew()) {
-            setParent(cachedData.getParent());
-            setPath(cachedData.getPath());
-            for (ContentData subContent : cachedData.getChildren()) {
-                getChildren().add(subContent);
-            }
-            for (FileData file : cachedData.getFiles()) {
-                getFiles().add(file);
-            }
+        super.setUpdateValues(rdata);
+        setParent(cachedData.getParent());
+        setPath(cachedData.getPath());
+        for (ContentData subContent : cachedData.getChildren()) {
+            getChildren().add(subContent);
         }
-        setChangerId(rdata.getUserId());
+        for (FileData file : cachedData.getFiles()) {
+            getFiles().add(file);
+        }
     }
 
     public void readBackendCreateRequestData(RequestData rdata) {

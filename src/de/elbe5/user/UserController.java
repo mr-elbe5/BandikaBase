@@ -147,21 +147,22 @@ public class UserController extends Controller {
         return showHome();
     }
 
+    public IResponse openCreateUser(RequestData rdata) {
+        assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser()));
+        UserData data = getNewUserData();
+        data.setCreateValues(rdata);
+        data.setId(UserBean.getInstance().getNextId());
+        rdata.setSessionObject("userData", data);
+        return showEditUser(data);
+    }
+
     public IResponse openEditUser(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
         assertRights(GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser()));
         int userId = rdata.getId();
         UserData data = UserBean.getInstance().getUser(userId);
-        rdata.setSessionObject("userData", data);
-        return showEditUser(data);
-    }
-
-    public IResponse openCreateUser(RequestData rdata) {
-        assertLoggedInSessionCall(rdata);
-        assertRights(GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser()));
-        UserData data = getNewUserData();
-        data.setNew(true);
-        data.setId(UserBean.getInstance().getNextId());
+        data.setUpdateValues(rdata);
         rdata.setSessionObject("userData", data);
         return showEditUser(data);
     }
@@ -241,6 +242,7 @@ public class UserController extends Controller {
             return showChangePassword();
         }
         data.setPassword(newPassword);
+        data.setUpdateValues(rdata);
         UserBean.getInstance().saveUserPassword(data);
         rdata.setMessage(LocalizedStrings.string("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/user/openProfile");

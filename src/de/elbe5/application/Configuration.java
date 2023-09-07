@@ -20,6 +20,7 @@ public class Configuration {
     private static int timerInterval = 30;
     private static Locale locale = Locale.GERMAN;
     private static final Map<String,Locale> locales = new HashMap<>();
+    static boolean showDateTime = false;
 
     static{
         locales.put("de",Locale.GERMAN);
@@ -54,6 +55,14 @@ public class Configuration {
         Configuration.locale = locale;
     }
 
+    public static boolean showDateTime() {
+        return showDateTime;
+    }
+
+    public static void setShowDateTime(boolean showDateTime) {
+        Configuration.showDateTime = showDateTime;
+    }
+
     public static int getTimerInterval() {
         return timerInterval;
     }
@@ -72,6 +81,7 @@ public class Configuration {
     public static void setConfigs(ServletContext servletContext) {
         setSalt(getSafeInitParameter(servletContext,"salt"));
         setTimerInterval(Integer.parseInt(getSafeInitParameter(servletContext,"timerInterval")));
+        setShowDateTime("true".equals(getSafeInitParameter(servletContext,"showDateTime")));
         String language = getSafeInitParameter(servletContext,"defaultLanguage");
         try {
             setLocale(new Locale(language));
@@ -79,5 +89,4 @@ public class Configuration {
         }
         System.out.println("language is "+ getLocale().getDisplayName());
     }
-
 }

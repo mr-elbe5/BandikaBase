@@ -161,12 +161,14 @@ public abstract class FileData extends BaseData {
     // multiple data
 
     public void setCreateValues(ContentData parent, RequestData rdata) {
-        setNew(true);
+        super.setCreateValues(rdata);
         setId(FileBean.getInstance().getNextId());
-        setCreatorId(rdata.getUserId());
-        setChangerId(rdata.getUserId());
         setParentId(parent.getId());
         setParent(parent);
+    }
+
+    public void setUpdateValues(RequestData rdata){
+        super.setUpdateValues(rdata);
     }
 
     // helper

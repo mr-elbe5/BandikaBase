@@ -35,7 +35,7 @@
                 </form:line>
                 <form:line label="_login" required="true"><%=$H(user.getLogin())%>
                 </form:line>
-                <form:text name="email" label="_email" required="true" value="<%=$H(user.getEmail())%>"/>
+                <form:text name="email" label="_email" value="<%=$H(user.getEmail())%>"/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><%=$SH("_close")%>

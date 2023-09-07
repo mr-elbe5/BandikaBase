@@ -44,6 +44,7 @@ public class ImageController extends FileController {
     public IResponse openEditFile(RequestData rdata) {
         assertLoggedInSessionCall(rdata);
         FileData data = FileBean.getInstance().getFile(rdata.getId(),true);
+        data.setUpdateValues(rdata);
         ContentData parent=ContentCache.getContent(data.getParentId());
         assertRights(parent.hasUserEditRight(rdata.getLoginUser()));
         rdata.setSessionObject(ContentRequestKeys.KEY_FILE,data);
@@ -61,7 +62,6 @@ public class ImageController extends FileController {
         if (!rdata.checkFormErrors()) {
             return showEditFile();
         }
-        data.setChangerId(rdata.getUserId());
         if (!FileBean.getInstance().saveFile(data, data.isNew() || data.getBytes()!=null)) {
             setSaveError(rdata);
             return showEditFile();

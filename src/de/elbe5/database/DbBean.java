@@ -124,29 +124,6 @@ public abstract class DbBean {
         return now;
     }
 
-    protected boolean changedItem(Connection con, String sql, BaseData data) {
-        if (data.isNew()) {
-            return true;
-        }
-        PreparedStatement pst = null;
-        ResultSet rs;
-        boolean result = true;
-        try {
-            pst = con.prepareStatement(sql);
-            pst.setInt(1, data.getId());
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
-                rs.close();
-                result = !date.equals(data.getChangeDate());
-            }
-        } catch (Exception ignored) {
-        } finally {
-            closeStatement(pst);
-        }
-        return result;
-    }
-
     public boolean deleteItem(String sql, int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;

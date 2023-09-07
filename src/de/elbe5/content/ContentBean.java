@@ -13,6 +13,7 @@ import de.elbe5.database.DbBean;
 
 import java.lang.reflect.Constructor;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class ContentBean extends DbBean {
@@ -40,12 +41,6 @@ public class ContentBean extends DbBean {
 
     public int getNextId() {
         return getNextId("s_content_id");
-    }
-
-    private static final String CHANGED_SQL = "SELECT change_date FROM t_content WHERE id=?";
-
-    public boolean changedContent(Connection con, ContentData data) {
-        return changedItem(con, CHANGED_SQL, data);
     }
 
     private static final String GET_ALL_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,open_access,reader_group_id,editor_group_id,nav_type,active FROM t_content";
@@ -150,11 +145,8 @@ public class ContentBean extends DbBean {
     public boolean saveContent(ContentData data) {
         Connection con = startTransaction();
         try {
-            if (!data.isNew() && changedContent(con, data)) {
-                return rollbackTransaction(con);
-            }
             ContentBean extrasBean = data.getBean();
-            data.setChangeDate(getServerTime(con));
+            data.setChangeDate(LocalDateTime.now());
             if (data.isNew()){
                 data.setCreationDate(data.getChangeDate());
                 createContent(con,data);

@@ -54,10 +54,6 @@ public class UserBean extends DbBean {
 
     private static final String CHANGED_SQL = "SELECT change_date FROM t_user WHERE id=?";
 
-    protected boolean changedUser(Connection con, UserData data) {
-        return changedLogin(con, data);
-    }
-
     private static final String GET_ALL_USERS_SQL = "SELECT type,id,change_date,name,email,login,locked,deleted FROM t_user WHERE deleted=FALSE";
 
     public List<UserData> getAllUsers() {
@@ -250,11 +246,7 @@ public class UserBean extends DbBean {
         Connection con = startTransaction();
         PreparedStatement pst;
         try {
-            if (changedUser(con, data)) {
-                return rollbackTransaction(con);
-            }
             String token=UUID.randomUUID().toString();
-            LocalDateTime now = getServerTime();
             pst = con.prepareStatement(SET_TOKEN_SQL);
             pst.setString(1, token);
             pst.setInt(2, data.getId());
@@ -374,13 +366,8 @@ public class UserBean extends DbBean {
     public boolean saveUser(UserData data) {
         Connection con = startTransaction();
         try {
-            if (!data.isNew() && changedUser(con, data)) {
-                return rollbackTransaction(con);
-            }
             UserBean extrasBean = data.getBean();
-            data.setChangeDate(getServerTime(con));
             if (data.isNew()){
-                data.setCreationDate(data.getChangeDate());
                 createUser(con,data);
                 if (extrasBean != null)
                     extrasBean.createUserExtras(con, data);
@@ -455,9 +442,6 @@ public class UserBean extends DbBean {
     public boolean saveUserProfile(UserData data) {
         Connection con = startTransaction();
         try {
-            if (changedUser(con, data)) {
-                return rollbackTransaction(con);
-            }
             data.setChangeDate(getServerTime(con));
             writeUserProfile(con, data);
             UserBean extrasBean = data.getBean();
@@ -490,17 +474,9 @@ public class UserBean extends DbBean {
     public void updateProfileExtras(Connection con, UserData userData) throws SQLException{
     }
 
-    protected boolean changedLogin(Connection con, UserData data) {
-        return changedItem(con, CHANGED_SQL, data);
-    }
-
     public boolean saveUserPassword(UserData data) {
         Connection con = startTransaction();
         try {
-            if (changedLogin(con, data)) {
-                return rollbackTransaction(con);
-            }
-            data.setChangeDate(getServerTime(con));
             writeUserPassword(con, data);
             return commitTransaction(con);
         } catch (Exception se) {

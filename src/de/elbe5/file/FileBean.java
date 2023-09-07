@@ -58,12 +58,6 @@ public class FileBean extends DbBean {
         return getNextId("s_file_id");
     }
 
-    private static final String CHANGED_SQL = "SELECT change_date FROM t_file WHERE id=?";
-
-    public boolean changedFile(Connection con, FileData data) {
-        return changedItem(con, CHANGED_SQL, data);
-    }
-
     private static final String GET_ALL_FILES_SQL = "SELECT type,id,creation_date,change_date,parent_id,file_name,display_name,description,creator_id,changer_id,content_type,file_size FROM t_file order by file_name";
 
     public List<FileData> getAllFiles() {
@@ -190,10 +184,6 @@ public class FileBean extends DbBean {
     }
 
     public boolean saveFile(Connection con, FileData data, boolean complete) throws SQLException {
-        if (!data.isNew() && changedFile(con, data)) {
-            return false;
-        }
-        data.setChangeDate(getServerTime(con));
         writeFile(con, data, complete);
         FileBean extrasBean = data.getBean();
         if (extrasBean != null) {
@@ -213,7 +203,6 @@ public class FileBean extends DbBean {
         if (!data.isNew() && data.getBytes()==null)
             return;
         PreparedStatement pst;
-        data.setChangeDate(getServerTime(con));
         int i = 1;
         pst = con.prepareStatement(data.isNew() ? INSERT_FILE_SQL : (complete ? UPDATE_FILE_SQL : UPDATE_FILE_NOBYTES_SQL));
         pst.setString(i++, data.getClass().getName());

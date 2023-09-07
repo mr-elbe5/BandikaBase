@@ -35,12 +35,6 @@ public class GroupBean extends DbBean {
         return getNextId("s_group_id");
     }
 
-    private static final String CHANGED_SQL = "SELECT change_date FROM t_group WHERE id=?";
-
-    protected boolean changedGroup(Connection con, GroupData data) {
-        return changedItem(con, CHANGED_SQL, data);
-    }
-
     public List<GroupData> getAllGroups() {
         List<GroupData> list = new ArrayList<>();
         Connection con = getConnection();
@@ -122,9 +116,6 @@ public class GroupBean extends DbBean {
     public boolean saveGroup(GroupData data) {
         Connection con = startTransaction();
         try {
-            if (!data.isNew() && changedGroup(con, data)) {
-                return rollbackTransaction(con);
-            }
             data.setChangeDate(getServerTime(con));
             writeGroup(con, data);
             writeGroupRights(con, data);

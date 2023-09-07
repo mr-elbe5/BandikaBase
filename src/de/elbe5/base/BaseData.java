@@ -8,6 +8,9 @@
  */
 package de.elbe5.base;
 
+import de.elbe5.content.ContentBean;
+import de.elbe5.content.ContentData;
+import de.elbe5.request.RequestData;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import org.json.simple.JSONObject;
@@ -104,6 +107,19 @@ public class BaseData implements IJsonData {
 
     public boolean hasValidData(){
         return getId() != 0;
+    }
+
+    public void setCreateValues(RequestData rdata) {
+        setNew(true);
+        setCreationDate(LocalDateTime.now());
+        setChangeDate(getCreationDate());
+        setCreatorId(rdata.getUserId());
+        setChangerId(rdata.getUserId());
+    }
+
+    public void setUpdateValues(RequestData rdata){
+        setChangeDate(LocalDateTime.now());
+        setChangerId(rdata.getUserId());
     }
 
     public JsonObject getJson() {

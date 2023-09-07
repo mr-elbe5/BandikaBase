@@ -42,7 +42,7 @@
                 <form:password name="password" label="_password"/>
                 <form:password name="password2" label="_retypePassword"/>
                 <form:text name="name" label="_name" value="<%=$H(user.getName())%>"/>
-                <form:text name="email" label="_email" required="true" value="<%=$H(user.getEmail())%>"/>
+                <form:text name="email" label="_email" value="<%=$H(user.getEmail())%>"/>
                 <h3><%=$SH("_groups")%>
                 </h3>
                 <form:line label="_group"><%=$SH("_inGroup")%>
