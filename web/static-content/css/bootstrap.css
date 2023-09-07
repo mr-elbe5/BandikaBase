@@ -4095,7 +4095,7 @@ button.close {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1050;
+  z-index: 11050;
   display: none;
   width: 100%;
   height: 100%;
@@ -4175,7 +4175,7 @@ button.close {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1040;
+  z-index: 11040;
   width: 100vw;
   height: 100vh;
   background-color: #000;
@@ -4272,7 +4272,7 @@ button.close {
 }
 .tooltip {
   position: absolute;
-  z-index: 1070;
+  z-index: 11070;
   display: block;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -4374,7 +4374,7 @@ button.close {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1060;
+  z-index: 11060;
   display: block;
   max-width: 276px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
