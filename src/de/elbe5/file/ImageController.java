@@ -8,7 +8,9 @@
  */
 package de.elbe5.file;
 
+import de.elbe5.base.BinaryFile;
 import de.elbe5.base.LocalizedStrings;
+import de.elbe5.base.Log;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
@@ -16,6 +18,8 @@ import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
 import de.elbe5.response.*;
 import de.elbe5.servlet.ControllerCache;
+import de.elbe5.user.UserData;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ImageController extends FileController {
 
@@ -80,6 +84,33 @@ public class ImageController extends FileController {
 
     protected IResponse showEditFile() {
         return new ForwardResponse("/WEB-INF/_jsp/file/editImage.ajax.jsp");
+    }
+
+    public IResponse uploadImage(RequestData rdata) {
+        Log.log("uploadImage");
+        assertApiCall(rdata);
+        UserData user = rdata.getLoginUser();
+        if (user == null)
+            return new StatusResponse(HttpServletResponse.SC_UNAUTHORIZED);
+        int contentId = rdata.getId();
+        int remoteImageId = rdata.getAttributes().getInt("imageId");
+        Log.info("remote image id = " + remoteImageId);
+        ContentData content=ContentCache.getContent(contentId);
+        assert(content != null);
+        BinaryFile file = rdata.getAttributes().getFile("file");
+        assert(file!=null);
+        ImageData image = new ImageData();
+        image.setCreateValues(content, rdata);
+        if (!image.createFromBinaryFile(file, image.getMaxWidth(), image.getMaxHeight(), image.getMaxPreviewWidth(),image.getMaxPreviewHeight(), false)) {
+            return new StatusResponse(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        image.setChangerId(rdata.getUserId());
+        if (!ImageBean.getInstance().saveFile(image,true)) {
+            return new StatusResponse(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        image.setNew(false);
+        ContentCache.setDirty();
+        return new JsonResponse(getIdJson(image.getId()).toJSONString());
     }
 
 }
