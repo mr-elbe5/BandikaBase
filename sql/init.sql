@@ -17,21 +17,12 @@ CREATE TABLE IF NOT EXISTS t_user
     id                 INTEGER      NOT NULL,
     type               VARCHAR(60)  NOT NULL,
     change_date        TIMESTAMP    NOT NULL DEFAULT now(),
-    first_name         VARCHAR(100) NOT NULL DEFAULT '',
-    last_name          VARCHAR(100) NOT NULL,
-    street             VARCHAR(100) NOT NULL DEFAULT '',
-    zipCode            VARCHAR(16)  NOT NULL DEFAULT '',
-    city               VARCHAR(50)  NOT NULL DEFAULT '',
-    country            VARCHAR(50)  NOT NULL DEFAULT '',
+    name         VARCHAR(100) NOT NULL DEFAULT '',
     email              VARCHAR(100) NOT NULL DEFAULT '',
-    phone              VARCHAR(50)  NOT NULL DEFAULT '',
-    mobile             VARCHAR(50)  NOT NULL DEFAULT '',
-    notes              VARCHAR(500) NOT NULL DEFAULT '',
     login              VARCHAR(30)  NOT NULL,
     pwd                VARCHAR(100) NOT NULL,
     token              VARCHAR(100) NOT NULL DEFAULT '',
-    locked             BOOLEAN      NOT NULL DEFAULT FALSE,
-    deleted            BOOLEAN      NOT NULL DEFAULT FALSE,
+    active             BOOLEAN      NOT NULL DEFAULT TRUE,
     CONSTRAINT t_user_pk PRIMARY KEY (id)
 );
 
@@ -135,8 +126,8 @@ CREATE OR REPLACE VIEW v_preview_file as (
 
 
 -- root user
-INSERT INTO t_user (id,first_name,last_name,email,login,pwd)
-VALUES (1,'System','Administrator','root@localhost','root','');
+INSERT INTO t_user (id,type,name,email,login,pwd)
+VALUES (1,'de.elbe5.user.UserData','Administrator','root@localhost','root','');
 
 -- timer
 INSERT INTO t_timer_task (name,display_name,execution_interval,minute,active)

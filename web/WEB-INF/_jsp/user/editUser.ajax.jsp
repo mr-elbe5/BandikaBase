@@ -43,6 +43,9 @@
                 <form:password name="password2" label="_retypePassword"/>
                 <form:text name="name" label="_name" value="<%=$H(user.getName())%>"/>
                 <form:text name="email" label="_email" value="<%=$H(user.getEmail())%>"/>
+                <form:line label="_active" padded="true">
+                    <form:check name="active" value="true" checked="<%=user.isActive()%>"/>
+                </form:line>
                 <h3><%=$SH("_groups")%>
                 </h3>
                 <form:line label="_group"><%=$SH("_inGroup")%>

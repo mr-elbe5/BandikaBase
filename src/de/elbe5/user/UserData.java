@@ -29,8 +29,7 @@ public class UserData extends BaseData implements IJsonData {
     protected String passwordHash = "";
     protected String token = "";
 
-    protected boolean locked = false;
-    protected boolean deleted = false;
+    protected boolean active = false;
 
     protected Set<Integer> groupIds = new HashSet<>();
 
@@ -104,22 +103,13 @@ public class UserData extends BaseData implements IJsonData {
         this.token = token;
     }
 
-    public boolean isLocked() {
-        return locked;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setLocked(boolean locked) {
-        this.locked = locked;
+    public void setActive(boolean active) {
+        this.active = active;
     }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
 
     public Set<GlobalRight> getGlobalRights() {
         return globalRights;
@@ -165,6 +155,7 @@ public class UserData extends BaseData implements IJsonData {
         setLogin(rdata.getAttributes().getString("login"));
         String pwd = rdata.getAttributes().getString("password");
         String pwd2 = rdata.getAttributes().getString("password2");
+        setActive(rdata.getAttributes().getBoolean("active"));
         if (pwd.equals(pwd2))
             setPassword(pwd);
         setGroupIds(rdata.getAttributes().getIntegerSet("groupIds"));

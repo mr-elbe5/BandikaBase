@@ -196,7 +196,10 @@ public class UserController extends Controller {
             rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
-        UserBean.getInstance().deleteUser(id);
+        if (!UserBean.getInstance().deleteUser(id)){
+            rdata.setMessage(LocalizedStrings.string("_userNotDeleted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            return new ForwardResponse("/ctrl/admin/openPersonAdministration");
+        }
         UserCache.setDirty();
         rdata.setMessage(LocalizedStrings.string("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");

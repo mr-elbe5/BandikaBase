@@ -16,7 +16,6 @@ import de.elbe5.rights.GlobalRight;
 
 import java.lang.reflect.Constructor;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,7 +53,7 @@ public class UserBean extends DbBean {
 
     private static final String CHANGED_SQL = "SELECT change_date FROM t_user WHERE id=?";
 
-    private static final String GET_ALL_USERS_SQL = "SELECT type,id,change_date,name,email,login,locked,deleted FROM t_user WHERE deleted=FALSE";
+    private static final String GET_ALL_USERS_SQL = "SELECT type,id,change_date,name,email,login,active FROM t_user";
 
     public List<UserData> getAllUsers() {
         List<UserData> list = new ArrayList<>();
@@ -111,7 +110,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String GET_USER_SQL = "SELECT type,id,change_date,name,email,login,locked,deleted FROM t_user WHERE id=?";
+    private static final String GET_USER_SQL = "SELECT type,id,change_date,name,email,login,active FROM t_user WHERE id=?";
 
     public UserData readUser(Connection con, int id) throws SQLException {
         UserData data = null;
@@ -144,13 +143,12 @@ public class UserBean extends DbBean {
             data.setEmail(rs.getString(i++));
             data.setLogin(rs.getString(i++));
             data.setPassword("");
-            data.setLocked(rs.getBoolean(i++));
-            data.setDeleted(rs.getBoolean(i));
+            data.setActive(rs.getBoolean(i));
         }
         return data;
     }
 
-    private static final String LOGIN_SQL = "SELECT pwd,type,id,change_date,name,email FROM t_user WHERE login=? AND locked=FALSE AND deleted=FALSE";
+    private static final String LOGIN_SQL = "SELECT pwd,type,id,change_date,name,email FROM t_user WHERE login=? AND active=TRUE";
 
     public UserData loginUser(String login, String pwd) {
         Connection con = getConnection();
@@ -173,8 +171,7 @@ public class UserBean extends DbBean {
                             data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                             data.setName(rs.getString(i++));
                             data.setEmail(rs.getString(i));
-                            data.setLocked(false);
-                            data.setDeleted(false);
+                            data.setActive(true);
                             UserBean extBean = data.getBean();
                             if (extBean != null)
                                 extBean.readUserExtras(con, data);
@@ -193,7 +190,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static final String API_LOGIN_SQL = "SELECT pwd,type,id,change_date,name,email,token FROM t_user WHERE login=? AND locked=FALSE AND deleted=FALSE";
+    private static final String API_LOGIN_SQL = "SELECT pwd,type,id,change_date,name,email,token FROM t_user WHERE login=? AND active=TRUE";
 
     //todo
     public UserData loginApiUser(String login, String pwd) {
@@ -219,8 +216,7 @@ public class UserBean extends DbBean {
                             data.setName(rs.getString(i++));
                             data.setEmail(rs.getString(i++));
                             data.setToken(rs.getString(i));
-                            data.setLocked(false);
-                            data.setDeleted(false);
+                            data.setActive(true);
                             UserBean extBean = data.getBean();
                             if (extBean != null)
                                 extBean.readUserExtras(con, data);
@@ -259,7 +255,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String LOGIN_BY_TOKEN_SQL = "SELECT type,id,login,change_date,name,email FROM t_user WHERE token=? AND locked=FALSE AND deleted=FALSE";
+    private static final String LOGIN_BY_TOKEN_SQL = "SELECT type,id,login,change_date,name,email FROM t_user WHERE token=? AND active=TRUE";
 
     public UserData loginUserByToken(String token) {
         Connection con = getConnection();
@@ -280,8 +276,7 @@ public class UserBean extends DbBean {
                         data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                         data.setName(rs.getString(i++));
                         data.setEmail(rs.getString(i));
-                        data.setLocked(false);
-                        data.setDeleted(false);
+                        data.setActive(true);
                         UserBean extBean = data.getBean();
                         if (extBean != null)
                             extBean.readUserExtras(con, data);
@@ -384,7 +379,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String INSERT_USER_SQL = "insert into t_user (type,change_date,name,email,login,pwd,locked,deleted,id) values(?,?,?,?,?,?,?,?,?)";
+    private static final String INSERT_USER_SQL = "insert into t_user (type,change_date,name,email,login,pwd,active,id) values(?,?,?,?,?,?,?,?)";
 
     protected void createUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -399,8 +394,7 @@ public class UserBean extends DbBean {
             if (data.hasPassword()) {
                 pst.setString(i++, data.getPasswordHash());
             }
-            pst.setBoolean(i++, data.isLocked());
-            pst.setBoolean(i++, data.isDeleted());
+            pst.setBoolean(i++, data.isActive());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
@@ -408,8 +402,8 @@ public class UserBean extends DbBean {
             closeStatement(pst);
         }
     }
-    private static final String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,name=?,email=?,login=?,pwd=?,locked=?,deleted=? where id=?";
-    private static final String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,name=?,email=?,login=?,locked=?,deleted=? where id=?";
+    private static final String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,name=?,email=?,login=?,pwd=?,active=? where id=?";
+    private static final String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,name=?,email=?,login=?,active=? where id=?";
 
     protected void updateUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -423,8 +417,7 @@ public class UserBean extends DbBean {
             if (data.hasPassword()) {
                 pst.setString(i++, data.getPasswordHash());
             }
-            pst.setBoolean(i++, data.isLocked());
-            pst.setBoolean(i++, data.isDeleted());
+            pst.setBoolean(i++, data.isActive());
             pst.setInt(i, data.getId());
             pst.executeUpdate();
             pst.close();
@@ -524,10 +517,10 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String DELETE_USER_SQL = "UPDATE t_user SET deleted=TRUE WHERE id=?";
+    private static final String DELETE_USER_SQL = "delete from t_user WHERE id=?";
     private static final String DELETE_ALL_USERGROUPS_SQL = "DELETE FROM t_user2group WHERE user_id=?";
 
-    public void deleteUser(int id) {
+    public boolean deleteUser(int id) {
         Connection con = getConnection();
         PreparedStatement pst = null;
         try {
@@ -539,11 +532,13 @@ public class UserBean extends DbBean {
             pst.setInt(1, id);
             pst.executeUpdate();
         } catch (SQLException se) {
-            Log.error("sql error", se);
+            Log.error("user caanot be deleted", se);
+            return false;
         } finally {
             closeStatement(pst);
             closeConnection(con);
         }
+        return true;
     }
 
     private static final String GET_SYSTEM_RIGHTS_SQL = "select name from t_system_right where group_id in({1})";
