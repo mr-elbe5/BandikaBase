@@ -47,5 +47,9 @@ alter table t_user drop column phone;
 alter table t_user drop column mobile;
 alter table t_user drop column notes;
 
+alter table t_user add active BOOLEAN NOT NULL DEFAULT TRUE;
+alter table t_user drop column locked;
+alter table t_user drop column deleted;
+
 
 
