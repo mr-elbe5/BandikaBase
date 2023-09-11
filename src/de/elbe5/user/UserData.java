@@ -29,7 +29,7 @@ public class UserData extends BaseData implements IJsonData {
     protected String passwordHash = "";
     protected String token = "";
 
-    protected boolean active = false;
+    protected boolean active = true;
 
     protected Set<Integer> groupIds = new HashSet<>();
 
