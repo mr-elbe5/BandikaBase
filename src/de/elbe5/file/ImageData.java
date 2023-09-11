@@ -8,13 +8,17 @@
  */
 package de.elbe5.file;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifIFD0Directory;
 import de.elbe5.base.*;
 import de.elbe5.request.RequestData;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 
 public class ImageData extends FileData implements IJsonData {
@@ -153,6 +157,7 @@ public class ImageData extends FileData implements IJsonData {
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
             setContentType(file.getContentType());
+            correctImageByExif();
             try {
                 createPreview(maxTumbnailWidth, maxThumbnailHeight);
                 success = true;
@@ -170,6 +175,7 @@ public class ImageData extends FileData implements IJsonData {
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
             setContentType(file.getContentType());
+            correctImageByExif();
             try {
                 createResizedImage(maxWidth, maxHeight, expand);
                 createPreview(maxTumbnailWidth, maxThumbnailHeight);
@@ -188,6 +194,7 @@ public class ImageData extends FileData implements IJsonData {
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
             setContentType(file.getContentType());
+            correctImageByExif();
             try {
                 createResizedJpeg(maxWidth, maxHeight, expand);
                 createPreview(maxTumbnailWidth, maxThumbnailHeight);
@@ -199,7 +206,7 @@ public class ImageData extends FileData implements IJsonData {
         return success;
     }
 
-    public void createResizedImage(int width, int height, boolean expand) throws IOException {
+    protected void createResizedImage(int width, int height, boolean expand) throws IOException {
         BufferedImage bi = ImageHelper.createResizedImage(getBytes(), getContentType(), width, height, expand);
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType(getContentType());
         if (writers.hasNext()) {
@@ -222,7 +229,7 @@ public class ImageData extends FileData implements IJsonData {
         setHeight(bi.getHeight());
     }
 
-    public void createResizedJpeg(int width, int height, boolean expand) throws IOException {
+    protected void createResizedJpeg(int width, int height, boolean expand) throws IOException {
         BufferedImage bi = ImageHelper.createResizedImage(getBytes(), getContentType(), width, height, expand);
         setFileName(FileHelper.getFileNameWithoutExtension(getFileName()) + ".jpg");
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
@@ -235,7 +242,7 @@ public class ImageData extends FileData implements IJsonData {
         setHeight(bi.getHeight());
     }
 
-    public void createScaledJpeg(int scalePercent) throws IOException {
+    protected void createScaledJpeg(int scalePercent) throws IOException {
         BufferedImage bi = ImageHelper.createScaledImage(getBytes(), getContentType(), scalePercent);
         setFileName(FileHelper.getFileNameWithoutExtension(getFileName()) + ".jpg");
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
@@ -265,6 +272,57 @@ public class ImageData extends FileData implements IJsonData {
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
         ImageWriter writer = writers.next();
         setPreviewBytes(ImageHelper.writeImage(writer, image));
+    }
+
+    public void correctImageByExif(){
+        try {
+            BufferedImage source = ImageHelper.createImage(getBytes(), getContentType());
+            int width = getWidth();
+            int height = getHeight();
+            int orientation = getOrientation();
+            if (orientation != 1) {
+                Log.info("correcting image with orientation " + orientation);
+                AffineTransform transform = ImageHelper.getExifTransformation(orientation, width, height);
+                BufferedImage output = ImageHelper.transformImage(source, transform);
+                Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
+                ImageWriter writer = writers.next();
+                setBytes(ImageHelper.writeImage(writer, output));
+            }
+            else{
+                Log.info("no image correction needed");
+            }
+        }
+        catch (IOException e){
+            Log.error("could not correct image");
+        }
+    }
+
+    public void rotateImage(Double angle){
+        try {
+            BufferedImage source = ImageHelper.createImage(getBytes(), getContentType());
+            assert (source != null);
+            BufferedImage output = ImageHelper.rotateImage(source, angle);
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
+            ImageWriter writer = writers.next();
+            setBytes(ImageHelper.writeImage(writer, output));
+        }
+        catch (IOException e){
+            Log.error("could not rotate image");
+        }
+    }
+
+    public int getOrientation(){
+        int orientation = 1;
+        try {
+            InputStream input = new ByteArrayInputStream(bytes);
+            Metadata metadata = ImageMetadataReader.readMetadata(input);
+            Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+            orientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+        }
+        catch (Exception e){
+            Log.error("could not read orientation", e);
+        }
+        return orientation;
     }
 
     @Override
