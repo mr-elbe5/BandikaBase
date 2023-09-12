@@ -101,7 +101,8 @@
         <footer>
             <div class="container">
                 <ul class="nav">
-                    <%=$SH("layout.copyright")%>
+                    <a class="nav-link"><%=$SH("_copyright")%>
+                    </a>
                 </ul>
             </div>
         </footer>

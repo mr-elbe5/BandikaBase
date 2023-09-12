@@ -11,6 +11,7 @@ package de.elbe5.request;
 import de.elbe5.application.Configuration;
 import de.elbe5.base.*;
 import de.elbe5.base.BaseData;
+import de.elbe5.content.ContentData;
 import de.elbe5.user.UserBean;
 import de.elbe5.user.UserData;
 
@@ -81,6 +82,10 @@ public class RequestData {
 
     public int getId() {
         return id;
+    }
+
+    public int getSafeId(){
+        return id !=0 ? id : ContentData.ID_ROOT;
     }
 
     public void setId(int id) {

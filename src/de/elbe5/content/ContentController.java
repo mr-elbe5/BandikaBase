@@ -56,7 +56,7 @@ public class ContentController extends Controller {
 
     public IResponse show(RequestData rdata) {
         assertSessionCall(rdata);
-        int contentId = rdata.getId();
+        int contentId = rdata.getSafeId();
         ContentData data = ContentCache.getContent(contentId);
         assertRights(data.hasUserReadRight(rdata.getLoginUser()));
         increaseViewCount(data);

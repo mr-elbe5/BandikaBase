@@ -21,6 +21,9 @@ public class Configuration {
     private static Locale locale = Locale.GERMAN;
     private static final Map<String,Locale> locales = new HashMap<>();
     static boolean showDateTime = false;
+    static boolean useReadRights = true;
+    static boolean useReadGroup = false;
+    static boolean useEditorGroup = false;
 
     static{
         locales.put("de",Locale.GERMAN);
@@ -63,6 +66,30 @@ public class Configuration {
         Configuration.showDateTime = showDateTime;
     }
 
+    public static boolean useReadRights() {
+        return useReadRights;
+    }
+
+    public static void setUseReadRights(boolean useReadRights) {
+        Configuration.useReadRights = useReadRights;
+    }
+
+    public static boolean useReadGroup() {
+        return useReadGroup;
+    }
+
+    public static void setUseReadGroup(boolean useReadGroup) {
+        Configuration.useReadGroup = useReadGroup;
+    }
+
+    public static boolean useEditorGroup() {
+        return useEditorGroup;
+    }
+
+    public static void setUseEditorGroup(boolean useEditorGroup) {
+        Configuration.useEditorGroup = useEditorGroup;
+    }
+
     public static int getTimerInterval() {
         return timerInterval;
     }
@@ -82,6 +109,9 @@ public class Configuration {
         setSalt(getSafeInitParameter(servletContext,"salt"));
         setTimerInterval(Integer.parseInt(getSafeInitParameter(servletContext,"timerInterval")));
         setShowDateTime("true".equals(getSafeInitParameter(servletContext,"showDateTime")));
+        setUseReadRights("true".equals(getSafeInitParameter(servletContext,"useReadRights")));
+        setUseReadGroup("true".equals(getSafeInitParameter(servletContext,"useReadGroup")));
+        setUseEditorGroup("true".equals(getSafeInitParameter(servletContext,"useEditorGroup")));
         String language = getSafeInitParameter(servletContext,"defaultLanguage");
         try {
             setLocale(new Locale(language));
