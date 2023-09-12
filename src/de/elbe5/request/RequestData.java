@@ -8,7 +8,7 @@
  */
 package de.elbe5.request;
 
-import de.elbe5.application.Configuration;
+import de.elbe5.configuration.Configuration;
 import de.elbe5.base.*;
 import de.elbe5.base.BaseData;
 import de.elbe5.content.ContentData;

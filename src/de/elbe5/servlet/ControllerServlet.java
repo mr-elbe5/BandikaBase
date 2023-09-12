@@ -9,7 +9,7 @@
 package de.elbe5.servlet;
 
 import de.elbe5.base.StringHelper;
-import de.elbe5.application.Configuration;
+import de.elbe5.configuration.Configuration;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
 import de.elbe5.response.IResponse;

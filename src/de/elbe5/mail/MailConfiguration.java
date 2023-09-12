@@ -8,9 +8,7 @@
  */
 package de.elbe5.mail;
 
-import de.elbe5.application.Configuration;
 import de.elbe5.base.Mailer;
-import jakarta.servlet.ServletContext;
 
 public class MailConfiguration {
 
@@ -78,18 +76,6 @@ public class MailConfiguration {
 
     public static void setMailReceiver(String mailReceiver) {
         MailConfiguration.mailReceiver = mailReceiver;
-    }
-
-    // read from config file
-
-    public static void setConfigs(ServletContext servletContext) {
-        setSmtpHost(Configuration.getSafeInitParameter(servletContext,"mailHost"));
-        setSmtpPort(Integer.parseInt(Configuration.getSafeInitParameter(servletContext,"mailPort")));
-        setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(Configuration.getSafeInitParameter(servletContext,"mailConnectionType")));
-        setSmtpUser(Configuration.getSafeInitParameter(servletContext,"mailUser"));
-        setSmtpPassword(Configuration.getSafeInitParameter(servletContext,"mailPassword"));
-        setMailSender(Configuration.getSafeInitParameter(servletContext,"mailSender"));
-        setMailReceiver(Configuration.getSafeInitParameter(servletContext,"mailReceiver"));
     }
 
 }

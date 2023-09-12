@@ -10,7 +10,7 @@ package de.elbe5.user;
 
 import de.elbe5.base.Log;
 import de.elbe5.base.StringFormatter;
-import de.elbe5.application.Configuration;
+import de.elbe5.configuration.Configuration;
 import de.elbe5.database.DbBean;
 import de.elbe5.rights.GlobalRight;
 

@@ -6,9 +6,8 @@
  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-package de.elbe5.application;
+package de.elbe5.configuration;
 
-import jakarta.servlet.ServletContext;
 import java.util.*;
 
 public class Configuration {
@@ -17,7 +16,6 @@ public class Configuration {
 
     private static String appTitle = "";
     private static String salt = "";
-    private static int timerInterval = 30;
     private static Locale locale = Locale.GERMAN;
     private static final Map<String,Locale> locales = new HashMap<>();
     static boolean showDateTime = false;
@@ -90,33 +88,4 @@ public class Configuration {
         Configuration.useEditorGroup = useEditorGroup;
     }
 
-    public static int getTimerInterval() {
-        return timerInterval;
-    }
-
-    public static void setTimerInterval(int timerInterval) {
-        Configuration.timerInterval = timerInterval;
-    }
-
-    // read from config file
-
-    public static String getSafeInitParameter(ServletContext servletContext, String key){
-        String s=servletContext.getInitParameter(key);
-        return s==null ? "" : s;
-    }
-
-    public static void setConfigs(ServletContext servletContext) {
-        setSalt(getSafeInitParameter(servletContext,"salt"));
-        setTimerInterval(Integer.parseInt(getSafeInitParameter(servletContext,"timerInterval")));
-        setShowDateTime("true".equals(getSafeInitParameter(servletContext,"showDateTime")));
-        setUseReadRights("true".equals(getSafeInitParameter(servletContext,"useReadRights")));
-        setUseReadGroup("true".equals(getSafeInitParameter(servletContext,"useReadGroup")));
-        setUseEditorGroup("true".equals(getSafeInitParameter(servletContext,"useEditorGroup")));
-        String language = getSafeInitParameter(servletContext,"defaultLanguage");
-        try {
-            setLocale(new Locale(language));
-        } catch (Exception ignore) {
-        }
-        System.out.println("language is "+ getLocale().getDisplayName());
-    }
 }

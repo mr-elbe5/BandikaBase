@@ -8,7 +8,7 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.application.Configuration;
+import de.elbe5.configuration.Configuration;
 import de.elbe5.base.StringFormatter;
 import de.elbe5.base.StringHelper;
 

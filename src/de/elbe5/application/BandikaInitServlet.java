@@ -12,6 +12,8 @@ import de.elbe5.administration.AdminController;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.JsonWebToken;
 import de.elbe5.base.Log;
+import de.elbe5.configuration.Configuration;
+import de.elbe5.configuration.ConfigurationBean;
 import de.elbe5.content.*;
 import de.elbe5.database.DbConnector;
 import de.elbe5.file.*;
@@ -37,13 +39,13 @@ public class BandikaInitServlet extends InitServlet {
         System.out.println("initializing Bandika Application...");
         ServletContext context=servletConfig.getServletContext();
         ApplicationPath.initializePath(ApplicationPath.getCatalinaAppDir(context), ApplicationPath.getCatalinaAppROOTDir(context));
-        Configuration.setConfigs(context);
-        LocalizedStrings.addBundle("bandika", Configuration.getLocale());
-        LocalizedStrings.addBundle("application", Configuration.getLocale());
         Log.initLog(ApplicationPath.getAppName());
         if (!DbConnector.getInstance().initialize("jdbc/bandika"))
             return;
-        Configuration.setAppTitle("Bandika");
+        ConfigurationBean.getInstance().readConfiguration();
+        //ConfigurationBean.getInstance().readMailConfiguration();
+        LocalizedStrings.addBundle("bandika", Configuration.getLocale());
+        LocalizedStrings.addBundle("application", Configuration.getLocale());
         JsonWebToken.createSecretKey(Configuration.getSalt());
         AdminController.register(new AdminController());
         ContentController.register(new ContentController());

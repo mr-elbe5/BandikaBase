@@ -1,6 +1,6 @@
 package de.elbe5.base;
 
-import de.elbe5.application.Configuration;
+import de.elbe5.configuration.Configuration;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;

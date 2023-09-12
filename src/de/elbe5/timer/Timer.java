@@ -10,7 +10,6 @@ package de.elbe5.timer;
 
 import de.elbe5.base.Log;
 import de.elbe5.application.AppContextListener;
-import de.elbe5.application.Configuration;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import java.util.Map;
 
 public class Timer {
 
+    static int TIMER_INTERVAL =30;
     private static Timer instance = null;
 
     public static Timer getInstance() {
@@ -35,9 +35,7 @@ public class Timer {
     }
 
     public void startThread() {
-        int interval = Configuration.getTimerInterval();
-        Log.log("setting timer interval to " + interval + " sec");
-        timerThread = new TimerThread(interval);
+        timerThread = new TimerThread(TIMER_INTERVAL);
         Log.log("timer thread state = " + (timerThread.isAlive() ? "alive" : "down"));
         if (timerThread.isAlive()) {
             restartThread();
@@ -54,8 +52,7 @@ public class Timer {
             timerThread.stopRunning();
         }
         timerThread = null;
-        int interval = Configuration.getTimerInterval();
-        timerThread = new TimerThread(interval);
+        timerThread = new TimerThread(TIMER_INTERVAL);
         timerThread.startRunning();
         AppContextListener.registerThread(timerThread);
     }

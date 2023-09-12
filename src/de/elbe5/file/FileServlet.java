@@ -9,7 +9,7 @@
 package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.application.Configuration;
+import de.elbe5.configuration.Configuration;
 import de.elbe5.base.Log;
 import de.elbe5.base.FileHelper;
 import de.elbe5.content.ContentCache;

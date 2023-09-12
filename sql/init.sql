@@ -1,5 +1,22 @@
 -- noinspection SqlNoDataSourceInspectionForFile
 
+CREATE TABLE IF NOT EXISTS t_configuration
+(
+    title            VARCHAR(100) NOT NULL DEFAULT 'CoDef',
+    salt             VARCHAR(100) NOT NULL DEFAULT 'V3xfgDrxdl8=',
+    locale           VARCHAR(30) NOT NULL DEFAULT 'GERMAN',
+    show_date_time   BOOLEAN NOT NULL DEFAULT false,
+    use_read_rights  BOOLEAN NOT NULL DEFAULT false,
+    use_read_group   BOOLEAN NOT NULL DEFAULT false,
+    use_editor_group BOOLEAN NOT NULL DEFAULT false,
+    smtp_host        VARCHAR(30) NOT NULL DEFAULT '',
+    smtp_port        INTEGER NOT NULL DEFAULT 25,
+    smtp_connection_type VARCHAR(30) NOT NULL DEFAULT 'plain',
+    smtp_user        VARCHAR(100) NOT NULL DEFAULT '',
+    smtp_assword     VARCHAR(100) NOT NULL DEFAULT '',
+    mail_sender      VARCHAR(100) NOT NULL DEFAULT '',
+    mail_receiver    VARCHAR(100) NOT NULL DEFAULT ''
+);
 
 CREATE SEQUENCE s_group_id START 1000;
 CREATE TABLE IF NOT EXISTS t_group
@@ -135,6 +152,8 @@ VALUES ('heartbeat','Heartbeat Task','CONTINOUS',5,FALSE);
 INSERT INTO t_timer_task (name,display_name,execution_interval,minute,active)
 VALUES ('cleanup','Cleanup Task','CONTINOUS',5,FALSE);
 
---- set pwd 'pass' dependent on salt V3xfgDrxdl8=
+insert into t_configuration (title, salt)
+values ('Bandika', 'V3xfgDrxdl8=');
+
 -- root user
 update t_user set pwd='A0y3+ZmqpMhWA21VFQMkyY6v74Y=' where id=1;

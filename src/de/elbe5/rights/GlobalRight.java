@@ -8,7 +8,7 @@
  */
 package de.elbe5.rights;
 
-import de.elbe5.application.Configuration;
+import de.elbe5.configuration.Configuration;
 import de.elbe5.user.UserData;
 
 import java.util.*;

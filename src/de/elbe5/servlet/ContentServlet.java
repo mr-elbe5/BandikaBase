@@ -8,7 +8,7 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.application.Configuration;
+import de.elbe5.configuration.Configuration;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
 import de.elbe5.content.ContentData;
