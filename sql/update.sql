@@ -51,5 +51,25 @@ alter table t_user add active BOOLEAN NOT NULL DEFAULT TRUE;
 alter table t_user drop column locked;
 alter table t_user drop column deleted;
 
+CREATE TABLE IF NOT EXISTS t_configuration
+(
+    title            VARCHAR(100) NOT NULL DEFAULT '',
+    salt             VARCHAR(100) NOT NULL DEFAULT '',
+    locale           VARCHAR(30) NOT NULL DEFAULT 'GERMAN',
+    show_date_time   BOOLEAN NOT NULL DEFAULT false,
+    use_read_rights  BOOLEAN NOT NULL DEFAULT false,
+    use_read_group   BOOLEAN NOT NULL DEFAULT false,
+    use_editor_group BOOLEAN NOT NULL DEFAULT false,
+    smtp_host        VARCHAR(30) NOT NULL DEFAULT '',
+    smtp_port        INTEGER NOT NULL DEFAULT 25,
+    smtp_connection_type VARCHAR(30) NOT NULL DEFAULT 'plain',
+    smtp_user        VARCHAR(100) NOT NULL DEFAULT '',
+    smtp_assword     VARCHAR(100) NOT NULL DEFAULT '',
+    mail_sender      VARCHAR(100) NOT NULL DEFAULT '',
+    mail_receiver    VARCHAR(100) NOT NULL DEFAULT ''
+);
+insert into t_configuration (title, salt)
+values ('Elbe5', 'V3xfgDrxdl8=');
+
 
 
