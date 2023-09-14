@@ -20,6 +20,7 @@ public class JsonResponse implements IResponse {
     }
 
     public JsonResponse(String json) {
+        Log.log("json: " + json);
         this.json = json;
     }
 
@@ -31,7 +32,6 @@ public class JsonResponse implements IResponse {
     }
 
     protected boolean sendJsonResponse(HttpServletResponse response) {
-        Log.log("sending json: " + json);
         try {
             ServletOutputStream out = response.getOutputStream();
             response.setHeader("Access-Control-Allow-Origin", "*");

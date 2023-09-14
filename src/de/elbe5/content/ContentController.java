@@ -13,6 +13,7 @@ import de.elbe5.base.BaseData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.request.RequestType;
 import de.elbe5.rights.GlobalRight;
 import de.elbe5.servlet.Controller;
 import de.elbe5.servlet.ControllerCache;
@@ -137,10 +138,7 @@ public class ContentController extends Controller {
         assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
         int contentId = rdata.getId();
         ContentData data = ContentData.getSessionContent(rdata, ContentData.class);
-        if (data.isNew())
-            data.readBackendCreateRequestData(rdata);
-        else
-            data.readBackendUpdateRequestData(rdata);
+        data.readRequestData(rdata, RequestType.backend);
         if (!rdata.checkFormErrors()) {
             return showEditBackendContent(data);
         }

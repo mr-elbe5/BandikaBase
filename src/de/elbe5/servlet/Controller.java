@@ -68,9 +68,4 @@ public abstract class Controller {
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    protected JsonObject getIdJson(int id) {
-        JsonObject json = new JsonObject();
-        json.add("id",id);
-        return json;
-    }
 }

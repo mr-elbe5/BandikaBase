@@ -14,5 +14,7 @@ public enum RequestType {
     content,
     session,
     api,
-    file
+    file,
+    backend,
+    frontend
 }

@@ -14,6 +14,8 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import de.elbe5.base.*;
 import de.elbe5.request.RequestData;
+import de.elbe5.request.RequestType;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import java.awt.geom.AffineTransform;
@@ -136,8 +138,8 @@ public class ImageData extends FileData implements IJsonData {
     // multiple data
 
     @Override
-    public void readRequestData(RequestData rdata) {
-        super.readRequestData(rdata);
+    public void readRequestData(RequestData rdata, RequestType type) {
+        super.readRequestData(rdata, type);
         if (!isNew()){
             return;
         }
@@ -317,7 +319,9 @@ public class ImageData extends FileData implements IJsonData {
             InputStream input = new ByteArrayInputStream(bytes);
             Metadata metadata = ImageMetadataReader.readMetadata(input);
             Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
-            orientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+            if (directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)) {
+                orientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+            }
         }
         catch (Exception e){
             Log.error("could not read orientation", e);

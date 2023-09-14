@@ -16,6 +16,7 @@ import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.request.RequestType;
 import de.elbe5.response.*;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.user.UserData;
@@ -62,7 +63,7 @@ public class ImageController extends FileController {
         assert fileId == data.getId();
         ContentData parent=ContentCache.getContent(data.getParentId());
         assertRights(parent.hasUserEditRight(rdata.getLoginUser()));
-        data.readRequestData(rdata);
+        data.readRequestData(rdata, RequestType.backend);
         if (!rdata.checkFormErrors()) {
             return showEditFile();
         }
@@ -86,8 +87,8 @@ public class ImageController extends FileController {
         return new ForwardResponse("/WEB-INF/_jsp/file/editImage.ajax.jsp");
     }
 
-    public IResponse uploadImage(RequestData rdata) {
-        Log.log("uploadImage");
+    public IResponse createImage(RequestData rdata) {
+        Log.log("createImage");
         assertApiCall(rdata);
         UserData user = rdata.getLoginUser();
         if (user == null)
@@ -101,16 +102,13 @@ public class ImageController extends FileController {
         assert(file!=null);
         ImageData image = new ImageData();
         image.setCreateValues(content, rdata);
-        if (!image.createFromBinaryFile(file, image.getMaxWidth(), image.getMaxHeight(), image.getMaxPreviewWidth(),image.getMaxPreviewHeight(), false)) {
-            return new StatusResponse(HttpServletResponse.SC_BAD_REQUEST);
-        }
-        image.setChangerId(rdata.getUserId());
+        image.readRequestData(rdata, RequestType.api);
         if (!ImageBean.getInstance().saveFile(image,true)) {
             return new StatusResponse(HttpServletResponse.SC_BAD_REQUEST);
         }
         image.setNew(false);
         ContentCache.setDirty();
-        return new JsonResponse(getIdJson(image.getId()).toJSONString());
+        return new JsonResponse(image.getIdJson().toJSONString());
     }
 
 }

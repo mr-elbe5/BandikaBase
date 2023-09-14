@@ -11,6 +11,7 @@ package de.elbe5.base;
 import de.elbe5.content.ContentBean;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
+import de.elbe5.request.RequestType;
 import de.elbe5.user.UserCache;
 import de.elbe5.user.UserData;
 import org.json.simple.JSONObject;
@@ -122,15 +123,25 @@ public class BaseData implements IJsonData {
         setChangerId(rdata.getUserId());
     }
 
+    public void readRequestData(RequestData rdata, RequestType type){
+    }
+
     public JsonObject getJson() {
         return new JsonObject()
                 .add("id", getId())
+                .add("isOnServer", true)
                 .add("creationDate", getCreationDate())
                 .add("creatorId", getCreatorId())
                 .add("changeDate", getChangeDate())
                 .add("changerId", getChangerId())
                 .add("creatorName", getCreatorName())
                 .add("changerName", getChangerName());
+    }
+
+    public JsonObject getIdJson() {
+        JsonObject json = new JsonObject();
+        json.add("id",getId());
+        return json;
     }
 
     @Override

@@ -14,6 +14,7 @@ import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
+import de.elbe5.request.RequestType;
 import de.elbe5.servlet.ControllerCache;
 import de.elbe5.response.CloseDialogResponse;
 import de.elbe5.response.IResponse;
@@ -59,7 +60,7 @@ public class MediaController extends FileController {
         assert fileId == data.getId();
         ContentData parent=ContentCache.getContent(data.getParentId());
         assertRights(parent.hasUserEditRight(rdata.getLoginUser()));
-        data.readRequestData(rdata);
+        data.readRequestData(rdata, RequestType.backend);
         if (!rdata.checkFormErrors()) {
             return showEditFile();
         }

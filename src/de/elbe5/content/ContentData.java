@@ -16,6 +16,7 @@ import de.elbe5.group.GroupCache;
 import de.elbe5.group.GroupData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
+import de.elbe5.request.RequestType;
 import de.elbe5.response.IMasterInclude;
 import de.elbe5.rights.GlobalRight;
 import de.elbe5.user.UserData;
@@ -515,39 +516,24 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
         }
     }
 
-    public void readBackendCreateRequestData(RequestData rdata) {
-        readBackendRequestData(rdata);
-    }
-
-    public void readBackendUpdateRequestData(RequestData rdata) {
-        readBackendRequestData(rdata);
-    }
-
-    public void readBackendRequestData(RequestData rdata) {
-        Log.log("ContentData.readBackendRequestData");
+    public void readRequestData(RequestData rdata, RequestType type){
+        Log.log("ContentData.readRequestData");
         setDisplayName(rdata.getAttributes().getString("displayName").trim());
         setName(StringHelper.toSafeWebName(getDisplayName()));
         setDescription(rdata.getAttributes().getString("description"));
-        setOpenAccess(rdata.getAttributes().getBoolean("openAccess"));
-        setReaderGroupId(rdata.getAttributes().getInt("readerGroupId"));
-        setEditorGroupId(rdata.getAttributes().getInt("editorGroupId"));
-        setNavType(rdata.getAttributes().getString("navType"));
-        setActive(rdata.getAttributes().getBoolean("active"));
-        if (name.isEmpty()) {
-            rdata.addIncompleteField("name");
+        switch (type){
+            case backend:
+            case frontend:
+                setOpenAccess(rdata.getAttributes().getBoolean("openAccess"));
+                setReaderGroupId(rdata.getAttributes().getInt("readerGroupId"));
+                setEditorGroupId(rdata.getAttributes().getInt("editorGroupId"));
+                setNavType(rdata.getAttributes().getString("navType"));
+                setActive(rdata.getAttributes().getBoolean("active"));
+                if (name.isEmpty()) {
+                    rdata.addIncompleteField("name");
+                }
+                break;
         }
-    }
-
-    public void readFrontendCreateRequestData(RequestData rdata) {
-        readFrontendRequestData(rdata);
-    }
-
-    public void readFrontendUpdateRequestData(RequestData rdata) {
-        readFrontendRequestData(rdata);
-    }
-
-    public void readFrontendRequestData(RequestData rdata) {
-        readBackendRequestData(rdata);
     }
 
     @Override

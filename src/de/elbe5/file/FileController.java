@@ -24,7 +24,6 @@ import de.elbe5.response.IResponse;
 import de.elbe5.response.ForwardResponse;
 
 import de.elbe5.servlet.ControllerCache;
-import de.elbe5.user.UserData;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 
