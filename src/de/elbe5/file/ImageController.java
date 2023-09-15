@@ -93,9 +93,9 @@ public class ImageController extends FileController {
         UserData user = rdata.getLoginUser();
         if (user == null)
             return new StatusResponse(HttpServletResponse.SC_UNAUTHORIZED);
-        int contentId = rdata.getId();
-        int remoteImageId = rdata.getAttributes().getInt("imageId");
-        Log.info("remote image id = " + remoteImageId);
+        int remoteId = rdata.getId();
+        int contentId = rdata.getAttributes().getInt("contentId");
+        Log.info("remote image id = " + remoteId);
         ContentData content=ContentCache.getContent(contentId);
         assert(content != null);
         BinaryFile file = rdata.getAttributes().getFile("file");

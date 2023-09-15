@@ -547,7 +547,6 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     @Override
     public JsonObject getJson() {
         return super.getJson()
-                .add("name", getName())
                 .add("displayName", getDisplayName())
                 .add("description", getDescription());
     }
@@ -582,12 +581,11 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     @Override
     public void fromJson(JSONObject json) {
         super.fromJson(json);
-        String s = getString(json, "name");
-        if (s!=null)
-            setName(s);
-        s = getString(json, "displayName");
-        if (s!=null)
+        String s = getString(json, "displayName");
+        if (s!=null) {
             setDisplayName(s);
+            setName(StringHelper.toSafeWebName(getDisplayName()));
+        }
         s = getString(json, "description");
         if (s!=null)
             setDescription(s);

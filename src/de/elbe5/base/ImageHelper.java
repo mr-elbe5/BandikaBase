@@ -90,65 +90,40 @@ public class ImageHelper {
         return bi;
     }
 
-    public static BufferedImage rotateImage(BufferedImage src, Double angle){
+    public static BufferedImage rotateImageFromOrientation(BufferedImage src, int orientation){
+        assert(src != null);
         int width = src.getWidth();
         int height = src.getHeight();
-        BufferedImage output = new BufferedImage(height, width, src.getType());
+        int w;
+        int h;
+        double angle;
+        switch(orientation){
+            case 3 -> {
+                w = width;
+                h = height;
+                angle = Math.PI;
+            }
+            case 6 -> {
+                w = height;
+                h = width;
+                angle = Math.PI / 2;
+            }
+            case 8 -> {
+                w = height;
+                h = width;
+                angle = Math.PI * 3 / 2;
+            }
+            default -> {
+                return src;
+            }
+        }
+        BufferedImage output = new BufferedImage(w, h, src.getType());
         Graphics2D g2d = (Graphics2D)output.getGraphics();
         g2d.translate(height/2., width/2.);
         g2d.rotate(angle);
         g2d.translate(-width/2., -height/2.);
         g2d.drawImage(src, 0,0,width, height,null);
         return output;
-    }
-
-    public static AffineTransform getExifTransformation(int orientation, int width, int height) {
-        AffineTransform t = new AffineTransform();
-        switch (orientation) {
-            case 1:
-                break;
-            case 2:
-                t.scale(-1.0, 1.0);
-                t.translate(-width, 0);
-                break;
-            case 3:
-                t.translate(width, height);
-                t.rotate(Math.PI);
-                break;
-            case 4:
-                t.scale(1.0, -1.0);
-                t.translate(0, -height);
-                break;
-            case 5:
-                t.rotate(-Math.PI / 2);
-                t.scale(-1.0, 1.0);
-                break;
-            case 6:
-                t.translate(height, 0);
-                t.rotate(Math.PI / 2);
-                break;
-            case 7:
-                t.scale(-1.0, 1.0);
-                t.translate(-height, 0);
-                t.translate(0, width);
-                t.rotate(  3 * Math.PI / 2);
-                break;
-            case 8:
-                t.translate(0, width);
-                t.rotate(  3 * Math.PI / 2);
-                break;
-        }
-        return t;
-    }
-
-    public static BufferedImage transformImage(BufferedImage image, AffineTransform transform) throws IOException {
-        AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BICUBIC);
-        BufferedImage destinationImage = op.createCompatibleDestImage(image, (image.getType() == BufferedImage.TYPE_BYTE_GRAY) ? image.getColorModel() : null );
-        Graphics2D g = destinationImage.createGraphics();
-        g.setBackground(Color.WHITE);
-        g.clearRect(0, 0, destinationImage.getWidth(), destinationImage.getHeight());
-        destinationImage = op.filter(image, destinationImage);
-        return destinationImage;
     }
 
     public static byte[] writeImage(ImageWriter writer, BufferedImage image) throws IOException {

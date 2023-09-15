@@ -279,13 +279,13 @@ public class ImageData extends FileData implements IJsonData {
     public void correctImageByExif(){
         try {
             BufferedImage source = ImageHelper.createImage(getBytes(), getContentType());
-            int width = getWidth();
-            int height = getHeight();
+            assert(source != null);
+            int width = source.getWidth();
+            int height = source.getHeight();
             int orientation = getOrientation();
             if (orientation != 1) {
                 Log.info("correcting image with orientation " + orientation);
-                AffineTransform transform = ImageHelper.getExifTransformation(orientation, width, height);
-                BufferedImage output = ImageHelper.transformImage(source, transform);
+                BufferedImage output = ImageHelper.rotateImageFromOrientation(source, orientation);
                 Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
                 ImageWriter writer = writers.next();
                 setBytes(ImageHelper.writeImage(writer, output));
@@ -296,20 +296,6 @@ public class ImageData extends FileData implements IJsonData {
         }
         catch (IOException e){
             Log.error("could not correct image");
-        }
-    }
-
-    public void rotateImage(Double angle){
-        try {
-            BufferedImage source = ImageHelper.createImage(getBytes(), getContentType());
-            assert (source != null);
-            BufferedImage output = ImageHelper.rotateImage(source, angle);
-            Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
-            ImageWriter writer = writers.next();
-            setBytes(ImageHelper.writeImage(writer, output));
-        }
-        catch (IOException e){
-            Log.error("could not rotate image");
         }
     }
 
