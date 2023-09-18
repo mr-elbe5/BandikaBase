@@ -43,7 +43,7 @@ public class ContentBean extends DbBean {
         return getNextId("s_content_id");
     }
 
-    private static final String GET_ALL_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,open_access,reader_group_id,editor_group_id,nav_type,active FROM t_content";
+    private static final String GET_ALL_CONTENT_SQL = "SELECT type,id,creator_id,changer_id,creation_date,change_date,parent_id,ranking,name,display_name,description,open_access,reader_group_id,editor_group_id,nav_type,active FROM t_content";
 
     public List<ContentData> getAllContents() {
         List<ContentData> list = new ArrayList<>();
@@ -96,7 +96,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String GET_CONTENT_SQL = "SELECT type,id,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,open_access,reader_group_id,editor_group_id,nav_type,active FROM t_content WHERE id=?";
+    private static final String GET_CONTENT_SQL = "SELECT type,id,creator_id,changer_id,creation_date,change_date,parent_id,ranking,name,display_name,description,open_access,reader_group_id,editor_group_id,nav_type,active FROM t_content WHERE id=?";
 
     public ContentData readContent(Connection con, int id) throws SQLException {
         ContentData data = null;
@@ -124,6 +124,8 @@ public class ContentBean extends DbBean {
         ContentData data = getNewContentData(type);
         if (data != null) {
             data.setId(rs.getInt(i++));
+            data.setCreatorId(rs.getInt(i++));
+            data.setChangerId(rs.getInt(i++));
             data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
             data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
             data.setParentId(rs.getInt(i++));
@@ -131,8 +133,6 @@ public class ContentBean extends DbBean {
             data.setName(rs.getString(i++));
             data.setDisplayName(rs.getString(i++));
             data.setDescription(rs.getString(i++));
-            data.setCreatorId(rs.getInt(i++));
-            data.setChangerId(rs.getInt(i++));
             data.setOpenAccess(rs.getBoolean(i++));
             data.setReaderGroupId(rs.getInt(i++));
             data.setEditorGroupId(rs.getInt(i++));
@@ -164,7 +164,7 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String INSERT_CONTENT_SQL = "insert into t_content (type,creation_date,change_date,parent_id,ranking,name,display_name,description,creator_id,changer_id,open_access,reader_group_id,editor_group_id,nav_type,active,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String INSERT_CONTENT_SQL = "insert into t_content (type,creator_id,changer_id,creation_date,change_date,parent_id,ranking,name,display_name,description,open_access,reader_group_id,editor_group_id,nav_type,active,id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     protected void createContent(Connection con, ContentData data) throws SQLException {
         PreparedStatement pst = null;
@@ -172,6 +172,8 @@ public class ContentBean extends DbBean {
             pst = con.prepareStatement(INSERT_CONTENT_SQL);
             int i = 1;
             pst.setString(i++, data.getClass().getName());
+            pst.setInt(i++, data.getCreatorId());
+            pst.setInt(i++, data.getChangerId());
             pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             if (data.getParentId() == 0) {
@@ -183,8 +185,6 @@ public class ContentBean extends DbBean {
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
-            pst.setInt(i++, data.getCreatorId());
-            pst.setInt(i++, data.getChangerId());
             pst.setBoolean(i++, data.isOpenAccess());
             if (data.getReaderGroupId() == 0) {
                 pst.setNull(i++, Types.INTEGER);
@@ -206,13 +206,14 @@ public class ContentBean extends DbBean {
         }
     }
 
-    private static final String UPDATE_CONTENT_SQL = "update t_content set change_date=?,parent_id=?,ranking=?,name=?,display_name=?,description=?,changer_id=?,open_access=?,reader_group_id=?,editor_group_id=?,nav_type=?,active=? where id=?";
+    private static final String UPDATE_CONTENT_SQL = "update t_content set changer_id=?,change_date=?,parent_id=?,ranking=?,name=?,display_name=?,description=?,open_access=?,reader_group_id=?,editor_group_id=?,nav_type=?,active=? where id=?";
 
     protected void updateContent(Connection con, ContentData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(UPDATE_CONTENT_SQL);
             int i = 1;
+            pst.setInt(i++, data.getChangerId());
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             if (data.getParentId() == 0){
                 pst.setNull(i++, Types.INTEGER);
@@ -224,7 +225,6 @@ public class ContentBean extends DbBean {
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getDisplayName());
             pst.setString(i++, data.getDescription());
-            pst.setInt(i++, data.getChangerId());
             pst.setBoolean(i++, data.isOpenAccess());
             if (data.getReaderGroupId() == 0) {
                 pst.setNull(i++, Types.INTEGER);

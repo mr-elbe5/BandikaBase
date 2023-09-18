@@ -518,12 +518,11 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     public void readRequestData(RequestData rdata, RequestType type){
         Log.log("ContentData.readRequestData");
-        setDisplayName(rdata.getAttributes().getString("displayName").trim());
-        setName(StringHelper.toSafeWebName(getDisplayName()));
-        setDescription(rdata.getAttributes().getString("description"));
-        switch (type){
-            case backend:
-            case frontend:
+        switch (type) {
+            case backend -> {
+                setDisplayName(rdata.getAttributes().getString("displayName").trim());
+                setName(StringHelper.toSafeWebName(getDisplayName()));
+                setDescription(rdata.getAttributes().getString("description"));
                 setOpenAccess(rdata.getAttributes().getBoolean("openAccess"));
                 setReaderGroupId(rdata.getAttributes().getInt("readerGroupId"));
                 setEditorGroupId(rdata.getAttributes().getInt("editorGroupId"));
@@ -532,7 +531,16 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
                 if (name.isEmpty()) {
                     rdata.addIncompleteField("name");
                 }
-                break;
+            }
+            case api -> {
+                setDisplayName(rdata.getAttributes().getString("displayName").trim());
+                setName(StringHelper.toSafeWebName(getDisplayName()));
+                setDescription(rdata.getAttributes().getString("description"));
+                setOpenAccess(true);
+                setActive(true);
+            }
+            case frontend -> {
+            }
         }
     }
 

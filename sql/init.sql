@@ -18,29 +18,44 @@ CREATE TABLE IF NOT EXISTS t_configuration
     mail_receiver    VARCHAR(100) NOT NULL DEFAULT ''
 );
 
-CREATE SEQUENCE s_group_id START 1000;
-CREATE TABLE IF NOT EXISTS t_group
-(
-    id          INTEGER      NOT NULL,
-    change_date TIMESTAMP    NOT NULL DEFAULT now(),
-    name        VARCHAR(100) NOT NULL,
-    notes       VARCHAR(500) NOT NULL DEFAULT '',
-    CONSTRAINT t_group_pk PRIMARY KEY (id)
-);
-
 CREATE SEQUENCE s_user_id START 1000;
 CREATE TABLE IF NOT EXISTS t_user
 (
     id                 INTEGER      NOT NULL,
+    creator_id    INTEGER       NOT NULL DEFAULT 1,
+    changer_id    INTEGER       NOT NULL DEFAULT 1,
+    creation_date TIMESTAMP     NOT NULL DEFAULT now(),
+    change_date   TIMESTAMP     NOT NULL DEFAULT now(),
     type               VARCHAR(60)  NOT NULL,
-    change_date        TIMESTAMP    NOT NULL DEFAULT now(),
-    name         VARCHAR(100) NOT NULL DEFAULT '',
+    name               VARCHAR(100) NOT NULL DEFAULT '',
     email              VARCHAR(100) NOT NULL DEFAULT '',
     login              VARCHAR(30)  NOT NULL,
     pwd                VARCHAR(100) NOT NULL,
     token              VARCHAR(100) NOT NULL DEFAULT '',
     active             BOOLEAN      NOT NULL DEFAULT TRUE,
-    CONSTRAINT t_user_pk PRIMARY KEY (id)
+    CONSTRAINT t_user_pk PRIMARY KEY (id),
+    CONSTRAINT t_user_fk1 FOREIGN KEY (creator_id) REFERENCES t_user (id) ON DELETE SET DEFAULT,
+    CONSTRAINT t_user_fk2 FOREIGN KEY (changer_id) REFERENCES t_user (id) ON DELETE SET DEFAULT
+);
+
+-- root user
+
+INSERT INTO t_user (id,type,name,login,pwd)
+VALUES (1,'de.elbe5.user.UserData','Root','root','');
+
+CREATE SEQUENCE s_group_id START 1000;
+CREATE TABLE IF NOT EXISTS t_group
+(
+    id          INTEGER      NOT NULL,
+    creator_id    INTEGER       NOT NULL DEFAULT 1,
+    changer_id    INTEGER       NOT NULL DEFAULT 1,
+    creation_date TIMESTAMP     NOT NULL DEFAULT now(),
+    change_date   TIMESTAMP     NOT NULL DEFAULT now(),
+    name        VARCHAR(100) NOT NULL,
+    notes       VARCHAR(500) NOT NULL DEFAULT '',
+    CONSTRAINT t_group_pk PRIMARY KEY (id),
+    CONSTRAINT t_group_fk1 FOREIGN KEY (creator_id) REFERENCES t_user (id) ON DELETE SET DEFAULT,
+    CONSTRAINT t_group_fk2 FOREIGN KEY (changer_id) REFERENCES t_user (id) ON DELETE SET DEFAULT
 );
 
 CREATE TABLE IF NOT EXISTS t_user2group

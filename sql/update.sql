@@ -71,5 +71,19 @@ CREATE TABLE IF NOT EXISTS t_configuration
 insert into t_configuration (title, salt)
 values ('Elbe5', 'V3xfgDrxdl8=');
 
+alter table t_user add creator_id    INTEGER       NOT NULL DEFAULT 1;
+alter table t_user add changer_id    INTEGER       NOT NULL DEFAULT 1;
+alter table t_user add creation_date TIMESTAMP     NOT NULL DEFAULT now();
+alter table t_user add CONSTRAINT t_user_fk1 FOREIGN KEY (creator_id) REFERENCES t_user (id) ON DELETE SET DEFAULT;
+alter table t_user add CONSTRAINT t_user_fk2 FOREIGN KEY (changer_id) REFERENCES t_user (id) ON DELETE SET DEFAULT;
+
+alter table t_group add creator_id    INTEGER       NOT NULL DEFAULT 1;
+alter table t_group add changer_id    INTEGER       NOT NULL DEFAULT 1;
+alter table t_group add creation_date TIMESTAMP     NOT NULL DEFAULT now();
+alter table t_group add CONSTRAINT t_group_fk1 FOREIGN KEY (creator_id) REFERENCES t_user (id) ON DELETE SET DEFAULT;
+alter table t_group add CONSTRAINT t_group_fk2 FOREIGN KEY (changer_id) REFERENCES t_user (id) ON DELETE SET DEFAULT;
+
+
+
 
 

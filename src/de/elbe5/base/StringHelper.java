@@ -69,7 +69,7 @@ public class StringHelper {
 
     public static String toSafeWebName(String src) {
         src = toAsciiName(src);
-        return src.replaceAll("[\\s&]+", "-").replaceAll("['\"><]+", "");
+        return src.replaceAll("[\\s]+", "-").replaceAll("[^a-zA-Z0-9]" , "");
     }
 
     public static String getIntString(List<Integer> ints) {

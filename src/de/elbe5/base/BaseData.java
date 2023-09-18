@@ -8,8 +8,6 @@
  */
 package de.elbe5.base;
 
-import de.elbe5.content.ContentBean;
-import de.elbe5.content.ContentData;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
 import de.elbe5.user.UserCache;

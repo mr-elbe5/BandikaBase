@@ -39,8 +39,13 @@
                 <form:line label="_id"><%=$I(user.getId())%>
                 </form:line>
                 <form:text name="login" label="_login" required="true" value="<%=$H(user.getLogin())%>"/>
+                <%if (user.isNew()){%>
+                <form:password name="password" label="_password" required="true"/>
+                <form:password name="password2" label="_retypePassword" required="true"/>
+                <%}else{%>
                 <form:password name="password" label="_password"/>
                 <form:password name="password2" label="_retypePassword"/>
+                <%}%>
                 <form:text name="name" label="_name" value="<%=$H(user.getName())%>"/>
                 <form:text name="email" label="_email" value="<%=$H(user.getEmail())%>"/>
                 <form:line label="_active" padded="true">

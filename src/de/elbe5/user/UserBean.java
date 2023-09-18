@@ -53,7 +53,7 @@ public class UserBean extends DbBean {
 
     private static final String CHANGED_SQL = "SELECT change_date FROM t_user WHERE id=?";
 
-    private static final String GET_ALL_USERS_SQL = "SELECT type,id,change_date,name,email,login,active FROM t_user";
+    private static final String GET_ALL_USERS_SQL = "SELECT type,id,creator_id,changer_id,creation_date,change_date,name,email,login,active FROM t_user";
 
     public List<UserData> getAllUsers() {
         List<UserData> list = new ArrayList<>();
@@ -110,7 +110,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String GET_USER_SQL = "SELECT type,id,change_date,name,email,login,active FROM t_user WHERE id=?";
+    private static final String GET_USER_SQL = "SELECT type,id,creator_id,changer_id,creation_date,change_date,name,email,login,active FROM t_user WHERE id=?";
 
     public UserData readUser(Connection con, int id) throws SQLException {
         UserData data = null;
@@ -138,6 +138,9 @@ public class UserBean extends DbBean {
         UserData data = getNewUserData(type);
         if (data!=null) {
             data.setId(rs.getInt(i++));
+            data.setCreatorId(rs.getInt(i++));
+            data.setChangerId(rs.getInt(i++));
+            data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
             data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
             data.setName(rs.getString(i++));
             data.setEmail(rs.getString(i++));
@@ -148,7 +151,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static final String LOGIN_SQL = "SELECT pwd,type,id,change_date,name,email FROM t_user WHERE login=? AND active=TRUE";
+    private static final String LOGIN_SQL = "SELECT pwd,type,id,creator_id,changer_id,creation_date,change_date,name,email FROM t_user WHERE login=? AND active=TRUE";
 
     public UserData loginUser(String login, String pwd) {
         Connection con = getConnection();
@@ -168,6 +171,9 @@ public class UserBean extends DbBean {
                         if (data!=null) {
                             data.setId(rs.getInt(i++));
                             data.setLogin(login);
+                            data.setCreatorId(rs.getInt(i++));
+                            data.setChangerId(rs.getInt(i++));
+                            data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
                             data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                             data.setName(rs.getString(i++));
                             data.setEmail(rs.getString(i));
@@ -190,7 +196,7 @@ public class UserBean extends DbBean {
         return data;
     }
 
-    private static final String API_LOGIN_SQL = "SELECT pwd,type,id,change_date,name,email,token FROM t_user WHERE login=? AND active=TRUE";
+    private static final String API_LOGIN_SQL = "SELECT pwd,type,id,creator_id,changer_id,creation_date,change_date,name,email,token FROM t_user WHERE login=? AND active=TRUE";
 
     //todo
     public UserData loginApiUser(String login, String pwd) {
@@ -212,6 +218,9 @@ public class UserBean extends DbBean {
                             data = new UserData();
                             data.setId(rs.getInt(i++));
                             data.setLogin(login);
+                            data.setCreatorId(rs.getInt(i++));
+                            data.setChangerId(rs.getInt(i++));
+                            data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
                             data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                             data.setName(rs.getString(i++));
                             data.setEmail(rs.getString(i++));
@@ -255,7 +264,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String LOGIN_BY_TOKEN_SQL = "SELECT type,id,login,change_date,name,email FROM t_user WHERE token=? AND active=TRUE";
+    private static final String LOGIN_BY_TOKEN_SQL = "SELECT type,id,login,creator_id,changer_id,creation_date,change_date,name,email FROM t_user WHERE token=? AND active=TRUE";
 
     public UserData loginUserByToken(String token) {
         Connection con = getConnection();
@@ -273,6 +282,9 @@ public class UserBean extends DbBean {
                     if (data!=null) {
                         data.setId(rs.getInt(i++));
                         data.setLogin(rs.getString(i++));
+                        data.setCreatorId(rs.getInt(i++));
+                        data.setChangerId(rs.getInt(i++));
+                        data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
                         data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                         data.setName(rs.getString(i++));
                         data.setEmail(rs.getString(i));
@@ -379,7 +391,7 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String INSERT_USER_SQL = "insert into t_user (type,change_date,name,email,login,pwd,active,id) values(?,?,?,?,?,?,?,?)";
+    private static final String INSERT_USER_SQL = "insert into t_user (type,creator_id,changer_id,creation_date,change_date,name,email,login,pwd,active,id) values(?,?,?,?,?,?,?,?,?,?,?)";
 
     protected void createUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
@@ -387,6 +399,9 @@ public class UserBean extends DbBean {
             pst = con.prepareStatement(INSERT_USER_SQL);
             int i = 1;
             pst.setString(i++, data.getClass().getName());
+            pst.setInt(i++, data.getCreatorId());
+            pst.setInt(i++, data.getChangerId());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getEmail());
@@ -402,14 +417,15 @@ public class UserBean extends DbBean {
             closeStatement(pst);
         }
     }
-    private static final String UPDATE_USER_PWD_SQL = "update t_user set change_date=?,name=?,email=?,login=?,pwd=?,active=? where id=?";
-    private static final String UPDATE_USER_NOPWD_SQL = "update t_user set change_date=?,name=?,email=?,login=?,active=? where id=?";
+    private static final String UPDATE_USER_PWD_SQL = "update t_user set changer_id=?,change_date=?,name=?,email=?,login=?,pwd=?,active=? where id=?";
+    private static final String UPDATE_USER_NOPWD_SQL = "update t_user set changer_id=?,change_date=?,name=?,email=?,login=?,active=? where id=?";
 
     protected void updateUser(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(data.hasPassword() ? UPDATE_USER_PWD_SQL : UPDATE_USER_NOPWD_SQL);
             int i = 1;
+            pst.setInt(i++, data.getChangerId());
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getEmail());
@@ -446,13 +462,14 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String UPDATE_PROFILE_SQL = "UPDATE t_user SET change_date=?,name=?,email=? WHERE id=?";
+    private static final String UPDATE_PROFILE_SQL = "UPDATE t_user SET changer_id=?,change_date=?,name=?,email=? WHERE id=?";
 
     protected void writeUserProfile(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(UPDATE_PROFILE_SQL);
             int i = 1;
+            pst.setInt(i++, data.getChangerId());
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getEmail());
@@ -477,13 +494,14 @@ public class UserBean extends DbBean {
         }
     }
 
-    private static final String UPDATE_PASSWORD_SQL = "UPDATE t_user SET change_date=?, pwd=? WHERE id=?";
+    private static final String UPDATE_PASSWORD_SQL = "UPDATE t_user SET changer_id=?,change_date=?, pwd=? WHERE id=?";
 
     protected void writeUserPassword(Connection con, UserData data) throws SQLException {
         PreparedStatement pst = null;
         try {
             pst = con.prepareStatement(UPDATE_PASSWORD_SQL);
             int i = 1;
+            pst.setInt(i++, data.getChangerId());
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getPasswordHash());
             pst.setInt(i, data.getId());

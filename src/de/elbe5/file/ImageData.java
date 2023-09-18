@@ -276,26 +276,21 @@ public class ImageData extends FileData implements IJsonData {
         setPreviewBytes(ImageHelper.writeImage(writer, image));
     }
 
-    public void correctImageByExif(){
-        try {
-            BufferedImage source = ImageHelper.createImage(getBytes(), getContentType());
-            assert(source != null);
-            int width = source.getWidth();
-            int height = source.getHeight();
-            int orientation = getOrientation();
-            if (orientation != 1) {
+    public void correctImageByExif() {
+        int orientation = getOrientation();
+        if (orientation != 1) {
+            try {
+                BufferedImage source = ImageHelper.createImage(getBytes(), getContentType());
+                assert (source != null);
                 Log.info("correcting image with orientation " + orientation);
                 BufferedImage output = ImageHelper.rotateImageFromOrientation(source, orientation);
                 Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
                 ImageWriter writer = writers.next();
                 setBytes(ImageHelper.writeImage(writer, output));
             }
-            else{
-                Log.info("no image correction needed");
+            catch(IOException ignore){
+                Log.error("could not correct image");
             }
-        }
-        catch (IOException e){
-            Log.error("could not correct image");
         }
     }
 
@@ -305,12 +300,11 @@ public class ImageData extends FileData implements IJsonData {
             InputStream input = new ByteArrayInputStream(bytes);
             Metadata metadata = ImageMetadataReader.readMetadata(input);
             Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
-            if (directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)) {
+            if (directory != null && directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)) {
                 orientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
             }
         }
-        catch (Exception e){
-            Log.error("could not read orientation", e);
+        catch (Exception ignore){
         }
         return orientation;
     }

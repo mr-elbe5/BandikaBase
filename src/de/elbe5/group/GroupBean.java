@@ -16,10 +16,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class UserBean is the persistence class for users and groups. <br>
- * Usage:
- */
 public class GroupBean extends DbBean {
 
     private static GroupBean instance = null;
@@ -41,12 +37,16 @@ public class GroupBean extends DbBean {
         PreparedStatement pst = null;
         GroupData data;
         try {
-            pst = con.prepareStatement("SELECT id,name,notes FROM t_group ORDER BY name");
+            pst = con.prepareStatement("SELECT id,creator_id,changer_id,creation_date,change_date,name,notes FROM t_group ORDER BY name");
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
                     int i = 1;
                     data = new GroupData();
                     data.setId(rs.getInt(i++));
+                    data.setCreatorId(rs.getInt(i++));
+                    data.setChangerId(rs.getInt(i++));
+                    data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
+                    data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                     data.setName(rs.getString(i++));
                     data.setNotes(rs.getString(i));
                     readGroupUsers(con,data);
@@ -63,7 +63,7 @@ public class GroupBean extends DbBean {
         return list;
     }
 
-    private static final String GET_GROUP_SQL = "SELECT change_date,name,notes FROM t_group WHERE id=? ORDER BY name";
+    private static final String GET_GROUP_SQL = "SELECT creator_id,changer_id,creation_date,change_date,name,notes FROM t_group WHERE id=? ORDER BY name";
 
     public GroupData getGroup(int id) {
         Connection con = getConnection();
@@ -78,6 +78,9 @@ public class GroupBean extends DbBean {
                 int i = 1;
                 data = new GroupData();
                 data.setId(id);
+                data.setCreatorId(rs.getInt(i++));
+                data.setChangerId(rs.getInt(i++));
+                data.setCreationDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setChangeDate(rs.getTimestamp(i++).toLocalDateTime());
                 data.setName(rs.getString(i++));
                 data.setNotes(rs.getString(i));
@@ -117,7 +120,13 @@ public class GroupBean extends DbBean {
         Connection con = startTransaction();
         try {
             data.setChangeDate(getServerTime(con));
-            writeGroup(con, data);
+            if (data.isNew()){
+                data.setCreationDate(data.getChangeDate());
+                createGroup(con,data);
+            }
+            else{
+                updateGroup(con,data);
+            }
             writeGroupRights(con, data);
             writeGroupUsers(con, data);
             writeGroupRights(con, data);
@@ -127,14 +136,35 @@ public class GroupBean extends DbBean {
         }
     }
 
-    private static final String INSERT_GROUP_SQL = "insert into t_group (change_date,name,notes, id) values(?,?,?,?)";
-    private static final String UPDATE_GROUP_SQL = "update t_group set change_date=?,name=?,notes=? where id=?";
+    private static final String INSERT_GROUP_SQL = "insert into t_group (creator_id,changer_id,creation_date,change_date,name,notes, id) values(?,?,?,?,?,?,?)";
+    private static final String UPDATE_GROUP_SQL = "update t_group set changer_id=?,change_date=?,name=?,notes=? where id=?";
 
-    protected void writeGroup(Connection con, GroupData data) throws SQLException {
+    protected void createGroup(Connection con, GroupData data) throws SQLException {
         PreparedStatement pst = null;
         try {
-            pst = con.prepareStatement(data.isNew() ? INSERT_GROUP_SQL : UPDATE_GROUP_SQL);
+            pst = con.prepareStatement(INSERT_GROUP_SQL);
             int i = 1;
+            pst.setInt(i++, data.getCreatorId());
+            pst.setInt(i++, data.getChangerId());
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getCreationDate()));
+            pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
+            pst.setString(i++, data.getName());
+            pst.setString(i++, data.getNotes());
+            pst.setInt(i, data.getId());
+            pst.executeUpdate();
+            pst.close();
+            writeGroupUsers(con, data);
+        } finally {
+            closeStatement(pst);
+        }
+    }
+
+    protected void updateGroup(Connection con, GroupData data) throws SQLException {
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(UPDATE_GROUP_SQL);
+            int i = 1;
+            pst.setInt(i++, data.getChangerId());
             pst.setTimestamp(i++, Timestamp.valueOf(data.getChangeDate()));
             pst.setString(i++, data.getName());
             pst.setString(i++, data.getNotes());
