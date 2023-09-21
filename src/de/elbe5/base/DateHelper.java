@@ -9,7 +9,7 @@ import java.util.Date;
 public class DateHelper {
 
     static DateTimeFormatter isoDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    static DateTimeFormatter isoDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T00:00:00Z'");
+    static DateTimeFormatter isoDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'00:00:00'Z'");
 
     public static Date asDate(LocalDate localDate) {
         if (localDate==null)
