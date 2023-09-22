@@ -38,12 +38,12 @@ public class ImageHelper {
         return null;
     }
 
-    public static BufferedImage createResizedImage(byte[] bytes, String contentType, int maxWidth, int maxHeight, boolean expand) throws IOException {
+    public static BufferedImage createResizedImage(byte[] bytes, String contentType, int maxSize) throws IOException {
         BufferedImage source = createImage(bytes, contentType);
         if (source == null) {
             return null;
         }
-        float factor = getResizeFactor(source, maxWidth, maxHeight, expand);
+        float factor = getResizeFactor(source, maxSize);
         if (factor == 1) {
             return source;
         }
@@ -62,18 +62,18 @@ public class ImageHelper {
         return copyImage(source, factor);
     }
 
-    public static float getResizeFactor(BufferedImage source, int maxWidth, int maxHeight, boolean expand) {
-        if (source == null) {
+    public static float getResizeFactor(BufferedImage source, int maxSize) {
+        if (source == null || maxSize == 0) {
             return 1;
         }
-        float wfactor = maxWidth == 0 ? 0 : ((float) maxWidth) / source.getWidth();
-        float hfactor = maxHeight == 0 ? 0 : ((float) maxHeight) / source.getHeight();
+        float wfactor = ((float) maxSize) / source.getWidth();
+        float hfactor = ((float) maxSize) / source.getHeight();
         float factor = 1;
         if (wfactor != 0)
             factor=wfactor;
         if (hfactor != 0)
             factor=Math.min(factor, hfactor);
-        if (factor>1 && !expand)
+        if (factor>1)
             factor = 1;
         return factor;
     }

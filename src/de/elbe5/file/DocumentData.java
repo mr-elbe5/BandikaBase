@@ -21,17 +21,22 @@ public class DocumentData extends FileData {
 
     @Override
     public void readRequestData(RequestData rdata, RequestType type) {
-        super.readRequestData(rdata, type);
-        if (!isNew()){
-            return;
-        }
-        BinaryFile file = rdata.getAttributes().getFile("file");
-        createFromBinaryFile(file);
-        if (getDisplayName().isEmpty()) {
-            setDisplayName(file.getFileNameWithoutExtension());
-        }
-        else{
-            adjustFileNameToDisplayName();
+        switch (type) {
+            case backend, frontend -> {
+                setDisplayName(rdata.getAttributes().getString("displayName").trim());
+                setDescription(rdata.getAttributes().getString("description"));
+                if (!isNew()){
+                    BinaryFile file = rdata.getAttributes().getFile("file");
+                    createFromBinaryFile(file);
+                    if (getDisplayName().isEmpty()) {
+                        setDisplayName(file.getFileNameWithoutExtension());
+                    }
+                    else{
+                        adjustFileNameToDisplayName();
+                    }
+                }
+
+            }
         }
     }
 

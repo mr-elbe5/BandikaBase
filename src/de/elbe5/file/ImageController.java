@@ -8,7 +8,6 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.BinaryFile;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.Log;
 import de.elbe5.content.ContentCache;
@@ -98,10 +97,9 @@ public class ImageController extends FileController {
         Log.info("remote image id = " + remoteId);
         ContentData content=ContentCache.getContent(contentId);
         assert(content != null);
-        BinaryFile file = rdata.getAttributes().getFile("file");
-        assert(file!=null);
         ImageData image = new ImageData();
         image.setCreateValues(content, rdata);
+        Log.info("new image id = " + image.getId());
         image.readRequestData(rdata, RequestType.api);
         if (!ImageBean.getInstance().saveFile(image,true)) {
             return new StatusResponse(HttpServletResponse.SC_BAD_REQUEST);
