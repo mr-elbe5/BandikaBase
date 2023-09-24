@@ -118,7 +118,8 @@ public class ContentController extends Controller {
         ContentData parentData = ContentCache.getContent(parentId);
         String type = rdata.getAttributes().getString("type");
         ContentData data = ContentBean.getInstance().getNewContentData(type);
-        data.setCreateValues(parentData, rdata);
+        data.setCreateValues(rdata, RequestType.backend);
+        data.setParentValues(parentData);
         rdata.setSessionObject(ContentRequestKeys.KEY_CONTENT, data);
         return showEditBackendContent(data);
     }

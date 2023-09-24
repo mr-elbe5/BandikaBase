@@ -491,10 +491,12 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
 
     // multiple data
 
-    // on openCreateBackend
-    public void setCreateValues(ContentData parent, RequestData rdata) {
-        super.setCreateValues(rdata);
+    @Override
+    public void setNewId(){
         setId(ContentBean.getInstance().getNextId());
+    }
+
+    public void setParentValues(ContentData parent){
         setParentId(parent.getId());
         setParent(parent);
         inheritRightsFromParent();
@@ -533,6 +535,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
                 }
             }
             case api -> {
+                super.readRequestData(rdata, type);
                 setDisplayName(rdata.getAttributes().getString("displayName").trim());
                 setName(StringHelper.toSafeWebName(getDisplayName()));
                 setDescription(rdata.getAttributes().getString("description"));

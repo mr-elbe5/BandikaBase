@@ -108,12 +108,22 @@ public class BaseData implements IJsonData {
         return getId() != 0;
     }
 
-    public void setCreateValues(RequestData rdata) {
+    public void setCreateValues(RequestData rdata, RequestType type) {
         setNew(true);
-        setCreationDate(LocalDateTime.now());
-        setChangeDate(getCreationDate());
-        setCreatorId(rdata.getUserId());
-        setChangerId(rdata.getUserId());
+        switch (type) {
+            case api -> {
+            }
+            case backend, frontend -> {
+                setCreationDate(LocalDateTime.now());
+                setChangeDate(getCreationDate());
+                setCreatorId(rdata.getUserId());
+                setChangerId(rdata.getUserId());
+                setNewId();
+            }
+        }
+    }
+
+    public void setNewId(){
     }
 
     public void setUpdateValues(RequestData rdata){
@@ -122,6 +132,17 @@ public class BaseData implements IJsonData {
     }
 
     public void readRequestData(RequestData rdata, RequestType type){
+        switch (type){
+            case api -> {
+                setId(rdata.getAttributes().getInt("id"));
+                setCreatorId(rdata.getAttributes().getInt("creatorId"));
+                setCreationDate(rdata.getAttributes().getDateTime("creationDate"));
+                setChangerId(rdata.getAttributes().getInt("changerId"));
+                setChangeDate(rdata.getAttributes().getDateTime("changeDate"));
+            }
+            case backend, frontend -> {
+            }
+        }
     }
 
     public JsonObject getJson() {

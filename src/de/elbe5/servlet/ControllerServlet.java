@@ -10,6 +10,7 @@ package de.elbe5.servlet;
 
 import de.elbe5.base.StringHelper;
 import de.elbe5.configuration.Configuration;
+import de.elbe5.request.RequestContext;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
 import de.elbe5.response.IResponse;
@@ -28,13 +29,13 @@ public class ControllerServlet extends WebServlet {
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
         String uri = request.getRequestURI();
-        RequestType requestType = RequestType.any;
+        RequestContext requestType = RequestContext.any;
         if (uri.startsWith("/ctrl/")){
-            requestType = RequestType.session;
+            requestType = RequestContext.session;
             uri = uri.substring(6);
         }
         else if (uri.startsWith("/api/")){
-            requestType = RequestType.api;
+            requestType = RequestContext.api;
             uri = uri.substring(5);
         }
         RequestData rdata = new RequestData(method, requestType, request);

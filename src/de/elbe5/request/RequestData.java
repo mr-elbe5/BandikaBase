@@ -41,17 +41,17 @@ public class RequestData {
 
     private final String method;
 
-    private final RequestType type;
+    private final RequestContext context;
 
     private UserData apiUser;
 
     private FormError formError = null;
 
-    public RequestData(String method, RequestType type, HttpServletRequest request) {
+    public RequestData(String method, RequestContext context, HttpServletRequest request) {
         this.request = request;
-        this.type = type;
+        this.context = context;
         this.method = method;
-        if (type==RequestType.api) {
+        if (context ==RequestContext.api) {
             String apiToken = request.getHeader("Authentication");
             if (apiToken == null || apiToken.isEmpty())
                 apiToken = request.getHeader("token");
@@ -100,8 +100,8 @@ public class RequestData {
         return method.equals("POST");
     }
 
-    public RequestType getType() {
-        return type;
+    public RequestContext getContext() {
+        return context;
     }
 
     /*********** message *********/
@@ -118,7 +118,7 @@ public class RequestData {
     /************ user ****************/
 
     public UserData getLoginUser() {
-        if (type==RequestType.api){
+        if (context ==RequestContext.api){
             return apiUser;
         }
         return getSessionUser();

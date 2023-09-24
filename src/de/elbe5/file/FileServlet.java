@@ -14,6 +14,7 @@ import de.elbe5.base.Log;
 import de.elbe5.base.FileHelper;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
+import de.elbe5.request.RequestContext;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
 import de.elbe5.servlet.WebServlet;
@@ -36,7 +37,7 @@ public class FileServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(Configuration.ENCODING);
-        RequestData rdata = new RequestData(method, RequestType.file, request);
+        RequestData rdata = new RequestData(method, RequestContext.file, request);
         rdata.init();
         try {
             String fileName = request.getPathInfo();

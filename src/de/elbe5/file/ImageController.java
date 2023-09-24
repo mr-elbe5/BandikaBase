@@ -86,8 +86,8 @@ public class ImageController extends FileController {
         return new ForwardResponse("/WEB-INF/_jsp/file/editImage.ajax.jsp");
     }
 
-    public IResponse createImage(RequestData rdata) {
-        Log.log("createImage");
+    public IResponse uploadImage(RequestData rdata) {
+        Log.log("uploadImage");
         assertApiCall(rdata);
         UserData user = rdata.getLoginUser();
         if (user == null)
@@ -98,9 +98,11 @@ public class ImageController extends FileController {
         ContentData content=ContentCache.getContent(contentId);
         assert(content != null);
         ImageData image = new ImageData();
-        image.setCreateValues(content, rdata);
-        Log.info("new image id = " + image.getId());
+        image.setCreateValues(rdata, RequestType.api);
+        image.setParentValues(content);
         image.readRequestData(rdata, RequestType.api);
+        image.setNewId();
+        Log.info("new image id = " + image.getId());
         if (!ImageBean.getInstance().saveFile(image,true)) {
             return new StatusResponse(HttpServletResponse.SC_BAD_REQUEST);
         }

@@ -13,10 +13,7 @@ import de.elbe5.base.BinaryFile;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
-import de.elbe5.request.ContentRequestKeys;
-import de.elbe5.request.RequestData;
-import de.elbe5.request.RequestKeys;
-import de.elbe5.request.RequestType;
+import de.elbe5.request.*;
 import de.elbe5.response.MemoryFileResponse;
 import de.elbe5.response.StatusResponse;
 import de.elbe5.servlet.Controller;
@@ -52,7 +49,7 @@ public class FileController extends Controller {
     }
 
     public IResponse download(RequestData rdata) {
-        if (rdata.getType() == RequestType.api)
+        if (rdata.getContext() == RequestContext.api)
             return apiDownload(rdata);
         else
             return sessionDownload(rdata);
@@ -96,7 +93,8 @@ public class FileController extends Controller {
         assertRights(parentData.hasUserEditRight(rdata.getLoginUser()));
         String type=rdata.getAttributes().getString("type");
         FileData data = FileBean.getInstance().getNewFileData(type);
-        data.setCreateValues(parentData, rdata);
+        data.setCreateValues(rdata, RequestType.backend);
+        data.setParentValues(parentData);
         rdata.setSessionObject(ContentRequestKeys.KEY_FILE, data);
         return new ForwardResponse(data.getEditURL());
     }

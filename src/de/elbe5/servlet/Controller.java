@@ -1,6 +1,5 @@
 package de.elbe5.servlet;
 
-import de.elbe5.base.JsonObject;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.request.*;
 import de.elbe5.response.IResponse;
@@ -40,25 +39,25 @@ public abstract class Controller {
     }
 
     protected void assertSessionCall(RequestData rdata){
-        if (rdata.getType()!=RequestType.session && rdata.getType()!=RequestType.content){
+        if (rdata.getContext()!=RequestContext.session && rdata.getContext()!=RequestContext.content){
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
     protected void assertLoggedInSessionCall(RequestData rdata){
-        if (!rdata.isLoggedIn() || (rdata.getType()!=RequestType.session && rdata.getType()!=RequestType.content)){
+        if (!rdata.isLoggedIn() || (rdata.getContext()!=RequestContext.session && rdata.getContext()!=RequestContext.content)){
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
     protected void assertApiCall(RequestData rdata){
-        if (rdata.getType()!=RequestType.api){
+        if (rdata.getContext()!=RequestContext.api){
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
     protected void assertLoggedInApiCall(RequestData rdata){
-        if (!rdata.isLoggedIn() || rdata.getType()!=RequestType.api){
+        if (!rdata.isLoggedIn() || rdata.getContext()!=RequestContext.api){
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }

@@ -48,7 +48,7 @@ public class UserController extends Controller {
     }
 
     public IResponse login(RequestData rdata) {
-        if (rdata.getType()==RequestType.api){
+        if (rdata.getContext()==RequestContext.api){
             return apiLogin(rdata);
         }
         return webLogin(rdata);
@@ -151,7 +151,7 @@ public class UserController extends Controller {
         assertLoggedInSessionCall(rdata);
         assertRights(GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser()));
         UserData data = getNewUserData();
-        data.setCreateValues(rdata);
+        data.setCreateValues(rdata, RequestType.backend);
         data.setId(UserBean.getInstance().getNextId());
         rdata.setSessionObject("userData", data);
         return showEditUser(data);
