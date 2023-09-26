@@ -17,7 +17,6 @@ import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestType;
-import de.elbe5.user.UserData;
 import org.json.simple.JSONObject;
 
 public abstract class FileData extends BaseData {
@@ -177,6 +176,32 @@ public abstract class FileData extends BaseData {
     }
 
     // helper
+
+    @Override
+    public void readRequestData(RequestData rdata, RequestType type) {
+        switch (type) {
+            case backend, frontend -> {
+                setDescription(rdata.getAttributes().getString("description"));
+                if (isNew()){
+                    BinaryFile file = rdata.getAttributes().getFile("file");
+                    createFromBinaryFile(file);
+                    if (getDisplayName().isEmpty()) {
+                        setDisplayName(file.getFileNameWithoutExtension());
+                    }
+                    else{
+                        adjustFileNameToDisplayName();
+                    }
+                }
+            }
+            case api -> {
+                super.readRequestData(rdata, type);
+                setDescription(rdata.getAttributes().getString("description"));
+                BinaryFile file = rdata.getAttributes().getFile("file");
+                createFromBinaryFile(file);
+                setDisplayName(file.getFileNameWithoutExtension());
+            }
+        }
+    }
 
     public boolean createFromBinaryFile(BinaryFile file) {
         if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {

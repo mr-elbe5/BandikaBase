@@ -118,31 +118,6 @@ public class ImageData extends FileData implements IJsonData {
     // multiple data
 
     @Override
-    public void readRequestData(RequestData rdata, RequestType type) {
-        switch (type) {
-            case backend, frontend -> {
-                setDisplayName(rdata.getAttributes().getString("displayName").trim());
-                setDescription(rdata.getAttributes().getString("description"));
-                if (isNew()){
-                    BinaryFile file = rdata.getAttributes().getFile("file");
-                    createFromBinaryFile(file);
-                    if (getDisplayName().isEmpty()) {
-                        setDisplayName(file.getFileNameWithoutExtension());
-                    }
-                    else{
-                        adjustFileNameToDisplayName();
-                    }
-                }
-            }
-            case api -> {
-                BinaryFile file = rdata.getAttributes().getFile("file");
-                createFromBinaryFile(file);
-                setDisplayName(file.getFileNameWithoutExtension());
-            }
-        }
-    }
-
-    @Override
     public boolean createFromBinaryFile(BinaryFile file) {
         if (super.createFromBinaryFile(file) && file.isImage()){
             correctImageByExif();
