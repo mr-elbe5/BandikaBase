@@ -136,9 +136,12 @@ public class BaseData implements IJsonData {
             case api -> {
                 setId(rdata.getAttributes().getInt("id"));
                 setCreatorId(rdata.getAttributes().getInt("creatorId"));
-                setCreationDate(rdata.getAttributes().getDateTime("creationDate"));
+                setCreationDate(rdata.getAttributes().getIsoDateTime("creationDate"));
                 setChangerId(rdata.getAttributes().getInt("changerId"));
-                setChangeDate(rdata.getAttributes().getDateTime("changeDate"));
+                setChangeDate(rdata.getAttributes().getIsoDateTime("changeDate"));
+                if (changeDate == null){
+                    setChangeDate(creationDate);
+                }
             }
             case backend, frontend -> {
             }
