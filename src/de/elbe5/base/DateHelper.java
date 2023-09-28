@@ -138,6 +138,6 @@ public class DateHelper {
     public static LocalDate fromISODate(String s) {
         if (s == null || s.isEmpty())
             return null;
-        return LocalDate.parse(s, isoDateFormatter);
+        return LocalDate.parse(s, isoDateTimeFormatter);
     }
 }
