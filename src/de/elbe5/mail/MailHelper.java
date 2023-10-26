@@ -14,36 +14,40 @@ import de.elbe5.base.Mailer;
 public class MailHelper {
 
     public static boolean sendPlainMail(String to, String subject, String text) {
+        Log.info("sending plain mail to " + to);
         Mailer mailer = getMailer();
         mailer.setTo(to);
         mailer.setSubject(subject);
         mailer.setText(text);
         try {
             if (!mailer.sendMail()) {
-                Log.error("could not end mail");
+                Log.error("could not send mail");
                 return false;
             }
         } catch (Exception e) {
-            Log.error("could not end mail", e);
+            Log.error("could not send mail", e);
             return false;
         }
+        Log.info("mail has been sent");
         return true;
     }
 
     public static boolean sendHtmlMail(String to, String subject, String html) {
+        Log.info("sending html mail to " + to);
         Mailer mailer = getMailer();
         mailer.setTo(to);
         mailer.setSubject(subject);
         mailer.setHtml(html);
         try {
             if (!mailer.sendMail()) {
-                Log.error("could not end mail");
+                Log.error("could not send mail");
                 return false;
             }
         } catch (Exception e) {
-            Log.error("could not end mail", e);
+            Log.error("could not send mail", e);
             return false;
         }
+        Log.info("mail has been sent");
         return true;
     }
 
