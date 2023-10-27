@@ -9,6 +9,7 @@
 package de.elbe5.configuration;
 
 import de.elbe5.base.Log;
+import de.elbe5.base.Mailer;
 import de.elbe5.database.DbBean;
 import de.elbe5.mail.MailConfiguration;
 
@@ -54,7 +55,7 @@ public class ConfigurationBean extends DbBean {
     }
 
     private static final String GET_MAIL_CONFIGURATION_SQL =
-            "SELECT smtp_host,smtp_port,smtp_connection_type,smtp_user,smtp_assword,mail_sender,mail_receiver from t_configuration";
+            "SELECT smtp_host,smtp_port,smtp_connection_type,smtp_user,smtp_password,mail_sender,mail_receiver from t_configuration";
 
     public void readMailConfiguration() {
         Connection con = getConnection();
@@ -66,6 +67,7 @@ public class ConfigurationBean extends DbBean {
                     int i = 1;
                     MailConfiguration.setSmtpHost(rs.getString(i++));
                     MailConfiguration.setSmtpPort(rs.getInt(i++));
+                    MailConfiguration.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(rs.getString(i++)));
                     MailConfiguration.setSmtpUser(rs.getString(i++));
                     MailConfiguration.setSmtpPassword(rs.getString(i++));
                     MailConfiguration.setMailSender(rs.getString(i++));
