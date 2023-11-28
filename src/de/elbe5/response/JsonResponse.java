@@ -20,7 +20,7 @@ public class JsonResponse implements IResponse {
     }
 
     public JsonResponse(String json) {
-        Log.log("json: " + json);
+        //Log.log("json: " + json);
         this.json = json;
     }
 
