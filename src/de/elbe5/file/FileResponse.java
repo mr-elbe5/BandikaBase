@@ -42,7 +42,7 @@ public class FileResponse implements IResponse {
         response.reset();
         response.setBufferSize(DEFAULT_BUFFER_SIZE);
         boolean forceDownload = rdata.getAttributes().getBoolean("download");
-        String disposition = (forceDownload ? "attachment" : "inline") + ";filename=\"" + StringHelper.toSafeWebName(fileName) + "\"";
+        String disposition = (forceDownload ? "attachment" : "inline") + ";filename=\"" + StringHelper.toSafeWebFileName(fileName) + "\"";
         response.setHeader("Content-Disposition", disposition);
         response.setHeader("Accept-Ranges", "bytes");
         String contentType = context.getMimeType(file.getName());

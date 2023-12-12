@@ -65,7 +65,7 @@ public abstract class FileData extends BaseData {
         int pos= getFileName().lastIndexOf('.');
         if (pos==-1)
             return;
-        setFileName(StringHelper.toSafeWebName(getDisplayName())+ getFileName().substring(pos));
+        setFileName(StringHelper.toSafeWebFileName(getDisplayName())+ getFileName().substring(pos));
     }
 
     public String getFileName() {

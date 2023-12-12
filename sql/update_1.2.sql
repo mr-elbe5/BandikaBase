@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS t_configuration
     smtp_port        INTEGER NOT NULL DEFAULT 25,
     smtp_connection_type VARCHAR(30) NOT NULL DEFAULT 'plain',
     smtp_user        VARCHAR(100) NOT NULL DEFAULT '',
-    smtp_assword     VARCHAR(100) NOT NULL DEFAULT '',
+    smtp_password    VARCHAR(100) NOT NULL DEFAULT '',
     mail_sender      VARCHAR(100) NOT NULL DEFAULT '',
     mail_receiver    VARCHAR(100) NOT NULL DEFAULT ''
 );

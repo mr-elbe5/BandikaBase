@@ -72,6 +72,11 @@ public class StringHelper {
         return src.replaceAll("[\\s]+", "-").replaceAll("[^a-zA-Z0-9]" , "");
     }
 
+    public static String toSafeWebFileName(String src) {
+        src = toAsciiName(src);
+        return src.replaceAll("[\\s]+", "-").replaceAll("[^a-zA-Z0-9.]" , "");
+    }
+
     public static String getIntString(List<Integer> ints) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ints.size(); i++) {
