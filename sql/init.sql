@@ -129,8 +129,8 @@ CREATE TABLE IF NOT EXISTS t_file
     creation_date TIMESTAMP     NOT NULL DEFAULT now(),
     change_date   TIMESTAMP     NOT NULL DEFAULT now(),
     parent_id     INTEGER       NULL,
-    file_name     VARCHAR(60)   NOT NULL,
-    display_name  VARCHAR(100)  NOT NULL,
+    file_name     VARCHAR(255)   NOT NULL,
+    display_name  VARCHAR(255)  NOT NULL,
     description   VARCHAR(2000) NOT NULL DEFAULT '',
     creator_id    INTEGER       NOT NULL DEFAULT 1,
     changer_id    INTEGER       NOT NULL DEFAULT 1,
@@ -156,10 +156,6 @@ CREATE OR REPLACE VIEW v_preview_file as (
                                          where t_file.id=t_image.id
                                              );
 
-
--- root user
-INSERT INTO t_user (id,type,name,email,login,pwd)
-VALUES (1,'de.elbe5.user.UserData','Administrator','root@localhost','root','');
 
 -- timer
 INSERT INTO t_timer_task (name,display_name,execution_interval,minute,active)
