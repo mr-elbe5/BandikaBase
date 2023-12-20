@@ -13,6 +13,7 @@
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
 <%@ page import="de.elbe5.file.FileData" %>
+<%@ page import="de.elbe5.base.LocalizedSystemStrings" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -35,7 +36,7 @@
                 <div class="dropdown-menu">
                     <%
                         for (Class<? extends FileData> fileType : fileClasses) {
-                        String name = $SH(fileType.getName());
+                        String name = LocalizedSystemStrings.getInstance().html(fileType.getName());
                     %>
                     <a class="dropdown-item" onclick="return openModalDialog('/ctrl/file/openCreateFile?parentId=<%=contentData.getId()%>&type=<%=fileType.getName()%>');"><%=name%>
                     </a>

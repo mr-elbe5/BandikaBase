@@ -8,11 +8,11 @@
  */
 package de.elbe5.base;
 
-public class LocalizedStrings extends StringBundle {
+public class LocalizedSystemStrings extends StringBundle {
 
-    final private static LocalizedStrings instance = new LocalizedStrings();
+    final private static LocalizedSystemStrings instance = new LocalizedSystemStrings();
 
-    public static LocalizedStrings getInstance(){
+    public static LocalizedSystemStrings getInstance(){
         return instance;
     }
 

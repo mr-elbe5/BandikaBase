@@ -8,9 +8,9 @@
  */
 package de.elbe5.request;
 
-import de.elbe5.configuration.Configuration;
 import de.elbe5.base.*;
 import de.elbe5.base.BaseData;
+import de.elbe5.configuration.StaticConfiguration;
 import de.elbe5.content.ContentData;
 import de.elbe5.user.UserBean;
 import de.elbe5.user.UserData;
@@ -178,7 +178,7 @@ public class RequestData {
         if (formError == null)
             return true;
         if (formError.isFormIncomplete())
-            formError.addFormError(LocalizedStrings.string("_notComplete"));
+            formError.addFormError(LocalizedStrings.getInstance().string("_notComplete"));
         return formError.isEmpty();
     }
 
@@ -298,7 +298,7 @@ public class RequestData {
             byte[] bytes = new byte[(int) part.getSize()];
             int read = part.getInputStream().read(bytes);
             if (read > 0) {
-                return new String(bytes, Configuration.ENCODING);
+                return new String(bytes, StaticConfiguration.ENCODING);
             }
         } catch (Exception e) {
             Log.error("could not extract parameter from multipart", e);

@@ -10,6 +10,7 @@ package de.elbe5.mail;
 
 import de.elbe5.base.Log;
 import de.elbe5.base.Mailer;
+import de.elbe5.configuration.Configuration;
 
 public class MailHelper {
 
@@ -53,13 +54,13 @@ public class MailHelper {
 
     public static Mailer getMailer() {
         Mailer mailer = new Mailer();
-        mailer.setSmtpHost(MailConfiguration.getSmtpHost());
-        mailer.setSmtpPort(MailConfiguration.getSmtpPort());
-        mailer.setSmtpConnectionType(MailConfiguration.getSmtpConnectionType());
-        mailer.setSmtpUser(MailConfiguration.getSmtpUser());
-        mailer.setSmtpPassword(MailConfiguration.getSmtpPassword());
-        mailer.setFrom(MailConfiguration.getMailSender());
-        mailer.setReplyTo(MailConfiguration.getMailSender());
+        mailer.setSmtpHost(Configuration.getSmtpHost());
+        mailer.setSmtpPort(Configuration.getSmtpPort());
+        mailer.setSmtpConnectionType(Configuration.getSmtpConnectionType());
+        mailer.setSmtpUser(Configuration.getSmtpUser());
+        mailer.setSmtpPassword(Configuration.getSmtpPassword());
+        mailer.setFrom(Configuration.getMailSender());
+        mailer.setReplyTo(Configuration.getMailSender());
         return mailer;
     }
 }

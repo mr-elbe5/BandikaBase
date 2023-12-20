@@ -21,7 +21,7 @@ public abstract class Controller {
     }
 
     protected void setSaveError(RequestData rdata) {
-        rdata.setMessage(LocalizedStrings.string("_saveError"), RequestKeys.MESSAGE_TYPE_ERROR);
+        rdata.setMessage($S("_saveError"), RequestKeys.MESSAGE_TYPE_ERROR);
     }
 
     protected IResponse openAdminPage(RequestData rdata, String jsp, String title) {
@@ -31,11 +31,11 @@ public abstract class Controller {
     }
 
     protected IResponse showSystemAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/systemAdministration.jsp", LocalizedStrings.string("_systemAdministration"));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/systemAdministration.jsp", $S("_systemAdministration"));
     }
 
     protected IResponse showPersonAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/personAdministration.jsp", LocalizedStrings.string("_personAdministration"));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/personAdministration.jsp", $S("_personAdministration"));
     }
 
     protected void assertSessionCall(RequestData rdata){
@@ -65,6 +65,18 @@ public abstract class Controller {
     protected void assertLoggedIn(RequestData rdata){
         if (!rdata.isLoggedIn())
             throw new ResponseException(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    protected String $S(String key){
+        return LocalizedStrings.getInstance().string(key);
+    }
+
+    protected String $SH(String key){
+        return LocalizedStrings.getInstance().html(key);
+    }
+
+    public String $SHM(String key){
+        return LocalizedStrings.getInstance().htmlMultiline(key);
     }
 
 }

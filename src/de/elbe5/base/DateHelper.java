@@ -1,6 +1,6 @@
 package de.elbe5.base;
 
-import de.elbe5.configuration.Configuration;
+import de.elbe5.configuration.StaticConfiguration;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -60,15 +60,15 @@ public class DateHelper {
     }
 
     public static String getDatePattern(){
-        return LocalizedStrings.string("system.datePattern");
+        return LocalizedSystemStrings.getInstance().string("datePattern");
     }
 
     public static String getDateTimePattern(){
-        return LocalizedStrings.string("system.dateTimePattern");
+        return LocalizedSystemStrings.getInstance().string("dateTimePattern");
     }
 
     public static String getTimePattern(){
-        return LocalizedStrings.string("system.timePattern");
+        return LocalizedSystemStrings.getInstance().string("timePattern");
     }
 
     public static String toHtmlDate(LocalDate date) {
@@ -114,7 +114,7 @@ public class DateHelper {
     }
 
     public static String toHtml(LocalDateTime date){
-        return Configuration.showDateTime() ? toHtmlDateTime(date) : toHtmlDate(date);
+        return StaticConfiguration.showDateTime() ? toHtmlDateTime(date) : toHtmlDate(date);
     }
 
     public static String toISODateTime(LocalDateTime date) {

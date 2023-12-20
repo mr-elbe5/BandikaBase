@@ -8,84 +8,76 @@
  */
 package de.elbe5.configuration;
 
+import de.elbe5.base.Mailer;
+
 import java.util.*;
 
 public class Configuration {
+    public static String smtpHost = null;
+    public static int smtpPort = 25;
+    public static Mailer.SmtpConnectionType smtpConnectionType = Mailer.SmtpConnectionType.plain;
+    public static String smtpUser = "";
+    public static String smtpPassword = "";
+    public static String mailSender = null;
+    public static String mailReceiver = null;
 
-    public static String ENCODING = "UTF-8";
-
-    private static String appTitle = "";
-    private static String salt = "";
-    private static Locale locale = Locale.GERMAN;
-    private static final Map<String,Locale> locales = new HashMap<>();
-    static boolean showDateTime = false;
-    static boolean useReadRights = true;
-    static boolean useReadGroup = false;
-    static boolean useEditorGroup = false;
-
-    static{
-        locales.put("de",Locale.GERMAN);
-        locales.put("en",Locale.ENGLISH);
+    public static String getSmtpHost() {
+        return smtpHost;
     }
+
+    public static void setSmtpHost(String smtpHost) {
+        Configuration.smtpHost = smtpHost;
+    }
+
+    public static int getSmtpPort() {
+        return smtpPort;
+    }
+
+    public static void setSmtpPort(int smtpPort) {
+        Configuration.smtpPort = smtpPort;
+    }
+
+    public static Mailer.SmtpConnectionType getSmtpConnectionType() {
+        return smtpConnectionType;
+    }
+
+    public static void setSmtpConnectionType(Mailer.SmtpConnectionType smtpConnectionType) {
+        Configuration.smtpConnectionType = smtpConnectionType;
+    }
+
+    public static String getSmtpUser() {
+        return smtpUser;
+    }
+
+    public static void setSmtpUser(String smtpUser) {
+        Configuration.smtpUser = smtpUser;
+    }
+
+    public static String getSmtpPassword() {
+        return smtpPassword;
+    }
+
+    public static void setSmtpPassword(String smtpPassword) {
+        Configuration.smtpPassword = smtpPassword;
+    }
+
+    public static String getMailSender() {
+        return mailSender;
+    }
+
+    public static void setMailSender(String mailSender) {
+        Configuration.mailSender = mailSender;
+    }
+
+    public static String getMailReceiver() {
+        return mailReceiver;
+    }
+
+    public static void setMailReceiver(String mailReceiver) {
+        Configuration.mailReceiver = mailReceiver;
+    }
+
 
     // base data
-
-    public static String getAppTitle() {
-        return appTitle;
-    }
-
-    public static void setAppTitle(String appTitle) {
-        Configuration.appTitle = appTitle;
-    }
-
-    public static String getSalt() {
-        return salt;
-    }
-
-    public static void setSalt(String salt) {
-        Configuration.salt = salt;
-    }
-
-    public static Locale getLocale() {
-        return locale;
-    }
-
-    public static void setLocale(Locale locale) {
-        if (locale == null || !locales.containsValue(locale))
-            return;
-        Configuration.locale = locale;
-    }
-
-    public static boolean showDateTime() {
-        return showDateTime;
-    }
-
-    public static void setShowDateTime(boolean showDateTime) {
-        Configuration.showDateTime = showDateTime;
-    }
-
-    public static boolean useReadRights() {
-        return useReadRights;
-    }
-
-    public static void setUseReadRights(boolean useReadRights) {
-        Configuration.useReadRights = useReadRights;
-    }
-
-    public static boolean useReadGroup() {
-        return useReadGroup;
-    }
-
-    public static void setUseReadGroup(boolean useReadGroup) {
-        Configuration.useReadGroup = useReadGroup;
-    }
-
-    public static boolean useEditorGroup() {
-        return useEditorGroup;
-    }
-
-    public static void setUseEditorGroup(boolean useEditorGroup) {
-        Configuration.useEditorGroup = useEditorGroup;
-    }
 
 }

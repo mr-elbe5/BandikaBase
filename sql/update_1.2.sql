@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS t_configuration
 insert into t_configuration (title, salt)
 values ('Elbe5', 'V3xfgDrxdl8=');
 
+alter table t_user drop CONSTRAINT t_user_fk1;
 alter table t_user add creator_id    INTEGER       NOT NULL DEFAULT 1;
 alter table t_user add changer_id    INTEGER       NOT NULL DEFAULT 1;
 alter table t_user add creation_date TIMESTAMP     NOT NULL DEFAULT now();

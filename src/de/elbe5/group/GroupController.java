@@ -8,7 +8,6 @@
  */
 package de.elbe5.group;
 
-import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.*;
 import de.elbe5.response.StatusResponse;
@@ -78,7 +77,7 @@ public class GroupController extends Controller {
         }
         GroupBean.getInstance().saveGroup(data);
         GroupCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_groupSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?groupId=" + data.getId());
     }
 
@@ -87,12 +86,12 @@ public class GroupController extends Controller {
         assertRights(GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser()));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         GroupBean.getInstance().deleteGroup(id);
         GroupCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_groupDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 

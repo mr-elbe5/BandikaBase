@@ -8,10 +8,10 @@
  */
 package de.elbe5.tag;
 
-import de.elbe5.configuration.Configuration;
 import de.elbe5.base.StringFormatter;
 import de.elbe5.base.StringHelper;
 
+import de.elbe5.configuration.StaticConfiguration;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class DateTag extends FormLineTag {
@@ -31,7 +31,7 @@ public class DateTag extends FormLineTag {
                     """;
 
     protected String getPreControlHtml(HttpServletRequest request) {
-        return StringFormatter.format(controlPreHtml, name, name, StringHelper.toHtml(value),name, Configuration.getLocale().getLanguage());
+        return StringFormatter.format(controlPreHtml, name, name, StringHelper.toHtml(value),name, StaticConfiguration.getLocale().getLanguage());
     }
 
 }

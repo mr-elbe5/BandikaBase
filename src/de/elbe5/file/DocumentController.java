@@ -8,7 +8,6 @@
  */
 package de.elbe5.file;
 
-import de.elbe5.base.LocalizedStrings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.ContentRequestKeys;
@@ -72,7 +71,7 @@ public class DocumentController extends FileController {
         }
         data.setNew(false);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_fileSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + parent.getId());
     }
 

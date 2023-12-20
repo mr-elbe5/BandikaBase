@@ -8,6 +8,7 @@
  */
 package de.elbe5.tag;
 
+import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.StringHelper;
 import de.elbe5.request.RequestData;
 
@@ -68,6 +69,18 @@ public class BaseTag implements Tag {
 
     protected RequestData getRequestData() {
         return RequestData.getRequestData(getRequest());
+    }
+
+    protected String $S(String key){
+        return LocalizedStrings.getInstance().string(key);
+    }
+
+    protected String $SH(String key){
+        return LocalizedStrings.getInstance().html(key);
+    }
+
+    public String $SHM(String key){
+        return LocalizedStrings.getInstance().htmlMultiline(key);
     }
 
 }

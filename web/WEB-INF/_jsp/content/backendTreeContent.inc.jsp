@@ -12,6 +12,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.request.ContentRequestKeys" %>
+<%@ page import="de.elbe5.base.LocalizedSystemStrings" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -51,7 +52,7 @@
         <a class="icon fa fa-plus dropdown-toggle" data-toggle="dropdown" title="<%=$SH("_newContent")%>"></a>
         <div class="dropdown-menu">
             <%for (Class<? extends ContentData> pageType : childClasses) {
-                String name = $SH(pageType.getName());
+                String name = LocalizedSystemStrings.getInstance().html(pageType.getName());
             %>
             <a class="dropdown-item" onclick="return openModalDialog('/ctrl/content/openCreateBackendContent?parentId=<%=contentData.getId()%>&type=<%=pageType.getName()%>');"><%=name%>
             </a>

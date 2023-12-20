@@ -60,13 +60,13 @@ public class UserController extends Controller {
         String login = rdata.getAttributes().getString("login");
         String pwd = rdata.getAttributes().getString("password");
         if (login.length() == 0 || pwd.length() == 0) {
-            rdata.setMessage(LocalizedStrings.string("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_notComplete"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         UserData data = UserBean.getInstance().loginUser(login, pwd);
         if (data == null) {
             Log.info("bad login of "+login);
-            rdata.setMessage(LocalizedStrings.string("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_badLogin"), RequestKeys.MESSAGE_TYPE_ERROR);
             return openLogin(rdata);
         }
         rdata.setSessionUser(data);
@@ -136,7 +136,7 @@ public class UserController extends Controller {
         assertSessionCall(rdata);
         rdata.setSessionUser(null);
         rdata.resetSession();
-        rdata.setMessage(LocalizedStrings.string("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_loggedOut"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         String next = rdata.getAttributes().getString("next");
         if (!next.isEmpty())
             return new ForwardResponse(next);
@@ -184,7 +184,7 @@ public class UserController extends Controller {
         if (rdata.getUserId() == data.getId()) {
             rdata.setSessionUser(data);
         }
-        rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openPersonAdministration?userId=" + data.getId());
     }
 
@@ -193,15 +193,15 @@ public class UserController extends Controller {
         assertRights(GlobalRight.hasGlobalUserEditRight(rdata.getLoginUser()));
         int id = rdata.getId();
         if (id < BaseData.ID_MIN) {
-            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         if (!UserBean.getInstance().deleteUser(id)){
-            rdata.setMessage(LocalizedStrings.string("_userNotDeleted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_userNotDeleted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return new ForwardResponse("/ctrl/admin/openPersonAdministration");
         }
         UserCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_userDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new ForwardResponse("/ctrl/admin/openPersonAdministration");
     }
 
@@ -229,25 +229,25 @@ public class UserController extends Controller {
         String newPassword2 = rdata.getAttributes().getString("newPassword2");
         if (newPassword.length() < UserData.MIN_PASSWORD_LENGTH) {
             rdata.addFormErrorField("newPassword1");
-            rdata.addFormError(LocalizedStrings.string("_passwordLengthError"));
+            rdata.addFormError($S("_passwordLengthError"));
             return showChangePassword();
         }
         if (!newPassword.equals(newPassword2)) {
             rdata.addFormErrorField("newPassword1");
             rdata.addFormErrorField("newPassword2");
-            rdata.addFormError(LocalizedStrings.string("_passwordsDontMatch"));
+            rdata.addFormError($S("_passwordsDontMatch"));
             return showChangePassword();
         }
         UserData data = UserBean.getInstance().loginUser(user.getLogin(), oldPassword);
         if (data == null) {
             rdata.addFormErrorField("newPassword1");
-            rdata.addFormError(LocalizedStrings.string("_badLogin"));
+            rdata.addFormError($S("_badLogin"));
             return showChangePassword();
         }
         data.setPassword(newPassword);
         data.setUpdateValues(rdata);
         UserBean.getInstance().saveUserPassword(data);
-        rdata.setMessage(LocalizedStrings.string("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_passwordChanged"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 
@@ -269,7 +269,7 @@ public class UserController extends Controller {
         UserBean.getInstance().saveUserProfile(data);
         rdata.setSessionUser(data);
         UserCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_userSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/user/openProfile");
     }
 

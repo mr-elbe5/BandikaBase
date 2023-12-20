@@ -9,7 +9,6 @@
 package de.elbe5.administration;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.Log;
 import de.elbe5.base.FileHelper;
 import de.elbe5.content.ContentCache;
@@ -94,7 +93,7 @@ public class AdminController extends Controller {
         } catch (IOException e) {
             Log.error("could not touch file " + path, e);
         }
-        rdata.setMessage(LocalizedStrings.string("_restartHint"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_restartHint"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
@@ -103,7 +102,7 @@ public class AdminController extends Controller {
         assertRights(GlobalRight.hasGlobalApplicationEditRight(rdata.getLoginUser()));
         UserCache.setDirty();
         UserCache.checkDirty();
-        rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
@@ -111,7 +110,7 @@ public class AdminController extends Controller {
         assertLoggedInSessionCall(rdata);
         assertRights(GlobalRight.hasGlobalApplicationEditRight(rdata.getLoginUser()));
         PreviewCache.clear();
-        rdata.setMessage(LocalizedStrings.string("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_cacheCleared"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
@@ -120,12 +119,12 @@ public class AdminController extends Controller {
         assertRights(GlobalRight.hasGlobalApplicationEditRight(rdata.getLoginUser()));
         ContentCache.setDirty();
         ContentCache.checkDirty();
-        rdata.setMessage(LocalizedStrings.string("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_cacheReloaded"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return openSystemAdministration(rdata);
     }
 
     protected IResponse showContentAdministration(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", LocalizedStrings.string("_contentAdministration"));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/administration/contentAdministration.jsp", $S("_contentAdministration"));
     }
 
 }

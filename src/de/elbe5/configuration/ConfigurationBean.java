@@ -11,10 +11,8 @@ package de.elbe5.configuration;
 import de.elbe5.base.Log;
 import de.elbe5.base.Mailer;
 import de.elbe5.database.DbBean;
-import de.elbe5.mail.MailConfiguration;
 
 import java.sql.*;
-import java.util.Locale;
 
 public class ConfigurationBean extends DbBean {
 
@@ -27,7 +25,8 @@ public class ConfigurationBean extends DbBean {
         return instance;
     }
 
-    private static final String GET_CONFIGURATION_SQL = "SELECT title,salt,locale,show_date_time,use_read_rights,use_read_group,use_editor_group FROM t_configuration";
+    private static final String GET_CONFIGURATION_SQL =
+            "SELECT smtp_host,smtp_port,smtp_connection_type,smtp_user,smtp_password,mail_sender,mail_receiver from t_configuration";
 
     public void readConfiguration() {
         Connection con = getConnection();
@@ -37,41 +36,13 @@ public class ConfigurationBean extends DbBean {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    Configuration.setAppTitle(rs.getString(i++));
-                    Configuration.setSalt(rs.getString(i++));
-                    Configuration.setLocale(new Locale(rs.getString(i++)));
-                    Configuration.setShowDateTime(rs.getBoolean(i++));
-                    Configuration.setUseReadRights(rs.getBoolean(i++));
-                    Configuration.setUseReadGroup(rs.getBoolean(i++));
-                    Configuration.setUseEditorGroup(rs.getBoolean(i));
-                }
-            }
-        } catch (SQLException se) {
-            Log.error("sql error", se);
-        } finally {
-            closeStatement(pst);
-            closeConnection(con);
-        }
-    }
-
-    private static final String GET_MAIL_CONFIGURATION_SQL =
-            "SELECT smtp_host,smtp_port,smtp_connection_type,smtp_user,smtp_password,mail_sender,mail_receiver from t_configuration";
-
-    public void readMailConfiguration() {
-        Connection con = getConnection();
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement(GET_MAIL_CONFIGURATION_SQL);
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    int i = 1;
-                    MailConfiguration.setSmtpHost(rs.getString(i++));
-                    MailConfiguration.setSmtpPort(rs.getInt(i++));
-                    MailConfiguration.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(rs.getString(i++)));
-                    MailConfiguration.setSmtpUser(rs.getString(i++));
-                    MailConfiguration.setSmtpPassword(rs.getString(i++));
-                    MailConfiguration.setMailSender(rs.getString(i++));
-                    MailConfiguration.setMailReceiver(rs.getString(i));
+                    Configuration.setSmtpHost(rs.getString(i++));
+                    Configuration.setSmtpPort(rs.getInt(i++));
+                    Configuration.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(rs.getString(i++)));
+                    Configuration.setSmtpUser(rs.getString(i++));
+                    Configuration.setSmtpPassword(rs.getString(i++));
+                    Configuration.setMailSender(rs.getString(i++));
+                    Configuration.setMailReceiver(rs.getString(i));
                 }
             }
         } catch (SQLException se) {

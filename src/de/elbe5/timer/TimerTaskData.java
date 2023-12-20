@@ -170,7 +170,7 @@ public abstract class TimerTaskData extends BaseData implements Cloneable {
         setMinute(rdata.getAttributes().getInt("minute"));
         setActive(rdata.getAttributes().getBoolean("active"));
         if (interval != TimerInterval.CONTINOUS && (day == 0 || (hour < 0 || hour >= 24) || (minute < 0 || minute >= 60))) {
-            rdata.addFormError(LocalizedStrings.string("_timerSettingsError"));
+            rdata.addFormError(LocalizedStrings.getInstance().string("_timerSettingsError"));
             rdata.addFormErrorField("interval");
             rdata.addFormErrorField("day");
             rdata.addFormErrorField("hour");

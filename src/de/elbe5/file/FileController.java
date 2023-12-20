@@ -10,7 +10,6 @@ package de.elbe5.file;
 
 import de.elbe5.application.ApplicationPath;
 import de.elbe5.base.BinaryFile;
-import de.elbe5.base.LocalizedStrings;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentData;
 import de.elbe5.request.*;
@@ -129,7 +128,7 @@ public class FileController extends Controller {
         FileData data=rdata.getClipboardData(ContentRequestKeys.KEY_FILE, FileData.class);
         ContentData parent=ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, parentId);
         }
         assertRights(parent.hasUserEditRight(rdata.getLoginUser()));
@@ -139,7 +138,7 @@ public class FileController extends Controller {
         FileBean.getInstance().saveFile(data, true);
         rdata.clearClipboardData(ContentRequestKeys.KEY_FILE);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_filePasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_filePasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 
@@ -153,7 +152,7 @@ public class FileController extends Controller {
         FileBean.getInstance().deleteFile(data);
         ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
-        rdata.setMessage(LocalizedStrings.string("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_fileDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
     }
 

@@ -8,7 +8,6 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.BaseData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
@@ -106,7 +105,7 @@ public class ContentController extends Controller {
     }
 
     protected IResponse showContentTree(RequestData rdata) {
-        return openAdminPage(rdata, "/WEB-INF/_jsp/content/contentTree.jsp", LocalizedStrings.string("_contentTree"));
+        return openAdminPage(rdata, "/WEB-INF/_jsp/content/contentTree.jsp", $S("_contentTree"));
     }
 
     /* Content Administration */
@@ -151,7 +150,7 @@ public class ContentController extends Controller {
         data.setNew(false);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_contentSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + data.getId());
     }
 
@@ -161,7 +160,7 @@ public class ContentController extends Controller {
         int contentId = rdata.getId();
         ContentData data=ContentCache.getContent(contentId);
         if (contentId < BaseData.ID_MIN) {
-            rdata.setMessage(LocalizedStrings.string("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_notDeletable"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, contentId);
         }
         int parentId = ContentCache.getParentContentId(contentId);
@@ -169,7 +168,7 @@ public class ContentController extends Controller {
         ContentCache.setDirty();
         rdata.getAttributes().put("contentId", Integer.toString(parentId));
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_contentDeleted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,parentId);
     }
 
@@ -188,18 +187,18 @@ public class ContentController extends Controller {
         int parentId = rdata.getAttributes().getInt("parentId");
         ContentData data=rdata.getClipboardData(ContentRequestKeys.KEY_CONTENT,ContentData.class);
         if (data==null){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, parentId);
         }
         ContentData parent = ContentCache.getContent(parentId);
         if (parent == null){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, parentId);
         }
         Set<Integer> parentIds=new HashSet<>();
         parent.collectParentIds(parentIds);
         if (parentIds.contains(data.getId())){
-            rdata.setMessage(LocalizedStrings.string("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
+            rdata.setMessage($S("_actionNotExcecuted"), RequestKeys.MESSAGE_TYPE_ERROR);
             return showContentAdministration(rdata, parentId);
         }
         data.setParentId(parentId);
@@ -209,7 +208,7 @@ public class ContentController extends Controller {
         ContentBean.getInstance().saveContent(data);
         rdata.clearClipboardData(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_contentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_contentPasted"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return showContentAdministration(rdata,data.getId());
     }
 
@@ -248,7 +247,7 @@ public class ContentController extends Controller {
         ContentBean.getInstance().updateChildRankings(data);
         rdata.removeSessionObject(ContentRequestKeys.KEY_CONTENT);
         ContentCache.setDirty();
-        rdata.setMessage(LocalizedStrings.string("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
+        rdata.setMessage($S("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
     }
 

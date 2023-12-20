@@ -1,8 +1,8 @@
 package de.elbe5.response;
 
-import de.elbe5.configuration.Configuration;
 import de.elbe5.base.JsonObject;
 import de.elbe5.base.Log;
+import de.elbe5.configuration.StaticConfiguration;
 import de.elbe5.request.RequestData;
 
 import jakarta.servlet.ServletContext;
@@ -41,7 +41,7 @@ public class JsonResponse implements IResponse {
             if (json == null || json.length() == 0) {
                 response.setHeader("Content-Length", "0");
             } else {
-                byte[] bytes = json.getBytes(Configuration.ENCODING);
+                byte[] bytes = json.getBytes(StaticConfiguration.ENCODING);
                 response.setHeader("Content-Length", Integer.toString(bytes.length));
                 out.write(bytes);
             }

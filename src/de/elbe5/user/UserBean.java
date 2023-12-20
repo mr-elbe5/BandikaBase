@@ -10,7 +10,7 @@ package de.elbe5.user;
 
 import de.elbe5.base.Log;
 import de.elbe5.base.StringFormatter;
-import de.elbe5.configuration.Configuration;
+import de.elbe5.configuration.StaticConfiguration;
 import de.elbe5.database.DbBean;
 import de.elbe5.rights.GlobalRight;
 
@@ -165,7 +165,7 @@ public class UserBean extends DbBean {
                 if (rs.next()) {
                     int i = 1;
                     String encrypted = rs.getString(i++);
-                    if (UserSecurity.encryptPassword(pwd, Configuration.getSalt()).equals(encrypted)){
+                    if (UserSecurity.encryptPassword(pwd, StaticConfiguration.getSalt()).equals(encrypted)){
                         String type = rs.getString(i++);
                         data = getNewUserData(type);
                         if (data!=null) {
@@ -210,7 +210,7 @@ public class UserBean extends DbBean {
                 if (rs.next()) {
                     int i = 1;
                     String encrypted = rs.getString(i++);
-                    String encryptedLogin = UserSecurity.encryptPassword(pwd, Configuration.getSalt());
+                    String encryptedLogin = UserSecurity.encryptPassword(pwd, StaticConfiguration.getSalt());
                     if (encryptedLogin != null && encryptedLogin.equals(encrypted)) {
                         String type = rs.getString(i++);
                         data = getNewUserData(type);

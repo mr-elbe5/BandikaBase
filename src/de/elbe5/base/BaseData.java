@@ -184,4 +184,8 @@ public class BaseData implements IJsonData {
         if (i!=0)
             setChangerId(i);
     }
+
+    public String getClassDisplayName(){
+        return LocalizedSystemStrings.getInstance().string(getClass().getName());
+    }
 }

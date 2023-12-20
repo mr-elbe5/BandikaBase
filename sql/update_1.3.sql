@@ -12,3 +12,11 @@ SELECT t_file.id,
 FROM t_file,
      t_image
 WHERE t_file.id = t_image.id;
+
+alter table t_configuration drop column title;
+alter table t_configuration drop column salt;
+alter table t_configuration drop column locale;
+alter table t_configuration drop column show_date_time;
+alter table t_configuration drop column use_read_rights;
+alter table t_configuration drop column use_read_group;
+alter table t_configuration drop column use_editor_group;

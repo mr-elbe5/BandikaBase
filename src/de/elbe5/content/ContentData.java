@@ -8,9 +8,9 @@
  */
 package de.elbe5.content;
 
-import de.elbe5.configuration.Configuration;
 import de.elbe5.base.*;
 import de.elbe5.base.BaseData;
+import de.elbe5.configuration.StaticConfiguration;
 import de.elbe5.file.*;
 import de.elbe5.group.GroupCache;
 import de.elbe5.group.GroupData;
@@ -139,7 +139,7 @@ public class ContentData extends BaseData implements IMasterInclude, Comparable<
     }
 
     public boolean isOpenAccess() {
-        return !Configuration.useReadRights() || openAccess;
+        return !StaticConfiguration.useReadRights() || openAccess;
     }
 
     public void setOpenAccess(boolean openAccess) {
