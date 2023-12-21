@@ -53,6 +53,7 @@
                         </ul>
                     </li>
                     <jsp:include page="../timer/timerAdministration.inc.jsp" flush="true"/>
+                    <jsp:include page="../configuration/configAdministration.inc.jsp" flush="true"/>
                     <%}%>
                 </ul>
             </li>

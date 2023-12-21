@@ -9,75 +9,104 @@
 package de.elbe5.configuration;
 
 import de.elbe5.base.Mailer;
-
-import java.util.*;
+import de.elbe5.request.RequestData;
 
 public class Configuration {
-    public static String smtpHost = null;
-    public static int smtpPort = 25;
-    public static Mailer.SmtpConnectionType smtpConnectionType = Mailer.SmtpConnectionType.plain;
-    public static String smtpUser = "";
-    public static String smtpPassword = "";
-    public static String mailSender = null;
-    public static String mailReceiver = null;
 
-    public static String getSmtpHost() {
+    private static Configuration instance = new Configuration();
+
+    public static void setInstance(Configuration instance) {
+        Configuration.instance = instance;
+    }
+
+    public static Configuration getInstance() {
+        return instance;
+    }
+
+    public String smtpHost = null;
+    public int smtpPort = 25;
+    public Mailer.SmtpConnectionType smtpConnectionType = Mailer.SmtpConnectionType.plain;
+    public String smtpUser = "";
+    public String smtpPassword = "";
+    public String mailSender = null;
+    public String mailReceiver = null;
+
+    public String getSmtpHost() {
         return smtpHost;
     }
 
-    public static void setSmtpHost(String smtpHost) {
-        Configuration.smtpHost = smtpHost;
+    public void setSmtpHost(String smtpHost) {
+        this.smtpHost = smtpHost;
     }
 
-    public static int getSmtpPort() {
+    public int getSmtpPort() {
         return smtpPort;
     }
 
-    public static void setSmtpPort(int smtpPort) {
-        Configuration.smtpPort = smtpPort;
+    public void setSmtpPort(int smtpPort) {
+        this.smtpPort = smtpPort;
     }
 
-    public static Mailer.SmtpConnectionType getSmtpConnectionType() {
+    public Mailer.SmtpConnectionType getSmtpConnectionType() {
         return smtpConnectionType;
     }
 
-    public static void setSmtpConnectionType(Mailer.SmtpConnectionType smtpConnectionType) {
-        Configuration.smtpConnectionType = smtpConnectionType;
+    public void setSmtpConnectionType(Mailer.SmtpConnectionType smtpConnectionType) {
+        this.smtpConnectionType = smtpConnectionType;
     }
 
-    public static String getSmtpUser() {
+    public String getSmtpUser() {
         return smtpUser;
     }
 
-    public static void setSmtpUser(String smtpUser) {
-        Configuration.smtpUser = smtpUser;
+    public void setSmtpUser(String smtpUser) {
+        this.smtpUser = smtpUser;
     }
 
-    public static String getSmtpPassword() {
+    public String getSmtpPassword() {
         return smtpPassword;
     }
 
-    public static void setSmtpPassword(String smtpPassword) {
-        Configuration.smtpPassword = smtpPassword;
+    public void setSmtpPassword(String smtpPassword) {
+        this.smtpPassword = smtpPassword;
     }
 
-    public static String getMailSender() {
+    public String getMailSender() {
         return mailSender;
     }
 
-    public static void setMailSender(String mailSender) {
-        Configuration.mailSender = mailSender;
+    public void setMailSender(String mailSender) {
+        this.mailSender = mailSender;
     }
 
-    public static String getMailReceiver() {
+    public String getMailReceiver() {
         return mailReceiver;
     }
 
-    public static void setMailReceiver(String mailReceiver) {
-        Configuration.mailReceiver = mailReceiver;
+    public void setMailReceiver(String mailReceiver) {
+        this.mailReceiver = mailReceiver;
     }
 
+    public Configuration getCopy(){
+        Configuration config = new Configuration();
+        config.smtpHost = this.smtpHost;
+        config.smtpPort = this.smtpPort;
+        config.smtpConnectionType = this.smtpConnectionType;
+        config.smtpUser = this.smtpUser;
+        config.smtpPassword = this.smtpPassword;
+        config.mailSender = this.mailSender;
+        config.mailReceiver = this.mailReceiver;
+        return config;
+    }
 
-    // base data
+    public void readRequestData(RequestData rdata){
+        smtpHost = rdata.getAttributes().getString("smtpHost");
+        smtpPort = rdata.getAttributes().getInt("smtpPort");
+        smtpConnectionType = Mailer.SmtpConnectionType.valueOf(rdata.getAttributes().getString("smtpConnectionType"));
+        smtpUser = rdata.getAttributes().getString("smtpUser");
+        smtpPassword = rdata.getAttributes().getString("smtpPassword");
+        mailSender = rdata.getAttributes().getString("mailSender");
+        mailReceiver = rdata.getAttributes().getString("mailReceiver");
+    }
 
 }

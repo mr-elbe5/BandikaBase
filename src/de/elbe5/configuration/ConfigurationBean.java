@@ -31,18 +31,19 @@ public class ConfigurationBean extends DbBean {
     public void readConfiguration() {
         Connection con = getConnection();
         PreparedStatement pst = null;
+        Configuration config = Configuration.getInstance();
         try {
             pst = con.prepareStatement(GET_CONFIGURATION_SQL);
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     int i = 1;
-                    Configuration.setSmtpHost(rs.getString(i++));
-                    Configuration.setSmtpPort(rs.getInt(i++));
-                    Configuration.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(rs.getString(i++)));
-                    Configuration.setSmtpUser(rs.getString(i++));
-                    Configuration.setSmtpPassword(rs.getString(i++));
-                    Configuration.setMailSender(rs.getString(i++));
-                    Configuration.setMailReceiver(rs.getString(i));
+                    config.setSmtpHost(rs.getString(i++));
+                    config.setSmtpPort(rs.getInt(i++));
+                    config.setSmtpConnectionType(Mailer.SmtpConnectionType.valueOf(rs.getString(i++)));
+                    config.setSmtpUser(rs.getString(i++));
+                    config.setSmtpPassword(rs.getString(i++));
+                    config.setMailSender(rs.getString(i++));
+                    config.setMailReceiver(rs.getString(i));
                 }
             }
         } catch (SQLException se) {
@@ -51,6 +52,33 @@ public class ConfigurationBean extends DbBean {
             closeStatement(pst);
             closeConnection(con);
         }
+    }
+
+    private static final String UPDATE_CONFIGURATION_SQL =
+            "UPDATE t_configuration set smtp_host=?,smtp_port=?,smtp_connection_type=?,smtp_user=?,smtp_password=?,mail_sender=?,mail_receiver=?";
+
+    public boolean updateConfiguration(Configuration config){
+        Connection con = getConnection();
+        PreparedStatement pst = null;
+        try {
+            pst = con.prepareStatement(UPDATE_CONFIGURATION_SQL);
+            int i = 1;
+            pst.setString(i++, config.getSmtpHost());
+            pst.setInt(i++, config.getSmtpPort());
+            pst.setString(i++, config.getSmtpConnectionType().name());
+            pst.setString(i++, config.getSmtpUser());
+            pst.setString(i++, config.getSmtpPassword());
+            pst.setString(i++, config.getMailSender());
+            pst.setString(i, config.getMailReceiver());
+            pst.executeUpdate();
+        } catch (SQLException se) {
+            Log.error("sql error", se);
+            return false;
+        } finally {
+            closeStatement(pst);
+            closeConnection(con);
+        }
+        return true;
     }
 
 }

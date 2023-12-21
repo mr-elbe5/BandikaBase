@@ -12,6 +12,7 @@ import de.elbe5.administration.AdminController;
 import de.elbe5.base.LocalizedStrings;
 import de.elbe5.base.JsonWebToken;
 import de.elbe5.base.Log;
+import de.elbe5.configuration.Configuration;
 import de.elbe5.configuration.ConfigurationBean;
 import de.elbe5.configuration.StaticConfiguration;
 import de.elbe5.content.*;
@@ -43,7 +44,6 @@ public class BandikaInitServlet extends InitServlet {
         if (!DbConnector.getInstance().initialize())
             return;
         ConfigurationBean.getInstance().readConfiguration();
-        //ConfigurationBean.getInstance().readMailConfiguration();
         LocalizedStrings.getInstance().addBundle("bandika", StaticConfiguration.getLocale());
         LocalizedStrings.getInstance().addBundle("application", StaticConfiguration.getLocale());
         JsonWebToken.createSecretKey(StaticConfiguration.getSalt());

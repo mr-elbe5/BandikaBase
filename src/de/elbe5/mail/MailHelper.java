@@ -54,13 +54,13 @@ public class MailHelper {
 
     public static Mailer getMailer() {
         Mailer mailer = new Mailer();
-        mailer.setSmtpHost(Configuration.getSmtpHost());
-        mailer.setSmtpPort(Configuration.getSmtpPort());
-        mailer.setSmtpConnectionType(Configuration.getSmtpConnectionType());
-        mailer.setSmtpUser(Configuration.getSmtpUser());
-        mailer.setSmtpPassword(Configuration.getSmtpPassword());
-        mailer.setFrom(Configuration.getMailSender());
-        mailer.setReplyTo(Configuration.getMailSender());
+        mailer.setSmtpHost(Configuration.getInstance().getSmtpHost());
+        mailer.setSmtpPort(Configuration.getInstance().getSmtpPort());
+        mailer.setSmtpConnectionType(Configuration.getInstance().getSmtpConnectionType());
+        mailer.setSmtpUser(Configuration.getInstance().getSmtpUser());
+        mailer.setSmtpPassword(Configuration.getInstance().getSmtpPassword());
+        mailer.setFrom(Configuration.getInstance().getMailSender());
+        mailer.setReplyTo(Configuration.getInstance().getMailSender());
         return mailer;
     }
 }
