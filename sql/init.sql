@@ -2,13 +2,6 @@
 
 CREATE TABLE IF NOT EXISTS t_configuration
 (
-    title            VARCHAR(100) NOT NULL DEFAULT '',
-    salt             VARCHAR(100) NOT NULL DEFAULT '',
-    locale           VARCHAR(30) NOT NULL DEFAULT 'GERMAN',
-    show_date_time   BOOLEAN NOT NULL DEFAULT false,
-    use_read_rights  BOOLEAN NOT NULL DEFAULT false,
-    use_read_group   BOOLEAN NOT NULL DEFAULT false,
-    use_editor_group BOOLEAN NOT NULL DEFAULT false,
     smtp_host        VARCHAR(30) NOT NULL DEFAULT '',
     smtp_port        INTEGER NOT NULL DEFAULT 25,
     smtp_connection_type VARCHAR(30) NOT NULL DEFAULT 'plain',
