@@ -10,10 +10,7 @@ package de.elbe5.base;
 
 import org.apache.commons.text.StringEscapeUtils;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class StringBundle {
 
@@ -21,8 +18,16 @@ public class StringBundle {
 
     public void addBundle(String name, Locale locale){
         ResourceBundle bundle = ResourceBundle.getBundle(name, locale);
+        List<String> presentKeys = new ArrayList<>();
         for (String key : bundle.keySet()){
+            if (stringMap.containsKey(key)){
+                presentKeys.add(key);
+            }
             stringMap.put(key, bundle.getString(key));
+        }
+        Collections.sort(presentKeys);
+        for (String key : presentKeys){
+            Log.warn("Replaced key " + key + " with bundle " + name);
         }
     }
 
@@ -53,6 +58,11 @@ public class StringBundle {
 
     public String xml(String key) {
         return StringEscapeUtils.escapeXml11(string(key));
+    }
+
+    public String csv(String key) {
+        //escape by opencsv
+        return string(key);
     }
 
 }

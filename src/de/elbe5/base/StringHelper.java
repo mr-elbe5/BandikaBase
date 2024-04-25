@@ -31,6 +31,14 @@ public class StringHelper {
         return StringEscapeUtils.escapeHtml4(src).replaceAll("\n", "\n<br>\n");
     }
 
+    public static String toCsv(String src) {
+        if (src == null) {
+            return "";
+        }
+        //escape by opencsv
+        return src;
+    }
+
     public static String toXml(String src) {
         if (src == null) {
             return "";
