@@ -109,6 +109,15 @@ public class KeyValueMap extends HashMap<String, Object> {
         return new HashSet<>(getIntegerList(key));
     }
 
+    public List<KeyValueMap> getSubList(String key) {
+        List<KeyValueMap> list = new ArrayList<>();
+        Object obj = get(key);
+        if (obj instanceof KeyValueMap[]) {
+            Collections.addAll(list, ((KeyValueMap[]) obj));
+        }
+        return list;
+    }
+
     public long getLong(String key, int defaultValue) {
         long value = defaultValue;
         try {

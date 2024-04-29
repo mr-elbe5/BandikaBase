@@ -16,6 +16,7 @@ import de.elbe5.user.UserBean;
 import de.elbe5.user.UserData;
 
 import jakarta.servlet.http.*;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -346,7 +347,22 @@ public class RequestData {
                 JSONObject json = (JSONObject) new JsonDeserializer().deserialize(in);
                 Log.log("received json: "+ json.toJSONString());
                 for (Object key : json.keySet()){
-                    getAttributes().put(key.toString(), json.get(key));
+                    Object value = json.get(key);
+                    if (value instanceof JSONArray) {
+                        KeyValueMap[] valueList = new KeyValueMap[((JSONArray) value).size()];
+                        for (int i = 0; i < ((JSONArray) value).size(); i++) {
+                            KeyValueMap submap = new KeyValueMap();
+                            JSONObject subjson = (JSONObject) ((JSONArray) value).get(i);
+                            for (Object subkey : subjson.keySet()) {
+                                submap.put(subkey.toString(), subjson.get(subkey));
+                            }
+                            valueList[i] = submap;
+                        }
+                        getAttributes().put(key.toString(), valueList);
+                    }
+                    else {
+                        getAttributes().put(key.toString(), json.get(key));
+                    }
                 }
             }
             catch (Exception e){
