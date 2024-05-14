@@ -9,7 +9,6 @@
 package de.elbe5.database;
 
 import de.elbe5.application.ApplicationPath;
-import de.elbe5.base.BaseData;
 import de.elbe5.base.Log;
 import de.elbe5.base.FileHelper;
 
@@ -90,21 +89,6 @@ public abstract class DbBean {
         } catch (Exception ignored) {
         } finally {
             closeConnection(con);
-        }
-        return now;
-    }
-
-    public Timestamp getTimestamp(Connection con) throws SQLException {
-        Timestamp now;
-        PreparedStatement pst = null;
-        try {
-            pst = con.prepareStatement("SELECT now()");
-            try (ResultSet rs = pst.executeQuery()) {
-                rs.next();
-                now = rs.getTimestamp(1);
-            }
-        } finally {
-            closeStatement(pst);
         }
         return now;
     }

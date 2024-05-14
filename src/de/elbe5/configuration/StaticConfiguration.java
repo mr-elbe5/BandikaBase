@@ -10,9 +10,7 @@ package de.elbe5.configuration;
 
 import jakarta.servlet.ServletContext;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class StaticConfiguration {
 
@@ -22,6 +20,7 @@ public class StaticConfiguration {
     static String databaseKey = "";
     static String salt = "";
     static Locale locale = Locale.GERMAN;
+    static int timeOffset = 0;
     static boolean showDateTime = false;
     static boolean useReadRights = true;
     static boolean useReadGroup = false;
@@ -37,6 +36,7 @@ public class StaticConfiguration {
         databaseKey = getSafeInitParameter(context, "database");
         salt = getSafeInitParameter(context, "salt");
         locale = locales.get(getSafeInitParameter(context, "locale"));
+        timeOffset = Integer.parseInt(getSafeInitParameter(context, "timeOffset"));
         showDateTime = Boolean.parseBoolean(getSafeInitParameter(context, "showDateTime"));
         useReadRights = Boolean.parseBoolean(getSafeInitParameter(context, "useReadRights"));
         useReadGroup = Boolean.parseBoolean(getSafeInitParameter(context, "useReadGroup"));
@@ -62,6 +62,10 @@ public class StaticConfiguration {
 
     public static Locale getLocale() {
         return locale;
+    }
+
+    public static int getTimeOffset() {
+        return timeOffset;
     }
 
     public static boolean showDateTime() {

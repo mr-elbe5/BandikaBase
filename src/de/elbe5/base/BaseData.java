@@ -114,10 +114,10 @@ public class BaseData implements IJsonData {
             case api -> {
             }
             case backend, frontend -> {
-                setCreationDate(LocalDateTime.now());
+                setCreationDate(DateHelper.getCurrentTime());
                 setChangeDate(getCreationDate());
                 setCreatorId(rdata.getUserId());
-                setChangerId(rdata.getUserId());
+                setChangerId(getCreatorId());
                 setNewId();
             }
         }
@@ -127,7 +127,7 @@ public class BaseData implements IJsonData {
     }
 
     public void setUpdateValues(RequestData rdata){
-        setChangeDate(LocalDateTime.now());
+        setChangeDate(DateHelper.getCurrentTime());
         setChangerId(rdata.getUserId());
     }
 

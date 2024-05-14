@@ -4,7 +4,10 @@ import de.elbe5.configuration.StaticConfiguration;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class DateHelper {
 
@@ -24,15 +27,23 @@ public class DateHelper {
     }
 
     public static LocalDate asLocalDate(Date date) {
+        return asLocalDate(date, ZoneId.systemDefault());
+    }
+
+    public static LocalDate asLocalDate(Date date, ZoneId zoneId) {
         if (date==null)
             return null;
-        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        return Instant.ofEpochMilli(date.getTime()).atZone(zoneId).toLocalDate();
     }
 
     public static LocalDateTime asLocalDateTime(Date date) {
+        return asLocalDateTime(date, ZoneId.systemDefault());
+    }
+
+    public static LocalDateTime asLocalDateTime(Date date, ZoneId zoneId) {
         if (date==null)
             return null;
-        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return Instant.ofEpochMilli(date.getTime()).atZone(zoneId).toLocalDateTime();
     }
 
     public static long asMillis(LocalDate localDate) {
@@ -48,15 +59,29 @@ public class DateHelper {
     }
 
     public static LocalDate asLocalDate(long millis) {
+        return asLocalDate(millis, ZoneId.systemDefault());
+    }
+
+    public static LocalDate asLocalDate(long millis, ZoneId zoneId) {
         if (millis==0)
             return null;
-        return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate();
+        return Instant.ofEpochMilli(millis).atZone(zoneId).toLocalDate();
     }
 
     public static LocalDateTime asLocalDateTime(long millis) {
+        return asLocalDateTime(millis, ZoneId.systemDefault());
+    }
+
+    public static LocalDateTime asLocalDateTime(long millis, ZoneId zoneId) {
         if (millis==0)
             return null;
-        return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return Instant.ofEpochMilli(millis).atZone(zoneId).toLocalDateTime();
+    }
+
+    public static LocalDateTime getCurrentTime(){
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.roll(Calendar.HOUR_OF_DAY, StaticConfiguration.getTimeOffset());
+        return asLocalDateTime(cal.getTime());
     }
 
     public static String getDatePattern(){

@@ -8,12 +8,12 @@
  */
 package de.elbe5.content;
 
+import de.elbe5.base.DateHelper;
 import de.elbe5.base.Log;
 import de.elbe5.database.DbBean;
 
 import java.lang.reflect.Constructor;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class ContentBean extends DbBean {
@@ -146,7 +146,7 @@ public class ContentBean extends DbBean {
         Connection con = startTransaction();
         try {
             ContentBean extrasBean = data.getBean();
-            data.setChangeDate(LocalDateTime.now());
+            data.setChangeDate(DateHelper.getCurrentTime());
             if (data.isNew()){
                 data.setCreationDate(data.getChangeDate());
                 createContent(con,data);
