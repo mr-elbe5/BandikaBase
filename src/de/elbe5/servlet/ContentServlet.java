@@ -8,7 +8,7 @@
  */
 package de.elbe5.servlet;
 
-import de.elbe5.configuration.StaticConfiguration;
+import de.elbe5.application.Configuration;
 import de.elbe5.content.ContentCache;
 import de.elbe5.content.ContentController;
 import de.elbe5.content.ContentData;
@@ -25,7 +25,7 @@ import java.io.IOException;
 public class ContentServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding(StaticConfiguration.ENCODING);
+        request.setCharacterEncoding(Configuration.ENCODING);
         RequestData rdata = new RequestData(method, RequestContext.content, request);
         request.setAttribute(RequestKeys.KEY_REQUESTDATA, rdata);
         rdata.readRequestParams();

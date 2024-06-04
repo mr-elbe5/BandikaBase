@@ -10,7 +10,7 @@ package de.elbe5.request;
 
 import de.elbe5.base.*;
 import de.elbe5.base.BaseData;
-import de.elbe5.configuration.StaticConfiguration;
+import de.elbe5.application.Configuration;
 import de.elbe5.content.ContentData;
 import de.elbe5.user.UserBean;
 import de.elbe5.user.UserData;
@@ -299,7 +299,7 @@ public class RequestData {
             byte[] bytes = new byte[(int) part.getSize()];
             int read = part.getInputStream().read(bytes);
             if (read > 0) {
-                return new String(bytes, StaticConfiguration.ENCODING);
+                return new String(bytes, Configuration.ENCODING);
             }
         } catch (Exception e) {
             Log.error("could not extract parameter from multipart", e);

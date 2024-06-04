@@ -9,7 +9,7 @@
 package de.elbe5.servlet;
 
 import de.elbe5.base.StringHelper;
-import de.elbe5.configuration.StaticConfiguration;
+import de.elbe5.application.Configuration;
 import de.elbe5.request.RequestContext;
 import de.elbe5.request.RequestData;
 import de.elbe5.response.IResponse;
@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 public class ControllerServlet extends WebServlet {
 
     protected void processRequest(String method, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding(StaticConfiguration.ENCODING);
+        request.setCharacterEncoding(Configuration.ENCODING);
         String uri = request.getRequestURI();
         RequestContext requestType = RequestContext.any;
         if (uri.startsWith("/ctrl/")){

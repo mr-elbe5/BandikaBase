@@ -17,9 +17,9 @@
 <%@ page import="de.elbe5.group.GroupData" %>
 <%@ page import="java.util.List" %>
 <%@ page import="de.elbe5.group.GroupCache" %>
-<%@ page import="de.elbe5.configuration.Configuration" %>
+<%@ page import="de.elbe5.application.Configuration" %>
 <%@ page import="de.elbe5.base.LocalizedSystemStrings" %>
-<%@ page import="de.elbe5.configuration.StaticConfiguration" %>
+<%@ page import="de.elbe5.application.Configuration" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -55,12 +55,12 @@
 
                 <form:text name="displayName" label="_name" required="true" value="<%=$H(contentData.getDisplayName())%>"/>
                 <form:textarea name="description" label="_description" height="5em"><%=$H(contentData.getDescription())%></form:textarea>
-                <% if (StaticConfiguration.useReadRights()){%>
+                <% if (Configuration.useReadRights()){%>
                 <form:line label="_openAccess" padded="true">
                     <form:check name="openAccess" value="true" checked="<%=contentData.isOpenAccess()%>"/>
                 </form:line>
                 <%}%>
-                <% if (StaticConfiguration.useReadRights() && StaticConfiguration.useReadGroup()){%>
+                <% if (Configuration.useReadRights() && Configuration.useReadGroup()){%>
                 <form:select name="readerGroupId" label="_readerGroup">
                     <option value="0"  <%=contentData.getReaderGroupId()==0 ? "selected" : ""%>><%=$SH("_none")%></option>
                     <% for (GroupData group : groups){%>
@@ -68,7 +68,7 @@
                     <%}%>
                 </form:select>
                 <%}%>
-                <% if (StaticConfiguration.useEditorGroup()){%>
+                <% if (Configuration.useEditorGroup()){%>
                 <form:select name="editorGroupId" label="_editorGroup">
                     <option value="0"  <%=contentData.getEditorGroupId()==0 ? "selected" : ""%>><%=$SH("_none")%></option>
                     <% for (GroupData group : groups){%>

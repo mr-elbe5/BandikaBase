@@ -12,11 +12,9 @@
 <%@ page import="de.elbe5.request.RequestData" %>
 <%@ page import="de.elbe5.rights.GlobalRight" %>
 <%@ page import="de.elbe5.request.RequestKeys" %>
-<%@ page import="de.elbe5.configuration.Configuration" %>
-<%@ page import="de.elbe5.content.ContentData" %>
 <%@ page import="de.elbe5.rights.GlobalRight" %>
 <%@ page import="de.elbe5.base.LocalizedSystemStrings" %>
-<%@ page import="de.elbe5.configuration.StaticConfiguration" %>
+<%@ page import="de.elbe5.application.Configuration" %>
 <%@ taglib uri="/WEB-INF/formtags.tld" prefix="form" %>
 <%
     RequestData rdata = RequestData.getRequestData(request);
@@ -24,7 +22,7 @@
     String includeUrl = rdata.getAttributes().getString(RequestKeys.KEY_JSP);
 %>
 <!DOCTYPE html>
-<html lang="<%=StaticConfiguration.getLocale().getLanguage()%>">
+<html lang="<%=Configuration.getLocale().getLanguage()%>">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -70,12 +68,6 @@
                                 </a>
                             </li>
                             <%}%>
-                            <% if (GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser())){%>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/ctrl/admin/openContentAdministration?contentId=<%=ContentData.ID_ROOT%>"><%=$SH("_contentAdministration")%>
-                                </a>
-                            </li>
-                            <%}%>
                         </ul>
                     </nav>
                 </section>
@@ -103,8 +95,10 @@
         <footer>
             <div class="container">
                 <ul class="nav">
-                    <a class="nav-link"><%=LocalizedSystemStrings.getInstance().html("copyright")%>
-                    </a>
+                    <li>
+                        <a class="nav-link"><%=LocalizedSystemStrings.getInstance().html("copyright")%>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </footer>

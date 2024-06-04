@@ -9,7 +9,7 @@
 package de.elbe5.database;
 
 import de.elbe5.base.Log;
-import de.elbe5.configuration.StaticConfiguration;
+import de.elbe5.application.Configuration;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -45,7 +45,7 @@ public class DbConnector {
             Log.log("initializing database...");
             InitialContext initCtx = new InitialContext();
             Context envCtx = (Context) initCtx.lookup("java:comp/env");
-            dataSource = (DataSource) envCtx.lookup(StaticConfiguration.getDatabaseKey());
+            dataSource = (DataSource) envCtx.lookup(Configuration.getDatabaseKey());
             Log.log("trying to connect...");
             Connection con = null;
             try {

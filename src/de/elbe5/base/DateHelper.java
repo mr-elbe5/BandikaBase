@@ -1,13 +1,12 @@
 package de.elbe5.base;
 
-import de.elbe5.configuration.StaticConfiguration;
+import de.elbe5.application.Configuration;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 public class DateHelper {
 
@@ -80,7 +79,7 @@ public class DateHelper {
 
     public static LocalDateTime getCurrentTime(){
         Calendar cal = GregorianCalendar.getInstance();
-        cal.roll(Calendar.HOUR_OF_DAY, StaticConfiguration.getTimeOffset());
+        cal.roll(Calendar.HOUR_OF_DAY, Configuration.getTimeOffset());
         return asLocalDateTime(cal.getTime());
     }
 
@@ -139,7 +138,7 @@ public class DateHelper {
     }
 
     public static String toHtml(LocalDateTime date){
-        return StaticConfiguration.showDateTime() ? toHtmlDateTime(date) : toHtmlDate(date);
+        return Configuration.showDateTime() ? toHtmlDateTime(date) : toHtmlDate(date);
     }
 
     public static String toISODateTime(LocalDateTime date) {

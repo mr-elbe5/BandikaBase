@@ -8,7 +8,7 @@
  */
 package de.elbe5.rights;
 
-import de.elbe5.configuration.StaticConfiguration;
+import de.elbe5.application.Configuration;
 import de.elbe5.user.UserData;
 
 import java.util.*;
@@ -37,7 +37,7 @@ public enum GlobalRight {
     }
 
     public static boolean hasGlobalContentReadRight(UserData user) {
-        return !StaticConfiguration.useReadRights() || (user!=null && (includesAnyRightOf(user.getGlobalRights(), contentReadRights) || user.isRoot()));
+        return !Configuration.useReadRights() || (user!=null && (includesAnyRightOf(user.getGlobalRights(), contentReadRights) || user.isRoot()));
     }
 
     public static boolean hasGlobalContentEditRight(UserData user) {
