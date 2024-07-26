@@ -8,9 +8,13 @@
  */
 package de.elbe5.base;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 
 public class BinaryFile {
 
@@ -92,6 +96,30 @@ public class BinaryFile {
         }
         inputStream.close();
         bytes = outputStream.toByteArray();
+    }
+
+    public void resizeImage(int maxSize) {
+        try {
+            BufferedImage bi = ImageHelper.createResizedImage(getBytes(), getContentType(), maxSize);
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType(getContentType());
+            if (writers.hasNext()) {
+                setContentType(getContentType());
+            } else {
+                writers = ImageIO.getImageWritersBySuffix(FileHelper.getExtension(getFileName()));
+                if (writers.hasNext()) {
+                    setContentType("");
+                } else {
+                    writers = ImageIO.getImageWritersByMIMEType("image/jpeg");
+                    setContentType("image/jpeg");
+                }
+            }
+            ImageWriter writer = writers.next();
+            setBytes(ImageHelper.writeImage(writer, bi));
+            setFileSize(getBytes().length);
+        }
+        catch (Exception e) {
+            Log.error("resize error", e);
+        }
     }
 
 }
