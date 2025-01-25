@@ -9,6 +9,10 @@
 package de.elbe5.content;
 
 import de.elbe5.base.BaseData;
+import de.elbe5.base.Log;
+import de.elbe5.file.FileBean;
+import de.elbe5.file.ImageBean;
+import de.elbe5.file.ImageData;
 import de.elbe5.request.ContentRequestKeys;
 import de.elbe5.request.RequestData;
 import de.elbe5.request.RequestKeys;
@@ -249,6 +253,20 @@ public class ContentController extends Controller {
         ContentCache.setDirty();
         rdata.setMessage($S("_newRankingSaved"), RequestKeys.MESSAGE_TYPE_SUCCESS);
         return new CloseDialogResponse("/ctrl/admin/openContentAdministration?contentId=" + contentId);
+    }
+
+    public IResponse reduceImages(RequestData rdata) {
+        assertLoggedInSessionCall(rdata);
+        assertRights(GlobalRight.hasGlobalContentEditRight(rdata.getLoginUser()));
+        List<ImageData> list = ContentCache.getFiles(ImageData.class);
+        for (ImageData data : list){
+            ImageData image = ImageBean.getInstance().getFile(data.getId(), true, ImageData.class);
+            if (image.resizeImage()){
+                ImageBean.getInstance().saveFile(image, true);
+                Log.info("image "+data.getId()+" resized and saved");
+            }
+        }
+        return new ForwardResponse("/ctrl/admin/openContentAdministration");
     }
 
     protected IResponse showEditBackendContent(ContentData contentData) {

@@ -33,6 +33,7 @@ public class Configuration {
     static String smtpPassword = "";
     static String mailSender = null;
     static String mailReceiver = null;
+    static int maxImageSize = 2048;
 
     static{
         Configuration.locales.put("de",Locale.GERMAN);
@@ -61,6 +62,7 @@ public class Configuration {
         smtpPassword = getSafeString(context,"smtpPassword");
         mailSender = getSafeString(context,"mailSender");
         mailReceiver = getSafeString(context,"mailReceiver");
+        maxImageSize = getSafeInt(context,"maxImageSize");
         System.out.println("static configuration loaded");
     }
 
@@ -151,6 +153,10 @@ public class Configuration {
 
     public static String getMailReceiver() {
         return mailReceiver;
+    }
+
+    public static int getMaxImageSize() {
+        return maxImageSize;
     }
 
 }

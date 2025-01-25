@@ -24,6 +24,9 @@
                 <div class = "">
                     <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/clearClipboard"><%=$SH("_clearClipboard")%></a>
                 </div>
+                <div class = "">
+                    <a class = "btn btn-sm btn-outline-light" href="/ctrl/content/reduceImages"><%=$SH("_reduceImages")%></a>
+                </div>
                 <ul class="tree pagetree">
                     <% rootContent.displayBackendTreeContent(pageContext,rdata);%>
                 </ul>

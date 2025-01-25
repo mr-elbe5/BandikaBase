@@ -12,9 +12,8 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
+import de.elbe5.application.Configuration;
 import de.elbe5.base.*;
-import de.elbe5.request.RequestData;
-import de.elbe5.request.RequestType;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -31,7 +30,6 @@ public class ImageData extends FileData implements IJsonData {
     protected byte[] previewBytes = null;
     protected boolean hasPreview = false;
 
-    public int maxSize = 0;
     public int previewSize = DEFAULT_PREVIEW_SIZE;
 
     public ImageData() {
@@ -99,14 +97,6 @@ public class ImageData extends FileData implements IJsonData {
         return "preview_" + getId() + ".jpg";
     }
 
-    public int getMaxSize() {
-        return maxSize;
-    }
-
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
-    }
-
     public int getPreviewSize() {
         return previewSize;
     }
@@ -115,15 +105,25 @@ public class ImageData extends FileData implements IJsonData {
         this.previewSize = previewSize;
     }
 
+    public boolean resizeImage(){
+        try {
+            return createResizedImage(Configuration.getMaxImageSize());
+        }
+        catch (Exception e){
+            Log.error("could not resize image", e);
+            return false;
+        }
+    }
+
     // multiple data
 
     @Override
     public boolean createFromBinaryFile(BinaryFile file) {
         if (super.createFromBinaryFile(file) && file.isImage()){
             correctImageByExif();
-            if (maxSize != 0)
+            if (Configuration.getMaxImageSize() != 0)
                 try {
-                    createResizedImage(maxSize);
+                    createResizedImage(Configuration.getMaxImageSize());
                     createPreview(getPreviewSize());
                     return true;
                 } catch (IOException e) {
@@ -143,7 +143,10 @@ public class ImageData extends FileData implements IJsonData {
 
     //helper
 
-    protected void createResizedImage(int maxSize) throws IOException {
+    protected boolean createResizedImage(int maxSize) throws IOException {
+        if (width <= maxSize && height <= maxSize){
+            return false;
+        }
         BufferedImage bi = ImageHelper.createResizedImage(getBytes(), getContentType(), maxSize);
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType(getContentType());
         if (writers.hasNext()) {
@@ -164,6 +167,7 @@ public class ImageData extends FileData implements IJsonData {
         assert bi != null;
         setWidth(bi.getWidth());
         setHeight(bi.getHeight());
+        return true;
     }
 
     public void createPreview(int previewSize) throws IOException{
