@@ -204,7 +204,7 @@ public abstract class FileData extends BaseData {
     }
 
     public boolean createFromBinaryFile(BinaryFile file) {
-        if (file != null && file.getBytes() != null && file.getFileName().length() > 0 && !StringHelper.isNullOrEmpty(file.getContentType())) {
+        if (file != null && file.getBytes() != null && !file.getFileName().isEmpty() && !StringHelper.isNullOrEmpty(file.getContentType())) {
             setFileName(file.getFileName());
             setBytes(file.getBytes());
             setFileSize(file.getBytes().length);
