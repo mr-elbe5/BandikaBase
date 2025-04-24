@@ -29,7 +29,7 @@ public class ImageData extends FileData implements IJsonData {
     protected int height = 0;
     protected byte[] previewBytes = null;
     protected boolean hasPreview = false;
-
+    public int maxSize = 0;
     public int previewSize = DEFAULT_PREVIEW_SIZE;
 
     public ImageData() {
@@ -97,6 +97,14 @@ public class ImageData extends FileData implements IJsonData {
         return "preview_" + getId() + ".jpg";
     }
 
+    public int getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
     public int getPreviewSize() {
         return previewSize;
     }
@@ -121,9 +129,10 @@ public class ImageData extends FileData implements IJsonData {
     public boolean createFromBinaryFile(BinaryFile file) {
         if (super.createFromBinaryFile(file) && file.isImage()){
             correctImageByExif();
-            if (Configuration.getMaxImageSize() != 0)
+            int resizeSize = maxSize!=0 ? maxSize : Configuration.getMaxImageSize();
+            if (resizeSize != 0)
                 try {
-                    createResizedImage(Configuration.getMaxImageSize());
+                    createResizedImage(resizeSize);
                     createPreview(getPreviewSize());
                     return true;
                 } catch (IOException e) {
@@ -144,9 +153,6 @@ public class ImageData extends FileData implements IJsonData {
     //helper
 
     protected boolean createResizedImage(int maxSize) throws IOException {
-        if (width <= maxSize && height <= maxSize){
-            return false;
-        }
         BufferedImage bi = ImageHelper.createResizedImage(getBytes(), getContentType(), maxSize);
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType(getContentType());
         if (writers.hasNext()) {
